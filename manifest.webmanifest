@@ -1,0 +1,10 @@
+{
+  "name": "Note Map Guitar",
+  "short_name": "Note Map",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f6f3ee",
+  "theme_color": "#34251d",
+  "orientation": "any",
+  "icons": []
+}

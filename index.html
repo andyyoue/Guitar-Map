@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#34251d" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Note Map" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Note Map Guitar</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app">
+    <header>
+      <h1>Note Map Guitar</h1>
+      <p class="tagline">One fretboard. One question. Everything else is a filter.</p>
+    </header>
+
+    <section class="mode-panel">
+      <label class="top-level">View Mode
+        <select id="viewModeSelect">
+          <option value="map">Note map</option>
+          <option value="fingering">Chord fingering</option>
+          <option value="progression">Progression</option>
+        </select>
+      </label>
+    </section>
+
+    <section id="mapControls" class="controls">
+      <label>Key <select id="keySelect"></select></label>
+      <label>Scale / Filter
+        <select id="scaleSelect">
+          <option value="major">Major scale</option>
+          <option value="naturalMinor">Natural minor scale</option>
+          <option value="majorPentatonic">Major pentatonic</option>
+          <option value="minorPentatonic">Minor pentatonic</option>
+          <option value="blues">Minor blues</option>
+          <option value="mixolydian">Mixolydian</option>
+          <option value="dorian">Dorian</option>
+        </select>
+      </label>
+      <label>Chord Overlay
+        <select id="chordSelect">
+          <option value="major">Major: 1-3-5</option>
+          <option value="minor">Minor: 1-b3-5</option>
+          <option value="dominant7">Dominant 7: 1-3-5-b7</option>
+          <option value="major7">Major 7: 1-3-5-7</option>
+          <option value="minor7">Minor 7: 1-b3-5-b7</option>
+          <option value="sus2">Sus2: 1-2-5</option>
+          <option value="sus4">Sus4: 1-4-5</option>
+          <option value="none">No chord overlay</option>
+        </select>
+      </label>
+      <label>Display
+        <select id="displaySelect">
+          <option value="notes">Note names</option>
+          <option value="degrees">Scale degrees</option>
+        </select>
+      </label>
+    </section>
+
+    <section id="fingeringControls" class="controls hidden">
+      <label>Chord Root <select id="chordRootSelect"></select></label>
+      <label>Chord Type
+        <select id="fingeringTypeSelect">
+          <option value="major">Major</option>
+          <option value="minor">Minor</option>
+          <option value="minor7">Minor 7</option>
+          <option value="major7">Major 7</option>
+          <option value="sus2">Sus2</option>
+          <option value="sus4">Sus4</option>
+        </select>
+      </label>
+      <div class="stepper">
+        <button id="prevShape" type="button">◀ Previous</button>
+        <button id="nextShape" type="button">Next ▶</button>
+      </div>
+      <div class="shape-card">
+        <strong id="shapeName"></strong>
+        <p id="shapeDetails"></p>
+      </div>
+    </section>
+
+    <section id="progressionControls" class="controls hidden">
+      <label>Key <select id="progressionKeySelect"></select></label>
+      <label>Music Type
+        <select id="musicTypeSelect">
+          <option value="classic">Classic rock / folk</option>
+          <option value="pop">Pop / anthem</option>
+          <option value="sad">Sad / emotional</option>
+          <option value="blues">Blues</option>
+          <option value="funk">Funk / Dorian-ish</option>
+        </select>
+      </label>
+      <label>Target Position
+        <select id="positionSelect">
+          <option value="open">Open / low</option>
+          <option value="5">Around 5th fret</option>
+          <option value="9">Around 9th fret</option>
+          <option value="12">Around 12th fret</option>
+          <option value="14">Around 14th fret</option>
+        </select>
+      </label>
+      <div class="stepper">
+        <button id="prevProgressionChord" type="button">◀ Chord</button>
+        <button id="nextProgressionChord" type="button">Chord ▶</button>
+      </div>
+      <div class="stepper">
+        <button id="prevProgressionShape" type="button">◀ Shape</button>
+        <button id="nextProgressionShape" type="button">Shape ▶</button>
+      </div>
+      <div class="shape-card">
+        <strong id="progressionName"></strong>
+        <p id="progressionDetails"></p>
+      </div>
+    </section>
+
+    <section class="summary">
+      <div>
+        <h2 id="summaryTitle"></h2>
+        <p id="summaryNotes"></p>
+      </div>
+      <div class="legend">
+        <span><b class="legend-box root"></b>Root</span>
+        <span><b class="legend-box chord"></b>Chord tone</span>
+        <span><b class="legend-box scale"></b>Scale note</span>
+        <span><b class="legend-box outside"></b>Outside note</span>
+        <span><b class="legend-box fingering"></b>Fingering</span>
+      </div>
+    </section>
+
+    <section class="fretboard-wrap">
+      <div id="fretboard"></div>
+    </section>
+
+    <section class="explain">
+      <h2>Why this works</h2>
+      <p id="explanation"></p>
+    </section>
+
+    <section class="install">
+      <h2>iPhone test</h2>
+      <p>Open this app in Safari, tap Share, then tap <strong>Add to Home Screen</strong>. For best results, host the folder somewhere simple first; local files may not install as a true Home Screen app.</p>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
