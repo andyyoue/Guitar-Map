@@ -6,14 +6,14 @@
 <meta name="theme-color" content="#34251d" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-title" content="Note Map" />
-<title>Note Map Guitar V2</title>
+<title>Note Map Guitar V2.1</title>
 <link rel="manifest" href="manifest.webmanifest" />
 <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 <main class="app">
-<header><div><h1>Note Map Guitar</h1><p>One fretboard. One question. Everything else is a filter.</p></div><b>V2</b></header>
-<section class="hint">Phone tip: rotate sideways, or use fret windows instead of scrolling the full neck.</section>
+<header><div><h1>Note Map Guitar</h1><p>One fretboard. One question. Everything else is a filter.</p></div><b>V2.1</b></header>
+<section class="hint">Phone tip: rotate sideways. Pattern mode now works best with Fret Window set to Auto.</section>
 
 <section class="card mode"><label>View Mode<select id="mode"><option value="map">Note map</option><option value="chord">Chord fingering</option><option value="progression">Progression</option></select></label></section>
 
@@ -22,8 +22,8 @@
 <label>Scale<select id="scale"><option value="major">Major</option><option value="minor">Natural minor</option><option value="majorPent">Major pentatonic</option><option value="minorPent">Minor pentatonic</option><option value="blues">Minor blues</option><option value="mixolydian">Mixolydian</option><option value="dorian">Dorian</option></select></label>
 <label>Chord overlay<select id="overlay"><option value="major">Major</option><option value="minor">Minor</option><option value="minor7">Minor 7</option><option value="major7">Major 7</option><option value="dominant7">Dominant 7</option><option value="sus2">Sus2</option><option value="sus4">Sus4</option><option value="none">None</option></select></label>
 <label>Display<select id="display"><option value="notes">Note names</option><option value="degrees">Scale degrees</option></select></label>
-<label>Pattern highlight<select id="pattern"><option value="none">None</option><option value="p1">Pattern 1 / low route</option><option value="p2">Pattern 2 / middle route</option><option value="p3">Pattern 3 / upper route</option></select></label>
-<label>Fret window<select id="mapWindow"><option value="0">Open–5</option><option value="3">3–8</option><option value="5">5–10</option><option value="7">7–12</option><option value="10">10–15</option><option value="all">All 0–15</option></select></label>
+<label>Pattern highlight<select id="pattern"><option value="none">None</option><option value="p1">Pattern 1</option><option value="p2">Pattern 2</option><option value="p3">Pattern 3</option><option value="p4">Pattern 4</option><option value="p5">Pattern 5</option></select></label>
+<label>Fret window<select id="mapWindow"><option value="auto">Auto</option><option value="0">Open–5</option><option value="3">3–8</option><option value="5">5–10</option><option value="7">7–12</option><option value="10">10–15</option><option value="all">All 0–15</option></select></label>
 </section>
 
 <section id="chordControls" class="card controls hidden">

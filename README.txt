@@ -1,12 +1,8 @@
-NOTE MAP GUITAR - V2
+NOTE MAP GUITAR - V2.1
 
-Upload index.html, style.css, app.js, and manifest.webmanifest to your GitHub Pages repo.
-
-V2 changes:
-- Fret windows for mobile usability.
-- Landscape-friendly compact layout.
-- Pattern highlighting in Note Map mode.
-- Root resolution explanation.
-- Chord fingering styles: easy/cheat, open, movable/barre, triads.
-- Includes practical cheat shapes such as easy G.
-- Progression mode is more position-aware and uses nearby chord shapes.
+Changes from V2:
+- Pattern selector now has five pattern options.
+- Fret window now has Auto.
+- In pattern mode, Auto follows the selected pattern window.
+- Scale notes outside the selected pattern remain visible but are dimmed/greyed.
+- Root and chord tones stay prominent even if outside the selected pattern.
