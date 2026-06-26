@@ -1,14 +1,12 @@
-NOTE MAP GUITAR - V2.1.1
+NOTE MAP GUITAR - V2.1.2
 
-Bugfix release.
+Single-file release: upload index.html to GitHub Pages.
 
-Important: index.html is now self-contained and includes the CSS/JS inline.
-This means the fret diagram should still work even if only index.html is uploaded.
-
-For GitHub Pages you can upload either:
-- index.html only, or
-- all files if you want to keep the project structure.
-
-Fixes:
-- Defensive default values for View Mode, Pattern, and Fret Window.
-- Inline fallback so missing app.js/style.css does not break the diagram.
+Changes:
+1. Fret 0 is now a narrow nut/open-string column, not a normal fret.
+2. Open strings show O and muted strings show X.
+3. Pattern highlighting is stronger.
+4. Notes outside the selected pattern are aggressively greyed out.
+5. Fret windows now show roughly 7 frets; fret 0/nut is narrow.
+6. Color legend moved to the bottom as a sticky legend.
+7. Progression chords are clickable chips.
