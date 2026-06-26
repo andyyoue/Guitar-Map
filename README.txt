@@ -1,17 +1,12 @@
-NOTE MAP GUITAR - PWA V1
+NOTE MAP GUITAR - V2
 
-How to test on iPhone:
-1. Put this folder somewhere web-accessible, or open index.html locally if your file app/browser allows it.
-2. Open index.html in Safari.
-3. Tap Share.
-4. Tap Add to Home Screen.
+Upload index.html, style.css, app.js, and manifest.webmanifest to your GitHub Pages repo.
 
-Important:
-- iPhone Home Screen install works best from a hosted web URL.
-- Local file testing may still work in Safari, but may not behave like a true installed app.
-
-Changes:
-- Restored proposed fingering numbers where practical.
-- Removed confusing fret-position average wording.
-- Added PWA manifest and mobile Safari metadata.
-- Improved iPhone-friendly layout and touch targets.
+V2 changes:
+- Fret windows for mobile usability.
+- Landscape-friendly compact layout.
+- Pattern highlighting in Note Map mode.
+- Root resolution explanation.
+- Chord fingering styles: easy/cheat, open, movable/barre, triads.
+- Includes practical cheat shapes such as easy G.
+- Progression mode is more position-aware and uses nearby chord shapes.

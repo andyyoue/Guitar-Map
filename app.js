@@ -1,203 +1,27 @@
-const chromaticSharp = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
-const chromaticFlat = ["C","Db","D","Eb","E","F","Gb","G","Ab","A","Bb","B"];
-const keys = ["C","C#","Db","D","D#","Eb","E","F","F#","Gb","G","G#","Ab","A","A#","Bb","B"];
-const naturalRoots = ["C","D","E","F","G","A","B"];
-const tuning = ["E","B","G","D","A","E"];
-const maxFret = 15;
-
-const scaleDefs = {
-  major:{name:"Major scale",intervals:[0,2,4,5,7,9,11],degrees:["1","2","3","4","5","6","7"],why:"The major scale is the full seven-note home map. Chords, pentatonics and modes can be treated as filters on this same map."},
-  naturalMinor:{name:"Natural minor scale",intervals:[0,2,3,5,7,8,10],degrees:["1","2","b3","4","5","b6","b7"],why:"Natural minor changes the 3rd, 6th and 7th compared with major, giving the darker minor sound."},
-  majorPentatonic:{name:"Major pentatonic",intervals:[0,2,4,7,9],degrees:["1","2","3","5","6"],why:"Major pentatonic is the major scale with the 4th and 7th removed. Fewer notes means fewer clashes."},
-  minorPentatonic:{name:"Minor pentatonic",intervals:[0,3,5,7,10],degrees:["1","b3","4","5","b7"],why:"Minor pentatonic gives the essential rock/blues minor sound. It is a five-note filter across the whole neck."},
-  blues:{name:"Minor blues",intervals:[0,3,5,6,7,10],degrees:["1","b3","4","b5","5","b7"],why:"The blues scale is minor pentatonic plus the flat 5. That extra note is the classic blues tension note."},
-  mixolydian:{name:"Mixolydian",intervals:[0,2,4,5,7,9,10],degrees:["1","2","3","4","5","6","b7"],why:"Mixolydian is major with a flat 7. It is useful over dominant 7 chords and has a rootsy sound."},
-  dorian:{name:"Dorian",intervals:[0,2,3,5,7,9,10],degrees:["1","2","b3","4","5","6","b7"],why:"Dorian is minor with a natural 6. It keeps the minor feel but sounds brighter and funkier."}
-};
-const chordDefs = {
-  none:{name:"No chord overlay",intervals:[]},
-  major:{name:"Major",suffix:"",intervals:[0,4,7],formula:"1-3-5"},
-  minor:{name:"Minor",suffix:"m",intervals:[0,3,7],formula:"1-b3-5"},
-  dominant7:{name:"Dominant 7",suffix:"7",intervals:[0,4,7,10],formula:"1-3-5-b7"},
-  major7:{name:"Major 7",suffix:"maj7",intervals:[0,4,7,11],formula:"1-3-5-7"},
-  minor7:{name:"Minor 7",suffix:"m7",intervals:[0,3,7,10],formula:"1-b3-5-b7"},
-  sus2:{name:"Sus2",suffix:"sus2",intervals:[0,2,7],formula:"1-2-5"},
-  sus4:{name:"Sus4",suffix:"sus4",intervals:[0,5,7],formula:"1-4-5"}
-};
-
-const baseShapes = {
-  E: {
-    major:{frets:[0,2,2,1,0,0], fingers:["","2","3","1","",""]},
-    minor:{frets:[0,2,2,0,0,0], fingers:["","2","3","","",""]},
-    minor7:{frets:[0,2,0,0,0,0], fingers:["","2","","","",""]},
-    major7:{frets:[0,2,1,1,0,0], fingers:["","3","1","2","",""]},
-    sus2:{frets:[0,2,4,4,0,0], fingers:["","1","3","4","",""]},
-    sus4:{frets:[0,2,2,2,0,0], fingers:["","1","2","3","",""]}
-  },
-  A: {
-    major:{frets:["x",0,2,2,2,0], fingers:["","","1","2","3",""]},
-    minor:{frets:["x",0,2,2,1,0], fingers:["","","2","3","1",""]},
-    minor7:{frets:["x",0,2,0,1,0], fingers:["","","2","","1",""]},
-    major7:{frets:["x",0,2,1,2,0], fingers:["","","2","1","3",""]},
-    sus2:{frets:["x",0,2,2,0,0], fingers:["","","1","2","",""]},
-    sus4:{frets:["x",0,2,2,3,0], fingers:["","","1","2","3",""]}
-  },
-  D: {
-    major:{frets:["x","x",0,2,3,2], fingers:["","","","1","3","2"]},
-    minor:{frets:["x","x",0,2,3,1], fingers:["","","","2","3","1"]},
-    minor7:{frets:["x","x",0,2,1,1], fingers:["","","","2","1","1"]},
-    major7:{frets:["x","x",0,2,2,2], fingers:["","","","1","2","3"]},
-    sus2:{frets:["x","x",0,2,3,0], fingers:["","","","1","3",""]},
-    sus4:{frets:["x","x",0,2,3,3], fingers:["","","","1","3","4"]}
-  }
-};
-
-function prefersFlats(key){return key.includes("b") || ["F","Bb","Eb","Ab","Db","Gb"].includes(key);}
-function noteIndex(note){let i=chromaticSharp.indexOf(note); if(i>=0)return i; return chromaticFlat.indexOf(note);}
-function noteName(index,key){const names=prefersFlats(key)?chromaticFlat:chromaticSharp; return names[((index%12)+12)%12];}
-function intervalLabel(interval,scaleDef){const i=scaleDef.intervals.indexOf(interval); return i>=0?scaleDef.degrees[i]:"";}
-function cleanRoot(root){return root.replace("#","").replace("b","");}
-function transposeItem(item, offset){return typeof item === "number" ? item + offset : item;}
-function shapePosition(frets){const nums=frets.filter(f=>typeof f==="number" && f>0); return nums.length?Math.min(...nums):0;}
-function generateShapes(root, quality){
-  const target = noteIndex(root);
-  let shapes = [];
-  for (const family of ["E","A","D"]) {
-    const base = baseShapes[family][quality];
-    if (!base) continue;
-    const familyIndex = noteIndex(family);
-    for (let offset=0; offset<=12; offset++) {
-      if ((familyIndex + offset) % 12 !== target) continue;
-      const frets = base.frets.map(f=>transposeItem(f, offset));
-      const fingers = [...base.fingers];
-      const nums = frets.filter(f => typeof f === "number");
-      if (Math.max(...nums) > maxFret) continue;
-      const location = offset===0 ? "open position" : `around fret ${offset}`;
-      shapes.push({
-        name: `${root}${chordDefs[quality].suffix} ${family}-shape`,
-        frets, fingers,
-        note: `${family}-family shape, ${location}. Fingering numbers are shown where practical; barre shapes may need index-finger barring.`,
-        position: shapePosition(frets)
-      });
-    }
-  }
-  shapes.sort((a,b)=>a.position-b.position);
-  return shapes;
-}
-function closestShapeIndex(shapes,targetPos){
-  let best=0, bestScore=Infinity;
-  shapes.forEach((s,i)=>{const score=Math.abs(s.position-targetPos); if(score<bestScore){best=i; bestScore=score;}});
-  return best;
-}
-
-const els = {};
-["viewModeSelect","mapControls","fingeringControls","progressionControls","keySelect","scaleSelect","chordSelect","displaySelect","chordRootSelect","fingeringTypeSelect","prevShape","nextShape","shapeName","shapeDetails","progressionKeySelect","musicTypeSelect","positionSelect","prevProgressionChord","nextProgressionChord","prevProgressionShape","nextProgressionShape","progressionName","progressionDetails","fretboard","summaryTitle","summaryNotes","explanation"].forEach(id=>els[id]=document.getElementById(id));
-
-let shapeIndex=0, progressionChordIndex=0, progressionShapeOffset=0;
-
-keys.forEach(k=>{[els.keySelect,els.progressionKeySelect].forEach(sel=>{const o=document.createElement("option"); o.value=k; o.textContent=k; sel.appendChild(o);});});
-naturalRoots.forEach(k=>{const o=document.createElement("option"); o.value=k; o.textContent=k; els.chordRootSelect.appendChild(o);});
-els.keySelect.value="A"; els.progressionKeySelect.value="A"; els.scaleSelect.value="major"; els.chordSelect.value="major"; els.chordRootSelect.value="A"; els.fingeringTypeSelect.value="major";
-
-function setVisibleControls(){
-  const mode=els.viewModeSelect.value;
-  els.mapControls.classList.toggle("hidden", mode!=="map");
-  els.fingeringControls.classList.toggle("hidden", mode!=="fingering");
-  els.progressionControls.classList.toggle("hidden", mode!=="progression");
-}
-function drawFretboardWithShape(shape,title,details,why){
-  let html=`<div class="fretboard"><div class="fret-row"><div></div>`;
-  for(let fret=0; fret<=maxFret; fret++) html+=`<div class="fret-number">${fret}</div>`;
-  html+=`</div>`;
-  const visualFrets=[...shape.frets].reverse();
-  const visualFingers=[...shape.fingers].reverse();
-  tuning.forEach((openString, visualStringIndex)=>{
-    html+=`<div class="fret-row"><div class="string-label">${openString}</div>`;
-    const targetFret=visualFrets[visualStringIndex];
-    const finger=visualFingers[visualStringIndex];
-    for(let fret=0; fret<=maxFret; fret++){
-      let label="."; let className="outside";
-      if(targetFret==="x" && fret===0){ label="x"; className="muted"; }
-      else if(targetFret===fret){ label=targetFret===0?"0":(finger||"●"); className="fingering"; if(targetFret===0) className+=" open-string"; }
-      html+=`<div class="fret-cell"><span class="note ${className}">${label}</span></div>`;
-    }
-    html+=`</div>`;
-  });
-  html+=`</div>`;
-  els.fretboard.innerHTML=html;
-  els.summaryTitle.textContent=title;
-  els.summaryNotes.textContent=details;
-  els.explanation.textContent=why;
-}
-function renderNoteMap(){
-  const key=els.keySelect.value, scaleDef=scaleDefs[els.scaleSelect.value], chordDef=chordDefs[els.chordSelect.value], rootIndex=noteIndex(key);
-  const scaleNotes=scaleDef.intervals.map(i=>noteName(rootIndex+i,key));
-  const chordNotes=chordDef.intervals.map(i=>noteName(rootIndex+i,key));
-  els.summaryTitle.textContent=`${key} ${scaleDef.name}`;
-  els.summaryNotes.textContent=`Scale notes: ${scaleNotes.join("  ")}`+(chordDef.intervals.length?` | ${key} ${chordDef.name} chord tones: ${chordNotes.join("  ")}`:"");
-  els.explanation.textContent=scaleDef.why+(chordDef.intervals.length?` The ${key} ${chordDef.name} overlay highlights ${chordDef.formula}: ${chordNotes.join(", ")}.`:"");
-
-  let html=`<div class="fretboard"><div class="fret-row"><div></div>`;
-  for(let fret=0; fret<=maxFret; fret++) html+=`<div class="fret-number">${fret}</div>`;
-  html+=`</div>`;
-  tuning.forEach(openString=>{
-    html+=`<div class="fret-row"><div class="string-label">${openString}</div>`;
-    const openIndex=noteIndex(openString);
-    for(let fret=0; fret<=maxFret; fret++){
-      const currentIndex=(openIndex+fret)%12;
-      const interval=(currentIndex-rootIndex+12)%12;
-      const inScale=scaleDef.intervals.includes(interval), inChord=chordDef.intervals.includes(interval), isRoot=interval===0;
-      const className=isRoot?"root":inChord?"chord":inScale?"scale":"outside";
-      let label=els.displaySelect.value==="degrees"?(intervalLabel(interval,scaleDef)||"."):noteName(currentIndex,key);
-      if(!inScale && !inChord && !isRoot) label=".";
-      html+=`<div class="fret-cell"><span class="note ${className}">${label}</span></div>`;
-    }
-    html+=`</div>`;
-  });
-  html+=`</div>`;
-  els.fretboard.innerHTML=html;
-}
-function renderFingering(){
-  const root=els.chordRootSelect.value, quality=els.fingeringTypeSelect.value;
-  const shapes=generateShapes(root, quality);
-  if(shapeIndex>=shapes.length) shapeIndex=0;
-  const shape=shapes[shapeIndex];
-  els.shapeName.textContent=`${shape.name} (${shapeIndex+1} of ${shapes.length})`;
-  els.shapeDetails.textContent=shape.note;
-  drawFretboardWithShape(shape, `${root}${chordDefs[quality].suffix} chord fingering`, `Suggested fingering restored: numbers indicate fingers; 0 = open; x = muted; ● = barre/position note.`, `This view answers the physical question: how do I play ${root}${chordDefs[quality].suffix}? Use previous/next to step through practical shapes.`);
-}
-const progressions={
-  classic:{name:"Classic rock / folk", numerals:["I","IV","V","I"], note:"Simple, strong and familiar."},
-  pop:{name:"Pop / anthem", numerals:["I","V","vi","IV"], note:"The big modern pop progression."},
-  sad:{name:"Sad / emotional", numerals:["vi","IV","I","V"], note:"Starts on the relative minor for emotional pull."},
-  blues:{name:"Blues", numerals:["I7","IV7","I7","V7"], note:"Dominant 7 chords give the blues flavor."},
-  funk:{name:"Funk / Dorian-ish", numerals:["i7","IV7","i7","bVII"], note:"Minor 7 center with a brighter, funkier movement."}
-};
-const numeralMap={I:[0,"major"],i:[0,"minor"],"i7":[0,"minor7"],"I7":[0,"dominant7"],IV:[5,"major"],"IV7":[5,"dominant7"],V:[7,"major"],"V7":[7,"dominant7"],vi:[9,"minor"],"bVII":[10,"major"]};
-function progressionChords(){
-  const key=els.progressionKeySelect.value, prog=progressions[els.musicTypeSelect.value], rootIndex=noteIndex(key);
-  return prog.numerals.map(n=>{const [interval,quality]=numeralMap[n]; const root=noteName(rootIndex+interval,key); return {numeral:n, root:cleanRoot(root), displayRoot:root, quality};});
-}
-function renderProgression(){
-  const key=els.progressionKeySelect.value, prog=progressions[els.musicTypeSelect.value], chords=progressionChords();
-  if(progressionChordIndex>=chords.length) progressionChordIndex=0;
-  const current=chords[progressionChordIndex];
-  const targetPos=els.positionSelect.value==="open"?0:Number(els.positionSelect.value);
-  const shapes=generateShapes(current.root, current.quality);
-  const closest=closestShapeIndex(shapes,targetPos);
-  let idx=(closest+progressionShapeOffset)%shapes.length; if(idx<0) idx+=shapes.length;
-  const shape=shapes[idx];
-  const chordLabels=chords.map((c,i)=>`${i===progressionChordIndex?"▶ ":""}${c.displayRoot}${chordDefs[c.quality].suffix}`).join(" → ");
-  els.progressionName.textContent=`${key} ${prog.name}`;
-  els.progressionDetails.textContent=chordLabels + ` | ${els.positionSelect.options[els.positionSelect.selectedIndex].text}`;
-  drawFretboardWithShape(shape, `${current.displayRoot}${chordDefs[current.quality].suffix} in ${key} ${prog.name}`, chordLabels, `${prog.note} The app is choosing a nearby shape so the progression stays in the same fretboard area. Fingering numbers are shown where practical; ● usually means a barre or position note.`);
-}
-function render(){setVisibleControls(); if(els.viewModeSelect.value==="map")renderNoteMap(); if(els.viewModeSelect.value==="fingering")renderFingering(); if(els.viewModeSelect.value==="progression")renderProgression();}
-[els.keySelect,els.scaleSelect,els.chordSelect,els.displaySelect,els.viewModeSelect,els.chordRootSelect,els.fingeringTypeSelect,els.progressionKeySelect,els.musicTypeSelect,els.positionSelect].forEach(el=>el.addEventListener("change",()=>{ if(el===els.chordRootSelect || el===els.fingeringTypeSelect) shapeIndex=0; if([els.progressionKeySelect,els.musicTypeSelect,els.positionSelect].includes(el)){progressionChordIndex=0; progressionShapeOffset=0;} render();}));
-els.prevShape.addEventListener("click",()=>{const shapes=generateShapes(els.chordRootSelect.value,els.fingeringTypeSelect.value); shapeIndex=(shapeIndex-1+shapes.length)%shapes.length; render();});
-els.nextShape.addEventListener("click",()=>{const shapes=generateShapes(els.chordRootSelect.value,els.fingeringTypeSelect.value); shapeIndex=(shapeIndex+1)%shapes.length; render();});
-els.prevProgressionChord.addEventListener("click",()=>{const chords=progressionChords(); progressionChordIndex=(progressionChordIndex-1+chords.length)%chords.length; progressionShapeOffset=0; render();});
-els.nextProgressionChord.addEventListener("click",()=>{const chords=progressionChords(); progressionChordIndex=(progressionChordIndex+1)%chords.length; progressionShapeOffset=0; render();});
-els.prevProgressionShape.addEventListener("click",()=>{progressionShapeOffset--; render();});
-els.nextProgressionShape.addEventListener("click",()=>{progressionShapeOffset++; render();});
-render();
+const N=["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"], NF=["C","Db","D","Eb","E","F","Gb","G","Ab","A","Bb","B"];
+const KEYS=["C","C#","Db","D","D#","Eb","E","F","F#","Gb","G","G#","Ab","A","A#","Bb","B"], ROOTS=["C","D","E","F","G","A","B"], TUNING=["E","B","G","D","A","E"];
+const scales={major:["Major scale",[0,2,4,5,7,9,11],["1","2","3","4","5","6","7"],"The major scale is the full seven-note home map. Chords, pentatonics and modes are filters on this same map."],minor:["Natural minor",[0,2,3,5,7,8,10],["1","2","b3","4","5","b6","b7"],"Natural minor changes the 3rd, 6th and 7th compared with major."],majorPent:["Major pentatonic",[0,2,4,7,9],["1","2","3","5","6"],"Major pentatonic removes the 4th and 7th from major. It is a safer, simpler route."],minorPent:["Minor pentatonic",[0,3,5,7,10],["1","b3","4","5","b7"],"Minor pentatonic gives the essential rock/blues minor sound."],blues:["Minor blues",[0,3,5,6,7,10],["1","b3","4","b5","5","b7"],"The blues scale is minor pentatonic plus the flat 5, a classic tension note."],mixolydian:["Mixolydian",[0,2,4,5,7,9,10],["1","2","3","4","5","6","b7"],"Mixolydian is major with a flat 7."],dorian:["Dorian",[0,2,3,5,7,9,10],["1","2","b3","4","5","6","b7"],"Dorian is minor with a natural 6."]};
+const chords={none:["None","",[],""],major:["Major","",[0,4,7],"1-3-5"],minor:["Minor","m",[0,3,7],"1-b3-5"],minor7:["Minor 7","m7",[0,3,7,10],"1-b3-5-b7"],major7:["Major 7","maj7",[0,4,7,11],"1-3-5-7"],dominant7:["Dominant 7","7",[0,4,7,10],"1-3-5-b7"],sus2:["Sus2","sus2",[0,2,7],"1-2-5"],sus4:["Sus4","sus4",[0,5,7],"1-4-5"]};
+const $=id=>document.getElementById(id), els={};["mode","mapControls","chordControls","progControls","key","scale","overlay","display","pattern","mapWindow","chordRoot","chordType","shapeStyle","chordWindow","prevShape","nextShape","shapeName","shapeText","progKey","progType","progStyle","near","prevChord","nextChord","prevProgShape","nextProgShape","progName","progText","title","subtitle","whyTitle","why","board"].forEach(id=>els[id]=$(id));
+let shapeIdx=0, progChordIdx=0, progShapeOffset=0;
+KEYS.forEach(k=>{["key","progKey"].forEach(id=>{let o=document.createElement("option");o.value=k;o.textContent=k;els[id].appendChild(o)})}); ROOTS.forEach(r=>{let o=document.createElement("option");o.value=r;o.textContent=r;els.chordRoot.appendChild(o)});
+els.key.value=els.progKey.value=els.chordRoot.value="A";
+function flats(k){return k.includes("b")||["F","Bb","Eb","Ab","Db","Gb"].includes(k)} function idx(n){let i=N.indexOf(n);return i>=0?i:NF.indexOf(n)} function nm(i,k="C"){let a=flats(k)?NF:N;return a[((i%12)+12)%12]} function clean(r){return r.replace("#","").replace("b","")} function tr(x,o){return typeof x==="number"?x+o:x} function pos(f){let a=f.filter(x=>typeof x==="number"&&x>0);return a.length?Math.min(...a):0} function maxf(f){let a=f.filter(x=>typeof x==="number");return a.length?Math.max(...a):0}
+const base={E:{major:[[0,2,2,1,0,0],["","2","3","1","",""]],minor:[[0,2,2,0,0,0],["","2","3","","",""]],minor7:[[0,2,0,0,0,0],["","2","","","",""]],major7:[[0,2,1,1,0,0],["","3","1","2","",""]],dominant7:[[0,2,0,1,0,0],["","2","","1","",""]],sus2:[[0,2,4,4,0,0],["","1","3","4","",""]],sus4:[[0,2,2,2,0,0],["","1","2","3","",""]]},A:{major:[["x",0,2,2,2,0],["","","1","2","3",""]],minor:[["x",0,2,2,1,0],["","","2","3","1",""]],minor7:[["x",0,2,0,1,0],["","","2","","1",""]],major7:[["x",0,2,1,2,0],["","","2","1","3",""]],dominant7:[["x",0,2,0,2,0],["","","2","","3",""]],sus2:[["x",0,2,2,0,0],["","","1","2","",""]],sus4:[["x",0,2,2,3,0],["","","1","2","3",""]]},D:{major:[["x","x",0,2,3,2],["","","","1","3","2"]],minor:[["x","x",0,2,3,1],["","","","2","3","1"]],minor7:[["x","x",0,2,1,1],["","","","2","1","1"]],major7:[["x","x",0,2,2,2],["","","","1","2","3"]],dominant7:[["x","x",0,2,1,2],["","","","2","1","3"]],sus2:[["x","x",0,2,3,0],["","","","1","3",""]],sus4:[["x","x",0,2,3,3],["","","","1","3","4"]]}};
+const manual=[{root:"G",q:"major",style:"easy",name:"G easy two-finger",frets:[3,"x","x","x",3,3],fingers:["2","","","","3","4"],note:"Cheat/practical G: mainly the 3rd fret on the top two strings plus low G."},{root:"G",q:"major",style:"easy",name:"G easy high strings",frets:["x","x","x",0,3,3],fingers:["","","","","3","4"],note:"Very small G color shape. Useful when changing quickly."},{root:"A",q:"major",style:"easy",name:"A one-finger mini barre",frets:["x",0,2,2,2,0],fingers:["","","1","1","1",""],note:"Easy A using one finger across D/G/B strings if comfortable."},{root:"C",q:"major",style:"easy",name:"C small three-string",frets:["x","x","x",0,1,0],fingers:["","","","","1",""],note:"Tiny C color shape on top strings."}];
+function shapes(root,q,style="all"){let out=[];manual.forEach(s=>{if(s.root===root&&s.q===q&&(style==="all"||style==="easy"))out.push({...s,quality:q,position:pos(s.frets)})}); if(style==="all"||style==="open"||style==="movable"){for(let fam of ["E","A","D"]){let b=base[fam][q]; if(!b)continue; for(let off=0;off<=12;off++){if((idx(fam)+off)%12!==idx(root))continue; let frets=b[0].map(x=>tr(x,off)); if(maxf(frets)>17)continue; let st=off===0?"open":"movable"; if(style!=="all"&&style!==st)continue; out.push({root,quality:q,style:st,name:`${root}${chords[q][1]} ${fam}-shape`,frets,fingers:[...b[1]],note:`${fam}-family shape, ${off===0?"open position":"around fret "+off}. Numbers are suggested fingers; ● may mean barre/repeated finger.`,position:pos(frets)})}}} if(style==="all"||style==="triad"){[0,3,5,7,10,12].forEach(start=>{let frets=["x","x","x","x","x","x"], ok=true, ints=chords[q][2]||chords.major[2], ri=idx(root); [3,4,5].forEach(si=>{let open=["E","A","D","G","B","E"][si], oi=idx(open), found=null; for(let f=start;f<=start+4;f++){if(ints.includes(((oi+f)-ri+120)%12)){found=f;break}} if(found===null)ok=false; frets[si]=found}); if(ok&&maxf(frets)<=17)out.push({root,quality:q,style:"triad",name:`${root}${chords[q][1]} small triad`,frets,fingers:["","","","●","●","●"],note:"Small three-string triad. Good for compact progressions.",position:pos(frets)})})} let seen=new Set(); out=out.filter(s=>{let k=s.frets.join(","); if(seen.has(k))return false; seen.add(k); return true}).sort((a,b)=>a.position-b.position); return out.length?out:shapes(root,"major","all")}
+function closest(arr,target){let b=0,score=1e9;arr.forEach((s,i)=>{let d=Math.abs(s.position-target);if(d<score){score=d;b=i}});return b}
+function setVis(){let m=els.mode.value;els.mapControls.classList.toggle("hidden",m!=="map");els.chordControls.classList.toggle("hidden",m!=="chord");els.progControls.classList.toggle("hidden",m!=="progression")}
+function win(v,shape=null){if(v==="all")return{start:0,end:15,all:true}; if(v==="auto"&&shape){let p=pos(shape.frets);let s=Math.max(0,Math.min(12,p-1));return{start:s,end:s+5}} let s=Number(v||0); return{start:s,end:s+5}} function frets(w){let a=[];for(let f=w.start;f<=w.end;f++)a.push(f);return a}
+function boardStart(w){let fs=frets(w);document.documentElement.style.setProperty("--frets",fs.length);return `<div class="fretboard ${w.all?"all":""}"><div class="row"><div></div>${fs.map(f=>`<div class="fret">${f}</div>`).join("")}</div>`}
+function drawShape(s,title,sub,why,wv="auto"){let w=win(wv,s),fs=frets(w),html=boardStart(w),vf=[...s.frets].reverse(),vg=[...s.fingers].reverse();TUNING.forEach((open,vi)=>{html+=`<div class="row"><div class="string">${open}</div>`;let tf=vf[vi],fg=vg[vi];fs.forEach(f=>{let lab=".",cl="outside"; if(tf==="x"&&f===w.start){lab="x";cl="muted"}else if(tf===f){lab=tf===0?"0":(fg||"●");cl="fingering"; if(tf===0)cl+=" open-string"} html+=`<div class="cell"><span class="dot ${cl}">${lab}</span></div>`});html+=`</div>`});html+=`</div>`;els.board.innerHTML=html;els.title.textContent=title;els.subtitle.textContent=sub;els.whyTitle.textContent="Why this works";els.why.textContent=why}
+function pRange(p,rootF){if(p==="none")return null; if(p==="p1")return{start:Math.max(0,rootF-1),end:rootF+3,name:"Pattern 1 / low route"}; if(p==="p2")return{start:rootF+3,end:rootF+7,name:"Pattern 2 / middle route"}; return{start:rootF+7,end:rootF+11,name:"Pattern 3 / upper route"}}
+function renderMap(){let key=els.key.value,sc=scales[els.scale.value],ch=chords[els.overlay.value],ri=idx(key),w=win(els.mapWindow.value),fs=frets(w),rootF=fs.find(f=>(idx("E")+f)%12===ri)??w.start,pr=pRange(els.pattern.value,rootF);let scaleNotes=sc[1].map(i=>nm(ri+i,key)),chNotes=ch[2].map(i=>nm(ri+i,key));els.title.textContent=`${key} ${sc[0]}`;els.subtitle.textContent=`Scale notes: ${scaleNotes.join("  ")}`+(ch[2].length?` | ${key} ${ch[0]} tones: ${chNotes.join("  ")}`:"");let why=sc[3]; if(ch[2].length)why+=` The ${key} ${ch[0]} overlay highlights ${ch[3]}: ${chNotes.join(", ")}.`; if(pr)why+=` ${pr.name} is a brighter pathway, not a different scale. Resolving to ${key}, the root, usually sounds finished because it returns the ear to home.`;els.whyTitle.textContent=pr?"Pattern and root resolution":"Why this works";els.why.textContent=why;let html=boardStart(w);TUNING.forEach(open=>{html+=`<div class="row"><div class="string">${open}</div>`;let oi=idx(open);fs.forEach(f=>{let ci=(oi+f)%12,inter=(ci-ri+12)%12,inScale=sc[1].includes(inter),inChord=ch[2].includes(inter),isRoot=inter===0,inPat=pr&&inScale&&f>=pr.start&&f<=pr.end,cl=isRoot?"root":inChord?"chord":inPat?"pattern":inScale?"scale":"outside";let lab=els.display.value==="degrees"?(sc[2][sc[1].indexOf(inter)]||"."):nm(ci,key);if(!inScale&&!inChord&&!isRoot)lab=".";html+=`<div class="cell"><span class="dot ${cl}">${lab}</span></div>`});html+=`</div>`});html+=`</div>`;els.board.innerHTML=html}
+function renderChord(){let r=els.chordRoot.value,q=els.chordType.value,st=els.shapeStyle.value,arr=shapes(r,q,st); if(shapeIdx>=arr.length)shapeIdx=0;let s=arr[shapeIdx];els.shapeName.textContent=`${s.name} (${shapeIdx+1} of ${arr.length})`;els.shapeText.textContent=s.note;drawShape(s,`${r}${chords[q][1]} chord fingering`,`Numbers indicate fingers; 0 = open; x = muted; ● = barre/compact note.`,`Shape Style lets you choose practical cheats, open grips, movable shapes, or compact triads.`,els.chordWindow.value)}
+const progs={classic:["Classic rock / folk",["I","IV","V","I"],"Simple, strong and familiar."],pop:["Pop / anthem",["I","V","vi","IV"],"The big modern pop progression."],sad:["Sad / emotional",["vi","IV","I","V"],"Starts on the relative minor for emotional pull."],blues:["Blues",["I7","IV7","I7","V7"],"Dominant 7 chords give the blues flavor."],funk:["Funk / Dorian-ish",["i7","IV7","i7","bVII"],"Minor 7 center with a brighter, funkier movement."]};
+const roman={I:[0,"major"],i:[0,"minor"],"i7":[0,"minor7"],"I7":[0,"dominant7"],IV:[5,"major"],"IV7":[5,"dominant7"],V:[7,"major"],"V7":[7,"dominant7"],vi:[9,"minor"],bVII:[10,"major"]};
+function progChords(){let key=els.progKey.value,p=progs[els.progType.value],ri=idx(key);return p[1].map(n=>{let [it,q]=roman[n],root=nm(ri+it,key);return{n,root:clean(root),display:root,q}})}
+function renderProg(){let key=els.progKey.value,p=progs[els.progType.value],cs=progChords();if(progChordIdx>=cs.length)progChordIdx=0;let c=cs[progChordIdx],target=Number(els.near.value),arr=shapes(c.root,c.q,els.progStyle.value),base=closest(arr,target);let si=(base+progShapeOffset)%arr.length;if(si<0)si+=arr.length;let s=arr[si],labels=cs.map((x,i)=>`${i===progChordIdx?"▶ ":""}${x.display}${chords[x.q][1]}`).join(" → ");els.progName.textContent=`${key} ${p[0]}`;els.progText.textContent=labels;drawShape(s,`${c.display}${chords[c.q][1]} in ${key} ${p[0]}`,labels,`${p[2]} The app chooses a nearby shape so the progression stays in the same fretboard area. Use Chord to move through the progression and Shape to try alternatives.`,String(Math.max(0,target-1)))}
+function render(){setVis(); if(els.mode.value==="map")renderMap(); else if(els.mode.value==="chord")renderChord(); else renderProg()}
+["key","scale","overlay","display","pattern","mapWindow","mode","chordRoot","chordType","shapeStyle","chordWindow","progKey","progType","progStyle","near"].forEach(id=>els[id].addEventListener("change",()=>{if(["chordRoot","chordType","shapeStyle"].includes(id))shapeIdx=0;if(["progKey","progType","progStyle","near"].includes(id)){progChordIdx=0;progShapeOffset=0}render()}));
+els.prevShape.onclick=()=>{let a=shapes(els.chordRoot.value,els.chordType.value,els.shapeStyle.value);shapeIdx=(shapeIdx-1+a.length)%a.length;render()};els.nextShape.onclick=()=>{let a=shapes(els.chordRoot.value,els.chordType.value,els.shapeStyle.value);shapeIdx=(shapeIdx+1)%a.length;render()};els.prevChord.onclick=()=>{let a=progChords();progChordIdx=(progChordIdx-1+a.length)%a.length;progShapeOffset=0;render()};els.nextChord.onclick=()=>{let a=progChords();progChordIdx=(progChordIdx+1)%a.length;progShapeOffset=0;render()};els.prevProgShape.onclick=()=>{progShapeOffset--;render()};els.nextProgShape.onclick=()=>{progShapeOffset++;render()};render();
