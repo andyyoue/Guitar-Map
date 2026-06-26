@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#34251d" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-title" content="Note Map" />
-<title>Note Map Guitar V2.1.2</title>
+<title>Note Map Guitar V2.1.3</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#f6f3ee;color:#221f1c;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
@@ -15,58 +15,59 @@ header{display:flex;justify-content:space-between;gap:12px;margin-bottom:10px}
 h1{font-size:28px;line-height:1.05;margin:0}
 header p{margin:4px 0 0;color:#6d6258}
 header b{background:#34251d;color:#fff8ef;border-radius:12px;padding:8px 10px;height:max-content}
-.hint{display:none;background:#fff8df;border:1px solid #eadfce;color:#5b4730;padding:10px 12px;border-radius:14px;margin-bottom:10px;font-size:14px;font-weight:800}
-.card{background:#fff;padding:11px;border-radius:16px;box-shadow:0 2px 12px #0000000f;margin-bottom:10px}
+.hint{display:none;background:#fff8df;border:1px solid #eadfce;color:#5b4730;padding:10px 12px;border-radius:12px;margin-bottom:10px;font-size:14px;font-weight:800}
+.card{background:#fff;padding:11px;border-radius:12px;box-shadow:0 2px 12px #0000000f;margin-bottom:10px}
 .mode{max-width:360px}
 .controls{display:grid;grid-template-columns:repeat(4,minmax(135px,1fr));gap:9px}
 .hidden{display:none!important}
 label{display:flex;flex-direction:column;gap:6px;font-weight:800;font-size:13px}
 select,button{font-size:16px;padding:9px;border:1px solid #cfc7bf;border-radius:10px;background:#fffdfa;min-height:42px}
-button{font-weight:900}
+button{font-weight:900;cursor:pointer}
 .buttons{display:flex;gap:8px;align-items:end}
-.note-card{background:#fff8ef;border:1px solid #eadfce;border-radius:12px;padding:10px}
+.note-card{background:#fff8ef;border:1px solid #eadfce;border-radius:10px;padding:10px}
 .note-card p{margin:4px 0 0;color:#5b5148}
-.summary{display:block}
 .summary h2{font-size:19px;margin:0 0 4px}
 .summary p,.explain p,.install p{margin:0;color:#4d453e}
-.legend{display:flex;flex-wrap:wrap;gap:8px 12px;font-size:13px;margin-top:8px}
-.legend span{display:inline-flex;align-items:center;gap:6px}
-.legend i{width:16px;height:16px;border-radius:5px;border:1px solid #0002;display:inline-block}
-.neck{overflow-x:auto;background:#34251d;padding:12px;border-radius:18px;box-shadow:inset 0 0 0 1px #ffffff14;margin-bottom:10px;-webkit-overflow-scrolling:touch}
-.fretboard{min-width:560px}
-.fretboard.all{min-width:980px}
-.row{display:grid;grid-template-columns:42px var(--nut-width,34px) repeat(var(--frets),minmax(54px,1fr));align-items:center}
-.cell,.string,.fret,.nuthead{min-height:41px;display:flex;align-items:center;justify-content:center}
+.prog-line{display:flex;flex-wrap:wrap;gap:8px;margin-top:9px}
+.prog-line button{border-radius:999px;min-height:36px;padding:7px 13px;background:#fffdfa}
+.prog-line button.active{background:#34251d;color:#fff8ef;border-color:#34251d}
+.neck{overflow-x:auto;background:#34251d;padding:10px;border-radius:14px;box-shadow:inset 0 0 0 1px #ffffff14;margin-bottom:10px;-webkit-overflow-scrolling:touch}
+.fretboard{min-width:520px}
+.fretboard.all{min-width:930px}
+.row{display:grid;grid-template-columns:38px 31px repeat(var(--frets),minmax(47px,1fr));align-items:center}
+.cell,.string,.fret,.nuthead{min-height:39px;display:flex;align-items:center;justify-content:center}
 .fret{color:#e8ded5;font-size:12px;font-weight:800}
-.nuthead{color:#e8ded5;font-size:11px;font-weight:900}
+.nuthead{color:#e8ded5;font-size:10px;font-weight:900;text-transform:uppercase}
 .string{color:#f8efe7;font-weight:900}
 .cell{border-left:2px solid #ffffff3b;border-bottom:2px solid #ffffff2e}
 .nutcell{border-left:5px solid #f5eadf;background:#2b1f18}
 .row:last-child .cell{border-bottom:none}
-.dot{width:31px;height:29px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:12px;border:2px solid #fffc}
-.openmark{width:25px;height:25px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:12px;border:2px solid #f5eadf;background:transparent;color:#f5eadf}
-.mutemark{width:25px;height:25px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:12px;border:2px solid #8b7a70;background:#1f1712;color:#8b7a70}
+.dot{width:30px;height:28px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:12px;border:2px solid #fffc}
+.open-note{width:24px;min-width:24px;height:24px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:10px;border:1px solid #ffffff66}
+.openmark,.mutemark{width:24px;height:24px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:12px;border:2px solid #f5eadf}
+.openmark{background:transparent;color:#f5eadf}
+.mutemark{background:#1f1712;color:#9b897d;border-color:#9b897d}
 .root{background:#ffdd68;color:#221f1c}
 .chord{background:#82c7ff;color:#09263e}
 .scale{background:#a6e6a2;color:#173817}
-.pattern{background:#16e07c;color:#052812;box-shadow:0 0 0 5px #16e07c55;border-color:#ecfff4}
+.pattern{background:#13e87c;color:#042411;box-shadow:0 0 0 5px #13e87c66;border-color:#f1fff7}
 .fingering{background:#f7a6ff;color:#321536}
 .outside{background:#5b463b;color:#dacdc2;border-color:#ffffff47;opacity:.72}
-.ghost{opacity:.14!important;filter:grayscale(1) saturate(.1);background:#625953!important;color:#b7aaa0!important;border-color:#ffffff1f!important;box-shadow:none!important}
-.muted{background:#1f1712;color:#8b7a70;border-color:#ffffff1f}
-.explain h2,.install h2{margin:0 0 6px;font-size:18px}
-.chipbar{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
-.chip{border:1px solid #cfc7bf;background:#fffdfa;border-radius:999px;min-height:36px;padding:7px 12px;font-weight:900}
-.chip.active{background:#34251d;color:#fff8ef;border-color:#34251d}
+.ghost{opacity:.11!important;filter:grayscale(1) saturate(.08);background:#625953!important;color:#b7aaa0!important;border-color:#ffffff1e!important;box-shadow:none!important}
+.muted{background:#1f1712;color:#9b897d;border-color:#ffffff1f}
+.explain h2{margin:0 0 6px;font-size:18px}
 .bottom-legend{position:sticky;bottom:0;z-index:5;border:1px solid #eadfce;background:#fffdf8ee;backdrop-filter:blur(8px)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 12px;font-size:13px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:16px;height:16px;border-radius:5px;border:1px solid #0002;display:inline-block}
 @media(max-width:940px){.controls{grid-template-columns:1fr 1fr}.buttons{align-items:stretch;flex-direction:column}}
-@media(max-width:620px){.controls{grid-template-columns:1fr}.mode{max-width:none}h1{font-size:24px}.app{padding-left:8px;padding-right:8px}.neck{padding:8px}.hint{display:block}.fretboard{min-width:530px}.row{grid-template-columns:38px var(--nut-width,30px) repeat(var(--frets),minmax(49px,1fr))}.cell,.string,.fret,.nuthead{min-height:38px}.dot{width:28px;height:26px;font-size:11px}}
-@media(orientation:landscape) and (max-height:520px){header,header p,.install{display:none}.app{padding-top:6px}.controls{grid-template-columns:repeat(6,minmax(115px,1fr))}.card{margin-bottom:7px;padding:8px}.summary h2{font-size:16px}.cell,.string,.fret,.nuthead{min-height:34px}.dot{width:27px;height:25px;font-size:11px}.neck{padding:7px}.row{grid-template-columns:38px var(--nut-width,28px) repeat(var(--frets),minmax(46px,1fr))}}
+@media(max-width:620px){.controls{grid-template-columns:1fr}.mode{max-width:none}h1{font-size:24px}.app{padding-left:8px;padding-right:8px}.neck{padding:8px}.hint{display:block}.fretboard{min-width:500px}.row{grid-template-columns:36px 28px repeat(var(--frets),minmax(43px,1fr))}.cell,.string,.fret,.nuthead{min-height:37px}.dot{width:27px;height:25px;font-size:11px}.open-note,.openmark,.mutemark{width:22px;height:22px;font-size:10px}}
+@media(orientation:landscape) and (max-height:520px){header,header p{display:none}.app{padding-top:6px}.controls{grid-template-columns:repeat(6,minmax(112px,1fr))}.card{margin-bottom:7px;padding:8px}.summary h2{font-size:16px}.cell,.string,.fret,.nuthead{min-height:33px}.dot{width:26px;height:24px;font-size:11px}.neck{padding:7px}.row{grid-template-columns:36px 26px repeat(var(--frets),minmax(42px,1fr))}}
 </style>
 </head>
 <body>
 <main class="app">
-<header><div><h1>Note Map Guitar</h1><p>One fretboard. One question. Everything else is a filter.</p></div><b>V2.1.2</b></header>
+<header><div><h1>Note Map Guitar</h1><p>One fretboard. One question. Everything else is a filter.</p></div><b>V2.1.3</b></header>
 <section class="hint">Phone tip: rotate sideways. Pattern mode works best with Fret Window set to Auto.</section>
 
 <section class="card mode"><label>View Mode<select id="mode"><option value="map">Note map</option><option value="chord">Chord fingering</option><option value="progression">Progression</option></select></label></section>
@@ -77,14 +78,14 @@ button{font-weight:900}
 <label>Chord overlay<select id="overlay"><option value="major">Major</option><option value="minor">Minor</option><option value="minor7">Minor 7</option><option value="major7">Major 7</option><option value="dominant7">Dominant 7</option><option value="sus2">Sus2</option><option value="sus4">Sus4</option><option value="none">None</option></select></label>
 <label>Display<select id="display"><option value="notes">Note names</option><option value="degrees">Scale degrees</option></select></label>
 <label>Pattern highlight<select id="pattern"><option value="none">None</option><option value="p1">Pattern 1</option><option value="p2">Pattern 2</option><option value="p3">Pattern 3</option><option value="p4">Pattern 4</option><option value="p5">Pattern 5</option></select></label>
-<label>Fret window<select id="mapWindow"><option value="auto">Auto</option><option value="0">Open–6</option><option value="3">3–9</option><option value="5">5–11</option><option value="7">7–13</option><option value="10">10–16</option><option value="all">All 0–15</option></select></label>
+<label>Fret window<select id="mapWindow"><option value="auto">Auto</option><option value="0">Open-7</option><option value="3">3-9</option><option value="5">5-11</option><option value="7">7-13</option><option value="10">10-16</option><option value="all">All 0-15</option></select></label>
 </section>
 
 <section id="chordControls" class="card controls hidden">
 <label>Root<select id="chordRoot"></select></label>
 <label>Type<select id="chordType"><option value="major">Major</option><option value="minor">Minor</option><option value="minor7">Minor 7</option><option value="major7">Major 7</option><option value="dominant7">Dominant 7</option><option value="sus2">Sus2</option><option value="sus4">Sus4</option></select></label>
 <label>Shape style<select id="shapeStyle"><option value="all">All practical</option><option value="easy">Easy / cheat</option><option value="open">Open</option><option value="movable">Movable / barre</option><option value="triad">Small triads</option></select></label>
-<label>Fret window<select id="chordWindow"><option value="auto">Auto</option><option value="0">Open–6</option><option value="3">3–9</option><option value="5">5–11</option><option value="7">7–13</option><option value="10">10–16</option><option value="12">12–18</option></select></label>
+<label>Fret window<select id="chordWindow"><option value="auto">Auto</option><option value="0">Open-7</option><option value="3">3-9</option><option value="5">5-11</option><option value="7">7-13</option><option value="10">10-16</option><option value="12">12-18</option></select></label>
 <div class="buttons"><button id="prevShape">◀ Previous</button><button id="nextShape">Next ▶</button></div>
 <div class="note-card"><strong id="shapeName"></strong><p id="shapeText"></p></div>
 </section>
@@ -96,57 +97,204 @@ button{font-weight:900}
 <label>Keep me near<select id="near"><option value="0">Open / low</option><option value="5">5th fret</option><option value="9">9th fret</option><option value="12">12th fret</option><option value="14">14th fret</option></select></label>
 <div class="buttons"><button id="prevChord">◀ Chord</button><button id="nextChord">Chord ▶</button></div>
 <div class="buttons"><button id="prevProgShape">◀ Shape</button><button id="nextProgShape">Shape ▶</button></div>
-<div class="note-card"><strong id="progName"></strong><p id="progText"></p><div id="progChips" class="chipbar"></div></div>
 </section>
 
-<section class="card summary"><div><h2 id="title"></h2><p id="subtitle"></p></div></section>
+<section class="card summary"><h2 id="title"></h2><p id="subtitle"></p><div id="progLine" class="prog-line hidden"></div></section>
 <section class="neck"><div id="board"></div></section>
 <section class="card explain"><h2 id="whyTitle">Why this works</h2><p id="why"></p></section>
 
 <section class="card bottom-legend">
-<div class="legend"><span><i class="root"></i>Root</span><span><i class="chord"></i>Chord</span><span><i class="scale"></i>Scale</span><span><i class="pattern"></i>Pattern</span><span><i class="outside"></i>Outside</span><span><i class="fingering"></i>Fingering</span><span><span class="openmark">O</span>Open</span><span><span class="mutemark">X</span>Muted</span></div>
+<div id="legend" class="legend"></div>
 </section>
 </main>
 <script>
 const N=["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"], NF=["C","Db","D","Eb","E","F","Gb","G","Ab","A","Bb","B"];
-const KEYS=["C","C#","Db","D","D#","Eb","E","F","F#","Gb","G","G#","Ab","A","A#","Bb","B"], ROOTS=["C","D","E","F","G","A","B"], TUNING=["E","B","G","D","A","E"];
-const scales={major:["Major scale",[0,2,4,5,7,9,11],["1","2","3","4","5","6","7"],"The major scale is the full seven-note home map. Chords, pentatonics and modes are filters on this same map."],minor:["Natural minor",[0,2,3,5,7,8,10],["1","2","b3","4","5","b6","b7"],"Natural minor changes the 3rd, 6th and 7th compared with major."],majorPent:["Major pentatonic",[0,2,4,7,9],["1","2","3","5","6"],"Major pentatonic removes the 4th and 7th from major. It is a safer, simpler route."],minorPent:["Minor pentatonic",[0,3,5,7,10],["1","b3","4","5","b7"],"Minor pentatonic gives the essential rock/blues minor sound."],blues:["Minor blues",[0,3,5,6,7,10],["1","b3","4","b5","5","b7"],"The blues scale is minor pentatonic plus the flat 5, a classic tension note."],mixolydian:["Mixolydian",[0,2,4,5,7,9,10],["1","2","3","4","5","6","b7"],"Mixolydian is major with a flat 7."],dorian:["Dorian",[0,2,3,5,7,9,10],["1","2","b3","4","5","6","b7"],"Dorian is minor with a natural 6."]};
-const chords={none:["None","",[],""],major:["Major","",[0,4,7],"1-3-5"],minor:["Minor","m",[0,3,7],"1-b3-5"],minor7:["Minor 7","m7",[0,3,7,10],"1-b3-5-b7"],major7:["Major 7","maj7",[0,4,7,11],"1-3-5-7"],dominant7:["Dominant 7","7",[0,4,7,10],"1-3-5-b7"],sus2:["Sus2","sus2",[0,2,7],"1-2-5"],sus4:["Sus4","sus4",[0,5,7],"1-4-5"]};
-const $=id=>document.getElementById(id), els={};["mode","mapControls","chordControls","progControls","key","scale","overlay","display","pattern","mapWindow","chordRoot","chordType","shapeStyle","chordWindow","prevShape","nextShape","shapeName","shapeText","progKey","progType","progStyle","near","prevChord","nextChord","prevProgShape","nextProgShape","progName","progText","progChips","title","subtitle","whyTitle","why","board"].forEach(id=>els[id]=$(id));
+const KEYS=["C","C#","Db","D","D#","Eb","E","F","F#","Gb","G","G#","Ab","A","A#","Bb","B"], TUNING=["E","B","G","D","A","E"];
+const scales={
+  major:["Major scale",[0,2,4,5,7,9,11],["1","2","3","4","5","6","7"],"The major scale is the full seven-note home map. Chords, pentatonics and modes are filters on this same map."],
+  minor:["Natural minor",[0,2,3,5,7,8,10],["1","2","b3","4","5","b6","b7"],"Natural minor changes the 3rd, 6th and 7th compared with major."],
+  majorPent:["Major pentatonic",[0,2,4,7,9],["1","2","3","5","6"],"Major pentatonic removes the 4th and 7th from major. It is a safer, simpler route."],
+  minorPent:["Minor pentatonic",[0,3,5,7,10],["1","b3","4","5","b7"],"Minor pentatonic gives the essential rock/blues minor sound."],
+  blues:["Minor blues",[0,3,5,6,7,10],["1","b3","4","b5","5","b7"],"The blues scale is minor pentatonic plus the flat 5, a classic tension note."],
+  mixolydian:["Mixolydian",[0,2,4,5,7,9,10],["1","2","3","4","5","6","b7"],"Mixolydian is major with a flat 7."],
+  dorian:["Dorian",[0,2,3,5,7,9,10],["1","2","b3","4","5","6","b7"],"Dorian is minor with a natural 6."]
+};
+const chords={
+  none:["None","",[],""], major:["Major","",[0,4,7],"1-3-5"], minor:["Minor","m",[0,3,7],"1-b3-5"],
+  minor7:["Minor 7","m7",[0,3,7,10],"1-b3-5-b7"], major7:["Major 7","maj7",[0,4,7,11],"1-3-5-7"],
+  dominant7:["Dominant 7","7",[0,4,7,10],"1-3-5-b7"], sus2:["Sus2","sus2",[0,2,7],"1-2-5"], sus4:["Sus4","sus4",[0,5,7],"1-4-5"]
+};
+const $=id=>document.getElementById(id), els={};
+["mode","mapControls","chordControls","progControls","key","scale","overlay","display","pattern","mapWindow","chordRoot","chordType","shapeStyle","chordWindow","prevShape","nextShape","shapeName","shapeText","progKey","progType","progStyle","near","prevChord","nextChord","prevProgShape","nextProgShape","progLine","title","subtitle","whyTitle","why","board","legend"].forEach(id=>els[id]=$(id));
 let shapeIdx=0, progChordIdx=0, progShapeOffset=0;
-KEYS.forEach(k=>{["key","progKey"].forEach(id=>{let o=document.createElement("option");o.value=k;o.textContent=k;els[id].appendChild(o)})}); ROOTS.forEach(r=>{let o=document.createElement("option");o.value=r;o.textContent=r;els.chordRoot.appendChild(o)});
+KEYS.forEach(k=>{["key","progKey","chordRoot"].forEach(id=>{let o=document.createElement("option");o.value=k;o.textContent=k;els[id].appendChild(o)})});
 els.key.value=els.progKey.value=els.chordRoot.value="A";
-function flats(k){return k.includes("b")||["F","Bb","Eb","Ab","Db","Gb"].includes(k)} 
-function idx(n){let i=N.indexOf(n);return i>=0?i:NF.indexOf(n)} 
-function nm(i,k="C"){let a=flats(k)?NF:N;return a[((i%12)+12)%12]} 
-function clean(r){return r.replace("#","").replace("b","")} 
-function tr(x,o){return typeof x==="number"?x+o:x} 
-function pos(f){let a=f.filter(x=>typeof x==="number"&&x>0);return a.length?Math.min(...a):0} 
+function flats(k){return k.includes("b")||["F","Bb","Eb","Ab","Db","Gb"].includes(k)}
+function idx(n){let i=N.indexOf(n);return i>=0?i:NF.indexOf(n)}
+function nm(i,k="C"){let a=flats(k)?NF:N;return a[((i%12)+12)%12]}
+function tr(x,o){return typeof x==="number"?x+o:x}
+function pos(f){let a=f.filter(x=>typeof x==="number"&&x>0);return a.length?Math.min(...a):0}
 function maxf(f){let a=f.filter(x=>typeof x==="number");return a.length?Math.max(...a):0}
-const base={E:{major:[[0,2,2,1,0,0],["","2","3","1","",""]],minor:[[0,2,2,0,0,0],["","2","3","","",""]],minor7:[[0,2,0,0,0,0],["","2","","","",""]],major7:[[0,2,1,1,0,0],["","3","1","2","",""]],dominant7:[[0,2,0,1,0,0],["","2","","1","",""]],sus2:[[0,2,4,4,0,0],["","1","3","4","",""]],sus4:[[0,2,2,2,0,0],["","1","2","3","",""]]},A:{major:[["x",0,2,2,2,0],["","","1","2","3",""]],minor:[["x",0,2,2,1,0],["","","2","3","1",""]],minor7:[["x",0,2,0,1,0],["","","2","","1",""]],major7:[["x",0,2,1,2,0],["","","2","1","3",""]],dominant7:[["x",0,2,0,2,0],["","","2","","3",""]],sus2:[["x",0,2,2,0,0],["","","1","2","",""]],sus4:[["x",0,2,2,3,0],["","","1","2","3",""]]},D:{major:[["x","x",0,2,3,2],["","","","1","3","2"]],minor:[["x","x",0,2,3,1],["","","","2","3","1"]],minor7:[["x","x",0,2,1,1],["","","","2","1","1"]],major7:[["x","x",0,2,2,2],["","","","1","2","3"]],dominant7:[["x","x",0,2,1,2],["","","","2","1","3"]],sus2:[["x","x",0,2,3,0],["","","","1","3",""]],sus4:[["x","x",0,2,3,3],["","","","1","3","4"]]}};
-const manual=[{root:"G",q:"major",style:"easy",name:"G easy two-finger",frets:[3,"x","x","x",3,3],fingers:["2","","","","3","4"],note:"Cheat/practical G: mainly the 3rd fret on the top two strings plus low G."},{root:"G",q:"major",style:"easy",name:"G easy high strings",frets:["x","x","x",0,3,3],fingers:["","","","","3","4"],note:"Very small G color shape. Useful when changing quickly."},{root:"A",q:"major",style:"easy",name:"A one-finger mini barre",frets:["x",0,2,2,2,0],fingers:["","","1","1","1",""],note:"Easy A using one finger across D/G/B strings if comfortable."},{root:"C",q:"major",style:"easy",name:"C small three-string",frets:["x","x","x",0,1,0],fingers:["","","","","1",""],note:"Tiny C color shape on top strings."}];
-function shapes(root,q,style="all"){let out=[];manual.forEach(s=>{if(s.root===root&&s.q===q&&(style==="all"||style==="easy"))out.push({...s,quality:q,position:pos(s.frets)})}); if(style==="all"||style==="open"||style==="movable"){for(let fam of ["E","A","D"]){let b=base[fam][q]; if(!b)continue; for(let off=0;off<=12;off++){if((idx(fam)+off)%12!==idx(root))continue; let frets=b[0].map(x=>tr(x,off)); if(maxf(frets)>18)continue; let st=off===0?"open":"movable"; if(style!=="all"&&style!==st)continue; out.push({root,quality:q,style:st,name:`${root}${chords[q][1]} ${fam}-shape`,frets,fingers:[...b[1]],note:`${fam}-family shape, ${off===0?"open position":"around fret "+off}. Numbers are suggested fingers; ● may mean barre/repeated finger.`,position:pos(frets)})}}} if(style==="all"||style==="triad"){[0,3,5,7,10,12].forEach(start=>{let frets=["x","x","x","x","x","x"], ok=true, ints=chords[q][2]||chords.major[2], ri=idx(root); [3,4,5].forEach(si=>{let open=["E","A","D","G","B","E"][si], oi=idx(open), found=null; for(let f=start;f<=start+4;f++){if(ints.includes(((oi+f)-ri+120)%12)){found=f;break}} if(found===null)ok=false; frets[si]=found}); if(ok&&maxf(frets)<=18)out.push({root,quality:q,style:"triad",name:`${root}${chords[q][1]} small triad`,frets,fingers:["","","","●","●","●"],note:"Small three-string triad. Good for compact progressions.",position:pos(frets)})})} let seen=new Set(); out=out.filter(s=>{let k=s.frets.join(","); if(seen.has(k))return false; seen.add(k); return true}).sort((a,b)=>a.position-b.position); return out.length?out:shapes(root,"major","all")}
+const base={
+  E:{major:[[0,2,2,1,0,0],["","2","3","1","",""]],minor:[[0,2,2,0,0,0],["","2","3","","",""]],minor7:[[0,2,0,0,0,0],["","2","","","",""]],major7:[[0,2,1,1,0,0],["","3","1","2","",""]],dominant7:[[0,2,0,1,0,0],["","2","","1","",""]],sus2:[[0,2,4,4,0,0],["","1","3","4","",""]],sus4:[[0,2,2,2,0,0],["","1","2","3","",""]]},
+  A:{major:[["x",0,2,2,2,0],["","","1","2","3",""]],minor:[["x",0,2,2,1,0],["","","2","3","1",""]],minor7:[["x",0,2,0,1,0],["","","2","","1",""]],major7:[["x",0,2,1,2,0],["","","2","1","3",""]],dominant7:[["x",0,2,0,2,0],["","","2","","3",""]],sus2:[["x",0,2,2,0,0],["","","1","2","",""]],sus4:[["x",0,2,2,3,0],["","","1","2","3",""]]},
+  D:{major:[["x","x",0,2,3,2],["","","","1","3","2"]],minor:[["x","x",0,2,3,1],["","","","2","3","1"]],minor7:[["x","x",0,2,1,1],["","","","2","1","1"]],major7:[["x","x",0,2,2,2],["","","","1","2","3"]],dominant7:[["x","x",0,2,1,2],["","","","2","1","3"]],sus2:[["x","x",0,2,3,0],["","","","1","3",""]],sus4:[["x","x",0,2,3,3],["","","","1","3","4"]]}
+};
+const manual=[
+  {root:"G",q:"major",style:"easy",name:"G easy two-finger",frets:[3,"x","x","x",3,3],fingers:["2","","","","3","4"],note:"Cheat/practical G: low G plus the top two strings."},
+  {root:"G",q:"major",style:"easy",name:"G easy high strings",frets:["x","x","x",0,3,3],fingers:["","","","","3","4"],note:"Very small G color shape. Useful when changing quickly."},
+  {root:"A",q:"major",style:"easy",name:"A one-finger mini barre",frets:["x",0,2,2,2,0],fingers:["","","1","1","1",""],note:"Easy A using one finger across D/G/B strings if comfortable."},
+  {root:"C",q:"major",style:"easy",name:"C small three-string",frets:["x","x","x",0,1,0],fingers:["","","","","1",""],note:"Tiny C color shape on top strings."}
+];
+function shapes(root,q,style="all"){
+  let out=[];
+  manual.forEach(s=>{if(s.root===root&&s.q===q&&(style==="all"||style==="easy"))out.push({...s,quality:q,position:pos(s.frets)})});
+  if(style==="all"||style==="open"||style==="movable"){
+    for(let fam of ["E","A","D"]){
+      let b=base[fam][q]; if(!b)continue;
+      for(let off=0;off<=12;off++){
+        if((idx(fam)+off)%12!==idx(root))continue;
+        let frets=b[0].map(x=>tr(x,off)); if(maxf(frets)>18)continue;
+        let st=off===0?"open":"movable"; if(style!=="all"&&style!==st)continue;
+        out.push({root,quality:q,style:st,name:`${root}${chords[q][1]} ${fam}-shape`,frets,fingers:[...b[1]],note:`${fam}-family shape, ${off===0?"open position":"around fret "+off}. Numbers are suggested fingers; filled circles may mean barre or compact notes.`,position:pos(frets)})
+      }
+    }
+  }
+  if(style==="all"||style==="triad"){
+    [0,3,5,7,10,12].forEach(start=>{
+      let frets=["x","x","x","x","x","x"], ok=true, ints=chords[q][2]||chords.major[2], ri=idx(root);
+      [3,4,5].forEach(si=>{
+        let open=["E","A","D","G","B","E"][si], oi=idx(open), found=null;
+        for(let f=start;f<=start+4;f++){if(ints.includes(((oi+f)-ri+120)%12)){found=f;break}}
+        if(found===null)ok=false; frets[si]=found;
+      });
+      if(ok&&maxf(frets)<=18)out.push({root,quality:q,style:"triad",name:`${root}${chords[q][1]} small triad`,frets,fingers:["","","","●","●","●"],note:"Small three-string triad. Good for compact progressions.",position:pos(frets)})
+    })
+  }
+  let seen=new Set();
+  out=out.filter(s=>{let k=s.frets.join(","); if(seen.has(k))return false; seen.add(k); return true}).sort((a,b)=>a.position-b.position);
+  return out.length?out:shapes(root,"major","all")
+}
 function closest(arr,target){let b=0,score=1e9;arr.forEach((s,i)=>{let d=Math.abs(s.position-target);if(d<score){score=d;b=i}});return b}
-function setVis(){let m=els.mode.value;els.mapControls.classList.toggle("hidden",m!=="map");els.chordControls.classList.toggle("hidden",m!=="chord");els.progControls.classList.toggle("hidden",m!=="progression")}
-function win(v,shape=null){if(v==="all")return{start:0,end:15,all:true}; if(v==="auto"&&shape){let p=pos(shape.frets);let s=Math.max(0,Math.min(12,p-1));return{start:s,end:s+6}} let s=Number(v||0); return{start:s,end:s+6}} 
+function setVis(){
+  let m=els.mode.value;
+  els.mapControls.classList.toggle("hidden",m!=="map");
+  els.chordControls.classList.toggle("hidden",m!=="chord");
+  els.progControls.classList.toggle("hidden",m!=="progression");
+  els.progLine.classList.toggle("hidden",m!=="progression");
+  renderLegend(m);
+}
+function renderLegend(m){
+  let base='<span><i class="root"></i>Root</span><span><i class="chord"></i>Chord</span><span><i class="scale"></i>Scale</span><span><i class="pattern"></i>Pattern</span><span><i class="outside"></i>Outside</span>';
+  if(m==="map") els.legend.innerHTML=base;
+  else els.legend.innerHTML=base+'<span><i class="fingering"></i>Fingering</span><span><span class="openmark">O</span>Open</span><span><span class="mutemark">X</span>Muted</span>';
+}
+function win(v,shape=null){
+  if(v==="all")return{start:0,end:15,all:true};
+  if(v==="auto"&&shape){let p=pos(shape.frets);let s=Math.max(0,Math.min(12,p-1));return{start:s,end:s+6}};
+  let s=Number(v||0); return{start:s,end:s+(s===0?7:6)}
+}
 function frets(w){let a=[];for(let f=Math.max(1,w.start);f<=w.end;f++)a.push(f);return a}
-function boardStart(w){let fs=frets(w);document.documentElement.style.setProperty("--frets",fs.length);return `<div class="fretboard ${w.all?"all":""}"><div class="row"><div></div><div class="nuthead">0</div>${fs.map(f=>`<div class="fret">${f}</div>`).join("")}</div>`}
-function openCell(label, cls){return `<div class="cell nutcell"><span class="${cls}">${label}</span></div>`}
-function drawShape(s,title,sub,why,wv="auto"){let w=win(wv,s),fs=frets(w),html=boardStart(w),vf=[...s.frets].reverse(),vg=[...s.fingers].reverse();TUNING.forEach((open,vi)=>{html+=`<div class="row"><div class="string">${open}</div>`;let tf=vf[vi],fg=vg[vi]; if(tf==="x") html+=openCell("X","mutemark"); else if(tf===0) html+=openCell("O","openmark"); else html+=openCell("","openmark ghost"); fs.forEach(f=>{let lab=".",cl="outside"; if(tf===f){lab=(fg||"●");cl="fingering"} html+=`<div class="cell"><span class="dot ${cl}">${lab}</span></div>`});html+=`</div>`});html+=`</div>`;els.board.innerHTML=html;els.title.textContent=title;els.subtitle.textContent=sub;els.whyTitle.textContent="Why this works";els.why.textContent=why}
-function pRange(p){if(p==="none")return null; const starts={p1:0,p2:3,p3:5,p4:7,p5:10}; const names={p1:"Pattern 1",p2:"Pattern 2",p3:"Pattern 3",p4:"Pattern 4",p5:"Pattern 5"}; let start=starts[p]??0; return{start:start,end:start+6,name:names[p]||"Pattern"}}
-function renderMap(){let key=els.key.value,sc=scales[els.scale.value],ch=chords[els.overlay.value],ri=idx(key),pr=pRange(els.pattern.value);let w=(els.mapWindow.value==="auto"&&pr)?{start:pr.start,end:pr.end}:win(els.mapWindow.value==="auto"?"0":els.mapWindow.value),fs=frets(w);let scaleNotes=sc[1].map(i=>nm(ri+i,key)),chNotes=ch[2].map(i=>nm(ri+i,key));els.title.textContent=`${key} ${sc[0]}`;els.subtitle.textContent=`Scale notes: ${scaleNotes.join("  ")}`+(ch[2].length?` | ${key} ${ch[0]} tones: ${chNotes.join("  ")}`:"");let why=sc[3]; if(ch[2].length)why+=` The ${key} ${ch[0]} overlay highlights ${ch[3]}: ${chNotes.join(", ")}.`; if(pr)why+=` ${pr.name} is a brighter pathway, not a different scale. Auto window follows the selected pattern; scale notes outside the pattern are now heavily dimmed. Resolving to ${key}, the root, usually sounds finished because it returns the ear to home.`;els.whyTitle.textContent=pr?"Pattern and root resolution":"Why this works";els.why.textContent=why;let html=boardStart(w);TUNING.forEach(open=>{html+=`<div class="row"><div class="string">${open}</div>`;let oi=idx(open);
-let openInter=(oi-ri+12)%12, openInScale=sc[1].includes(openInter), openInChord=ch[2].includes(openInter), openRoot=openInter===0, openInPat=pr&&openInScale&&0>=pr.start&&0<=pr.end, openGhost=pr&&openInScale&&!openInPat&&!openRoot&&!openInChord;
-let openCls=openRoot?"root":openInChord?"chord":openInPat?"pattern":openInScale?"scale":"outside"; if(openGhost)openCls+=" ghost"; let openLab=openInScale||openInChord||openRoot?"O":"";
-html+=openCell(openLab, openLab==="O" ? "openmark" : "openmark ghost");
-fs.forEach(f=>{let ci=(oi+f)%12,inter=(ci-ri+12)%12,inScale=sc[1].includes(inter),inChord=ch[2].includes(inter),isRoot=inter===0,inPat=pr&&inScale&&f>=pr.start&&f<=pr.end,outPat=pr&&inScale&&!inPat&&!isRoot&&!inChord,cl=isRoot?"root":inChord?"chord":inPat?"pattern":inScale?"scale":"outside"; if(outPat)cl+=" ghost";let lab=els.display.value==="degrees"?(sc[2][sc[1].indexOf(inter)]||"."):nm(ci,key);if(!inScale&&!inChord&&!isRoot)lab=".";html+=`<div class="cell"><span class="dot ${cl}">${lab}</span></div>`});html+=`</div>`});html+=`</div>`;els.board.innerHTML=html}
-function renderChord(){let r=els.chordRoot.value,q=els.chordType.value,st=els.shapeStyle.value,arr=shapes(r,q,st); if(shapeIdx>=arr.length)shapeIdx=0;let s=arr[shapeIdx];els.shapeName.textContent=`${s.name} (${shapeIdx+1} of ${arr.length})`;els.shapeText.textContent=s.note;drawShape(s,`${r}${chords[q][1]} chord fingering`,`Numbers indicate fingers; O = open; X = muted; ● = barre/compact note.`,`Shape Style lets you choose practical cheats, open grips, movable shapes, or compact triads.`,els.chordWindow.value)}
-const progs={classic:["Classic rock / folk",["I","IV","V","I"],"Simple, strong and familiar."],pop:["Pop / anthem",["I","V","vi","IV"],"The big modern pop progression."],sad:["Sad / emotional",["vi","IV","I","V"],"Starts on the relative minor for emotional pull."],blues:["Blues",["I7","IV7","I7","V7"],"Dominant 7 chords give the blues flavor."],funk:["Funk / Dorian-ish",["i7","IV7","i7","bVII"],"Minor 7 center with a brighter, funkier movement."]};
+function boardStart(w){let fs=frets(w);document.documentElement.style.setProperty("--frets",fs.length);return `<div class="fretboard ${w.all?"all":""}"><div class="row"><div></div><div class="nuthead">Open</div>${fs.map(f=>`<div class="fret">${f}</div>`).join("")}</div>`}
+function zeroShapeCell(label, cls){return `<div class="cell nutcell"><span class="${cls}">${label}</span></div>`}
+function zeroMapCell(label, cls){return `<div class="cell nutcell">${label?`<span class="open-note ${cls}">${label}</span>`:""}</div>`}
+function drawShape(s,title,sub,why,wv="auto"){
+  let w=win(wv,s),fs=frets(w),html=boardStart(w),vf=[...s.frets].reverse(),vg=[...s.fingers].reverse();
+  TUNING.forEach((open,vi)=>{
+    html+=`<div class="row"><div class="string">${open}</div>`;
+    let tf=vf[vi],fg=vg[vi];
+    if(tf==="x") html+=zeroShapeCell("X","mutemark");
+    else if(tf===0) html+=zeroShapeCell("O","openmark");
+    else html+=zeroShapeCell("","openmark ghost");
+    fs.forEach(f=>{
+      let lab=".",cl="outside";
+      if(tf===f){lab=fg||"●";cl="fingering"}
+      html+=`<div class="cell"><span class="dot ${cl}">${lab}</span></div>`
+    });
+    html+=`</div>`
+  });
+  html+=`</div>`;
+  els.board.innerHTML=html; els.title.textContent=title; els.subtitle.textContent=sub; els.whyTitle.textContent="Why this works"; els.why.textContent=why;
+}
+function patternInfo(key, scaleKey, p){
+  if(p==="none")return null;
+  let i=Number(p.slice(1))-1, sc=scales[scaleKey][1], anchors=sc.slice(0,5);
+  while(anchors.length<5)anchors.push(anchors[anchors.length-1]+2);
+  let rootOnLowE=(idx(key)-idx("E")+12)%12;
+  let anchor=rootOnLowE+anchors[i];
+  while(anchor>14)anchor-=12;
+  let pentLike=["majorPent","minorPent","blues"].includes(scaleKey);
+  let cleanRootBox=i===0&&["minorPent","blues","minor"].includes(scaleKey);
+  let activeStart=Math.max(0,anchor-(cleanRootBox?0:1)), activeEnd=anchor+(pentLike?3:4);
+  return {name:`Pattern ${i+1}`,anchor,activeStart,activeEnd,windowStart:activeStart,windowEnd:activeStart+(activeStart===0?7:6)}
+}
+function renderMap(){
+  let key=els.key.value,sc=scales[els.scale.value],ch=chords[els.overlay.value],ri=idx(key),pr=patternInfo(key,els.scale.value,els.pattern.value);
+  let w=(els.mapWindow.value==="auto"&&pr)?{start:pr.windowStart,end:pr.windowEnd}:win(els.mapWindow.value==="auto"?"0":els.mapWindow.value),fs=frets(w);
+  let scaleNotes=sc[1].map(i=>nm(ri+i,key)),chNotes=ch[2].map(i=>nm(ri+i,key));
+  els.title.textContent=`${key} ${sc[0]}`;
+  els.subtitle.textContent=`Scale notes: ${scaleNotes.join("  ")}`+(ch[2].length?` | ${key} ${ch[0]} tones: ${chNotes.join("  ")}`:"");
+  let why=sc[3];
+  if(ch[2].length)why+=` The ${key} ${ch[0]} overlay highlights ${ch[3]}: ${chNotes.join(", ")}.`;
+  if(pr)why+=` ${pr.name} is transposed for ${key}; the selected position is bright and other scale notes are deliberately pushed back.`;
+  els.whyTitle.textContent=pr?"Pattern and root resolution":"Why this works"; els.why.textContent=why; els.progLine.innerHTML="";
+  let html=boardStart(w);
+  TUNING.forEach(open=>{
+    html+=`<div class="row"><div class="string">${open}</div>`;
+    let oi=idx(open);
+    let openInter=(oi-ri+12)%12, openInScale=sc[1].includes(openInter), openInChord=ch[2].includes(openInter), openRoot=openInter===0;
+    let openInPat=pr&&openInScale&&0>=pr.activeStart&&0<=pr.activeEnd, openGhost=pr&&openInScale&&!openInPat&&!openRoot&&!openInChord;
+    let openCls=openInPat?"pattern":openRoot?"root":openInChord?"chord":openInScale?"scale":"outside"; if(openGhost)openCls+=" ghost";
+    let openLab=openInScale||openInChord||openRoot?(els.display.value==="degrees"?(sc[2][sc[1].indexOf(openInter)]||"") : nm(oi,key)):"";
+    html+=zeroMapCell(openLab,openCls);
+    fs.forEach(f=>{
+      let ci=(oi+f)%12,inter=(ci-ri+12)%12,inScale=sc[1].includes(inter),inChord=ch[2].includes(inter),isRoot=inter===0;
+      let inPat=pr&&inScale&&f>=pr.activeStart&&f<=pr.activeEnd,outPat=pr&&inScale&&!inPat&&!isRoot&&!inChord;
+      let cl=inPat?"pattern":isRoot?"root":inChord?"chord":inScale?"scale":"outside"; if(outPat)cl+=" ghost";
+      let lab=els.display.value==="degrees"?(sc[2][sc[1].indexOf(inter)]||"."):nm(ci,key);
+      if(!inScale&&!inChord&&!isRoot)lab=".";
+      html+=`<div class="cell"><span class="dot ${cl}">${lab}</span></div>`
+    });
+    html+=`</div>`
+  });
+  html+=`</div>`; els.board.innerHTML=html;
+}
+function renderChord(){
+  let r=els.chordRoot.value,q=els.chordType.value,st=els.shapeStyle.value,arr=shapes(r,q,st); if(shapeIdx>=arr.length)shapeIdx=0;
+  let s=arr[shapeIdx]; els.shapeName.textContent=`${s.name} (${shapeIdx+1} of ${arr.length})`; els.shapeText.textContent=s.note; els.progLine.innerHTML="";
+  drawShape(s,`${r}${chords[q][1]} chord fingering`,`Numbers indicate fingers; O = open; X = muted; filled circles can mean barre or compact notes.`,`Shape Style lets you choose practical cheats, open grips, movable shapes, or compact triads.`,els.chordWindow.value)
+}
+const progs={
+  classic:["Classic rock / folk",["I","IV","V","I"],"Simple, strong and familiar."],
+  pop:["Pop / anthem",["I","V","vi","IV"],"The big modern pop progression."],
+  sad:["Sad / emotional",["vi","IV","I","V"],"Starts on the relative minor for emotional pull."],
+  blues:["Blues",["I7","IV7","I7","V7"],"Dominant 7 chords give the blues flavor."],
+  funk:["Funk / Dorian-ish",["i7","IV7","i7","bVII"],"Minor 7 center with a brighter, funkier movement."]
+};
 const roman={I:[0,"major"],i:[0,"minor"],"i7":[0,"minor7"],"I7":[0,"dominant7"],IV:[5,"major"],"IV7":[5,"dominant7"],V:[7,"major"],"V7":[7,"dominant7"],vi:[9,"minor"],bVII:[10,"major"]};
-function progChords(){let key=els.progKey.value,p=progs[els.progType.value],ri=idx(key);return p[1].map(n=>{let [it,q]=roman[n],root=nm(ri+it,key);return{n,root:clean(root),display:root,q}})}
-function renderChips(cs){els.progChips.innerHTML="";cs.forEach((c,i)=>{let b=document.createElement("button");b.className="chip"+(i===progChordIdx?" active":"");b.textContent=`${c.display}${chords[c.q][1]}`;b.onclick=()=>{progChordIdx=i;progShapeOffset=0;renderProg()};els.progChips.appendChild(b)})}
-function renderProg(){let key=els.progKey.value,p=progs[els.progType.value],cs=progChords();if(progChordIdx>=cs.length)progChordIdx=0;let c=cs[progChordIdx],target=Number(els.near.value),arr=shapes(c.root,c.q,els.progStyle.value),base=closest(arr,target);let si=(base+progShapeOffset)%arr.length;if(si<0)si+=arr.length;let s=arr[si],labels=cs.map((x,i)=>`${i===progChordIdx?"▶ ":""}${x.display}${chords[x.q][1]}`).join(" → ");els.progName.textContent=`${key} ${p[0]}`;els.progText.textContent="Tap a chord below to jump directly.";renderChips(cs);drawShape(s,`${c.display}${chords[c.q][1]} in ${key} ${p[0]}`,labels,`${p[2]} Tap any chord chip to jump directly. The app chooses a nearby shape so the progression stays in the same fretboard area.`,String(Math.max(0,target-1)));renderChips(cs)}
+function progChords(){let key=els.progKey.value,p=progs[els.progType.value],ri=idx(key);return p[1].map(n=>{let [it,q]=roman[n],root=nm(ri+it,key);return{n,root,display:root,q}})}
+function renderProgLine(cs){
+  els.progLine.innerHTML="";
+  cs.forEach((c,i)=>{
+    let b=document.createElement("button"); b.type="button"; b.className=i===progChordIdx?"active":""; b.textContent=`${c.display}${chords[c.q][1]}`;
+    b.onclick=()=>{progChordIdx=i;progShapeOffset=0;renderProg()};
+    els.progLine.appendChild(b)
+  })
+}
+function renderProg(){
+  let key=els.progKey.value,p=progs[els.progType.value],cs=progChords(); if(progChordIdx>=cs.length)progChordIdx=0;
+  let c=cs[progChordIdx],target=Number(els.near.value),arr=shapes(c.root,c.q,els.progStyle.value),base=closest(arr,target);
+  let si=(base+progShapeOffset)%arr.length; if(si<0)si+=arr.length;
+  let s=arr[si],labels=cs.map((x,i)=>`${i===progChordIdx?"Current: ":""}${x.display}${chords[x.q][1]}`).join("  ");
+  drawShape(s,`${key} ${p[0]}`,`Tap a chord name to jump. ${labels}`,`${p[2]} The app chooses a nearby shape so the progression stays in the same fretboard area. Use Shape to try alternatives.`,String(Math.max(0,target-1)));
+  renderProgLine(cs)
+}
 function render(){setVis(); if(els.mode.value==="map")renderMap(); else if(els.mode.value==="chord")renderChord(); else renderProg()}
-["key","scale","overlay","display","pattern","mapWindow","mode","chordRoot","chordType","shapeStyle","chordWindow","progKey","progType","progStyle","near"].forEach(id=>els[id].addEventListener("change",()=>{if(["chordRoot","chordType","shapeStyle"].includes(id))shapeIdx=0;if(["progKey","progType","progStyle","near"].includes(id)){progChordIdx=0;progShapeOffset=0}render()}));
+["key","scale","overlay","display","pattern","mapWindow","mode","chordRoot","chordType","shapeStyle","chordWindow","progKey","progType","progStyle","near"].forEach(id=>els[id].addEventListener("change",()=>{
+  if(["chordRoot","chordType","shapeStyle"].includes(id))shapeIdx=0;
+  if(["progKey","progType","progStyle","near"].includes(id)){progChordIdx=0;progShapeOffset=0}
+  render()
+}));
 els.prevShape.onclick=()=>{let a=shapes(els.chordRoot.value,els.chordType.value,els.shapeStyle.value);shapeIdx=(shapeIdx-1+a.length)%a.length;render()};
 els.nextShape.onclick=()=>{let a=shapes(els.chordRoot.value,els.chordType.value,els.shapeStyle.value);shapeIdx=(shapeIdx+1)%a.length;render()};
 els.prevChord.onclick=()=>{let a=progChords();progChordIdx=(progChordIdx-1+a.length)%a.length;progShapeOffset=0;render()};

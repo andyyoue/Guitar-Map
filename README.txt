@@ -1,12 +1,11 @@
-NOTE MAP GUITAR - V2.1.2
+NOTE MAP GUITAR - V2.1.3
 
 Single-file release: upload index.html to GitHub Pages.
 
-Changes:
-1. Fret 0 is now a narrow nut/open-string column, not a normal fret.
-2. Open strings show O and muted strings show X.
-3. Pattern highlighting is stronger.
-4. Notes outside the selected pattern are aggressively greyed out.
-5. Fret windows now show roughly 7 frets; fret 0/nut is narrow.
-6. Color legend moved to the bottom as a sticky legend.
-7. Progression chords are clickable chips.
+Changes from V2.1.2:
+- O/X open and muted indicators are now only used in Chord and Progression modes.
+- Note Map / scale mode uses a narrow Open column without making fret 0 look like a normal finger position.
+- Progression mode has one clickable chord row above the fretboard, not a separate duplicate tap area.
+- Pattern starts now transpose with the selected key and scale instead of using fixed fret positions.
+- Pattern notes are brighter and non-pattern scale notes are much more aggressively greyed out.
+- Fret windows stay compact at roughly seven frets.
