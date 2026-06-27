@@ -1,14 +1,26 @@
-NOTE MAP GUITAR - V2.1.6
+NOTE MAP GUITAR - V3 ALPHA
 
 Single-file release: upload index.html to GitHub Pages.
 
-Changes from V2.1.3:
-- O/X open and muted indicators are now only used in Chord and Progression modes.
-- Removed the "Open" label from the fretboard header; open-string notes now stand on their own.
-- Chord shapes now fall back to practical finger-number suggestions instead of showing generic dots.
-- Chord and Progression views can show either finger numbers or note names.
-- Open strings show note names when note labels are selected in Chord/Progression modes.
-- Pattern stepping now normalizes root-linked positions, including A major pentatonic Pattern 5 at frets 2-5.
-- Added Romantic and Suspense / resolve progression themes.
-- Fixed compact triads such as A Major (2 of 9) so they show finger-number suggestions instead of generic dots.
-- Removed the open/closed column entirely from Note Map / scale view; Chord and Progression still keep it for O/X fingering.
+V3 alpha idea:
+- Adds a Today Coach above the existing fretboard.
+- Asks skill level, what the player wants to do today, and home key.
+- Generates a short practice path and configures the fretboard automatically.
+- Keeps the manual Note Map, Chord, and Progression controls from V2.1.6.
+
+Practice paths included:
+- Stop the fretboard feeling huge.
+- Find a pentatonic path.
+- Recognize chord shapes.
+- Make Free Fallin' musical.
+- Understand Dorian / Mixolydian.
+- Practice a progression.
+- Start a simple solo.
+
+Learning themes used:
+- Beginner overwhelm from seeing too much fretboard at once.
+- Pentatonic shape confusion and open-string shortcuts.
+- Chord shape families: E/A/D forms and small triads.
+- Sus2/sus4 embellishments from Free Fallin'.
+- Dorian and Mixolydian curiosity.
+- Memorizing small solo phrases instead of brute-force pattern practice.

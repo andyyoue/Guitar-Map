@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#34251d" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-title" content="Note Map" />
-<title>Note Map Guitar V2.1.6</title>
+<title>Note Map Guitar V3 Alpha</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#f6f3ee;color:#221f1c;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
@@ -19,6 +19,18 @@ header b{background:#34251d;color:#fff8ef;border-radius:12px;padding:8px 10px;he
 .card{background:#fff;padding:11px;border-radius:12px;box-shadow:0 2px 12px #0000000f;margin-bottom:10px}
 .mode{max-width:360px}
 .controls{display:grid;grid-template-columns:repeat(4,minmax(135px,1fr));gap:9px}
+.coach{display:grid;grid-template-columns:1.1fr 1fr;gap:10px;align-items:stretch}
+.coach-panel{background:#fff8ef;border:1px solid #eadfce;border-radius:12px;padding:12px}
+.coach-panel h2{font-size:21px;margin:0 0 5px}
+.coach-panel p{margin:0;color:#554a41}
+.coach-form{display:grid;grid-template-columns:1fr 1fr 100px;gap:9px;margin-top:10px}
+.practice-card{background:#fff;border:1px solid #eadfce;border-radius:12px;padding:12px}
+.practice-card h3{font-size:18px;margin:0 0 5px}
+.practice-card p{margin:0 0 9px;color:#4d453e}
+.practice-steps{margin:0;padding-left:20px;color:#302a25}
+.practice-steps li{margin:4px 0}
+.practice-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.pill{display:inline-flex;align-items:center;background:#34251d;color:#fff8ef;border-radius:999px;padding:5px 9px;font-size:12px;font-weight:900;margin-bottom:7px}
 .hidden{display:none!important}
 label{display:flex;flex-direction:column;gap:6px;font-weight:800;font-size:13px}
 select,button{font-size:16px;padding:9px;border:1px solid #cfc7bf;border-radius:10px;background:#fffdfa;min-height:42px}
@@ -61,17 +73,37 @@ button{font-weight:900;cursor:pointer}
 .legend{display:flex;flex-wrap:wrap;gap:8px 12px;font-size:13px}
 .legend span{display:inline-flex;align-items:center;gap:6px}
 .legend i{width:16px;height:16px;border-radius:5px;border:1px solid #0002;display:inline-block}
-@media(max-width:940px){.controls{grid-template-columns:1fr 1fr}.buttons{align-items:stretch;flex-direction:column}}
-@media(max-width:620px){.controls{grid-template-columns:1fr}.mode{max-width:none}h1{font-size:24px}.app{padding-left:8px;padding-right:8px}.neck{padding:8px}.hint{display:block}.fretboard{min-width:500px}.row{grid-template-columns:36px 28px repeat(var(--frets),minmax(43px,1fr))}.row.no-nut{grid-template-columns:36px repeat(var(--frets),minmax(43px,1fr))}.cell,.string,.fret,.nuthead{min-height:37px}.dot{width:27px;height:25px;font-size:11px}.open-note,.openmark,.mutemark{width:22px;height:22px;font-size:10px}}
-@media(orientation:landscape) and (max-height:520px){header,header p{display:none}.app{padding-top:6px}.controls{grid-template-columns:repeat(6,minmax(112px,1fr))}.card{margin-bottom:7px;padding:8px}.summary h2{font-size:16px}.cell,.string,.fret,.nuthead{min-height:33px}.dot{width:26px;height:24px;font-size:11px}.neck{padding:7px}.row{grid-template-columns:36px 26px repeat(var(--frets),minmax(42px,1fr))}.row.no-nut{grid-template-columns:36px repeat(var(--frets),minmax(42px,1fr))}}
+@media(max-width:940px){.controls{grid-template-columns:1fr 1fr}.coach{grid-template-columns:1fr}.buttons{align-items:stretch;flex-direction:column}}
+@media(max-width:620px){.controls,.coach-form{grid-template-columns:1fr}.mode{max-width:none}h1{font-size:24px}.app{padding-left:8px;padding-right:8px}.neck{padding:8px}.hint{display:block}.fretboard{min-width:500px}.row{grid-template-columns:36px 28px repeat(var(--frets),minmax(43px,1fr))}.row.no-nut{grid-template-columns:36px repeat(var(--frets),minmax(43px,1fr))}.cell,.string,.fret,.nuthead{min-height:37px}.dot{width:27px;height:25px;font-size:11px}.open-note,.openmark,.mutemark{width:22px;height:22px;font-size:10px}}
+@media(orientation:landscape) and (max-height:520px){header,header p{display:none}.app{padding-top:6px}.controls{grid-template-columns:repeat(6,minmax(112px,1fr))}.coach{grid-template-columns:1fr 1fr}.coach-panel,.practice-card,.card{margin-bottom:7px;padding:8px}.summary h2{font-size:16px}.cell,.string,.fret,.nuthead{min-height:33px}.dot{width:26px;height:24px;font-size:11px}.neck{padding:7px}.row{grid-template-columns:36px 26px repeat(var(--frets),minmax(42px,1fr))}.row.no-nut{grid-template-columns:36px repeat(var(--frets),minmax(42px,1fr))}}
 </style>
 </head>
 <body>
 <main class="app">
-<header><div><h1>Note Map Guitar</h1><p>One fretboard. One question. Everything else is a filter.</p></div><b>V2.1.6</b></header>
+<header><div><h1>Note Map Guitar</h1><p>V3 alpha: tell it where your head is, then let the fretboard become the lesson.</p></div><b>V3 alpha</b></header>
 <section class="hint">Phone tip: rotate sideways. Pattern mode works best with Fret Window set to Auto.</section>
 
-<section class="card mode"><label>View Mode<select id="mode"><option value="map">Note map</option><option value="chord">Chord fingering</option><option value="progression">Progression</option></select></label></section>
+<section class="coach">
+<div class="coach-panel">
+<span class="pill">Today coach</span>
+<h2>What kind of guitar brain do you have today?</h2>
+<p>This alpha turns your earlier questions into short practice paths: pentatonic boxes, open-string shortcuts, chord shapes, sus embellishments, modes, and song-first practice.</p>
+<div class="coach-form">
+<label>Skill level<select id="skillLevel"><option value="early">Early learner</option><option value="new">Just orienting</option><option value="curious">Theory curious</option><option value="song">Song focused</option></select></label>
+<label>What do you want today?<select id="todayGoal"><option value="orientation">Stop the fretboard feeling huge</option><option value="pentatonic">Find a pentatonic path</option><option value="chordShapes">Recognize chord shapes</option><option value="songFreeFallin">Make Free Fallin' musical</option><option value="modes">Understand Dorian / Mixolydian</option><option value="progression">Practice a progression</option><option value="solo">Start a simple solo</option></select></label>
+<label>Home key<select id="practiceKey"></select></label>
+</div>
+<div class="practice-actions"><button id="startToday">Take me there</button><button id="nextIdea">Give me another idea</button></div>
+</div>
+<div class="practice-card">
+<span class="pill" id="practiceBadge">Suggested path</span>
+<h3 id="practiceTitle"></h3>
+<p id="practiceWhy"></p>
+<ol id="practiceSteps" class="practice-steps"></ol>
+</div>
+</section>
+
+<section class="card mode"><label>Manual View<select id="mode"><option value="map">Note map</option><option value="chord">Chord fingering</option><option value="progression">Progression</option></select></label></section>
 
 <section id="mapControls" class="card controls">
 <label>Key<select id="key"></select></label>
@@ -128,10 +160,10 @@ const chords={
   dominant7:["Dominant 7","7",[0,4,7,10],"1-3-5-b7"], sus2:["Sus2","sus2",[0,2,7],"1-2-5"], sus4:["Sus4","sus4",[0,5,7],"1-4-5"]
 };
 const $=id=>document.getElementById(id), els={};
-["mode","mapControls","chordControls","progControls","key","scale","overlay","display","pattern","mapWindow","chordRoot","chordType","shapeStyle","chordLabels","chordWindow","prevShape","nextShape","shapeName","shapeText","progKey","progType","progStyle","progLabels","near","prevChord","nextChord","prevProgShape","nextProgShape","progLine","title","subtitle","whyTitle","why","board","legend"].forEach(id=>els[id]=$(id));
+["skillLevel","todayGoal","practiceKey","startToday","nextIdea","practiceBadge","practiceTitle","practiceWhy","practiceSteps","mode","mapControls","chordControls","progControls","key","scale","overlay","display","pattern","mapWindow","chordRoot","chordType","shapeStyle","chordLabels","chordWindow","prevShape","nextShape","shapeName","shapeText","progKey","progType","progStyle","progLabels","near","prevChord","nextChord","prevProgShape","nextProgShape","progLine","title","subtitle","whyTitle","why","board","legend"].forEach(id=>els[id]=$(id));
 let shapeIdx=0, progChordIdx=0, progShapeOffset=0;
-KEYS.forEach(k=>{["key","progKey","chordRoot"].forEach(id=>{let o=document.createElement("option");o.value=k;o.textContent=k;els[id].appendChild(o)})});
-els.key.value=els.progKey.value=els.chordRoot.value="A";
+KEYS.forEach(k=>{["key","progKey","chordRoot","practiceKey"].forEach(id=>{let o=document.createElement("option");o.value=k;o.textContent=k;els[id].appendChild(o)})});
+els.key.value=els.progKey.value=els.chordRoot.value=els.practiceKey.value="A";
 function flats(k){return k.includes("b")||["F","Bb","Eb","Ab","Db","Gb"].includes(k)}
 function idx(n){let i=N.indexOf(n);return i>=0?i:NF.indexOf(n)}
 function nm(i,k="C"){let a=flats(k)?NF:N;return a[((i%12)+12)%12]}
@@ -191,6 +223,89 @@ function renderLegend(m){
   let base='<span><i class="root"></i>Root</span><span><i class="chord"></i>Chord</span><span><i class="scale"></i>Scale</span><span><i class="pattern"></i>Pattern</span><span><i class="outside"></i>Outside</span>';
   if(m==="map") els.legend.innerHTML=base;
   else els.legend.innerHTML=base+'<span><i class="fingering"></i>Fingering</span><span><span class="openmark">O</span>Open</span><span><span class="mutemark">X</span>Muted</span>';
+}
+const goalOrder=["orientation","pentatonic","chordShapes","songFreeFallin","modes","progression","solo"];
+const skillCopy={
+  new:"Keep the board small. One sound, one area, one win.",
+  early:"Use shapes first, then let the note names explain what your fingers already found.",
+  curious:"Use the fretboard as a lab: change one interval and listen for the emotional shift.",
+  song:"Start with a musical job. Theory is only invited if it helps the song sound better."
+};
+function majorFourth(key){return nm(idx(key)+5,key)}
+function majorFifth(key){return nm(idx(key)+7,key)}
+function relativeMinor(key){return nm(idx(key)+9,key)}
+function setSelect(el,value){el.value=value}
+function setPracticeCard(plan){
+  els.practiceBadge.textContent=plan.badge;
+  els.practiceTitle.textContent=plan.title;
+  els.practiceWhy.textContent=plan.why;
+  els.practiceSteps.innerHTML=plan.steps.map(s=>`<li>${s}</li>`).join("");
+}
+function planFor(skill,goal,key){
+  let copy=skillCopy[skill]||skillCopy.early;
+  let plans={
+    orientation:{
+      badge:"Orientation",
+      title:`Shrink ${key} to one useful window`,
+      why:`${copy} This path answers the “where am I?” question before asking your fingers to do anything heroic.`,
+      steps:[`Say the open strings once: E B G D A E. Then ignore them and work only in the highlighted ${key} window.`,`Find every ${key} root. Let yellow mean “home”, not “memorize everything”.`,`Play any three green notes, then land on yellow. If it sounds finished, you found the point.`],
+      apply(){setSelect(els.mode,"map");setSelect(els.key,key);setSelect(els.scale,"majorPent");setSelect(els.overlay,"none");setSelect(els.pattern,"p5");setSelect(els.mapWindow,"auto")}
+    },
+    pentatonic:{
+      badge:"Pentatonic path",
+      title:`Build a ${key} major pentatonic route`,
+      why:`${copy} This is based on your “I can make my own pentatonic path with open strings and fewer finger moves” discovery.`,
+      steps:[`Start with Pattern 5 if it appears low on the neck; it often gives the friendliest ${key} major pent box.`,`Move only between adjacent highlighted notes. No jumps until the shape feels boring.`,`End phrases on ${key}. Then try ending on ${majorFifth(key)} and notice how it hangs open.`],
+      apply(){setSelect(els.mode,"map");setSelect(els.key,key);setSelect(els.scale,"majorPent");setSelect(els.overlay,"major");setSelect(els.pattern,"p5");setSelect(els.mapWindow,"auto")}
+    },
+    chordShapes:{
+      badge:"Chord shape vision",
+      title:`See ${key} chords as families, not isolated grips`,
+      why:`${copy} This follows your E/A/C/G/D-shape recognition questions: the goal is to recognize the family before worrying about the full chord name.`,
+      steps:[`Look at the suggested fingering, then switch to note names and find the root, third, and fifth.`,`Use Previous/Next Shape and ask: is this an E-family, A-family, D-family, or tiny triad idea?`,`Mute one string mentally. If the chord still has root, third, and fifth, it is probably a practical cheat shape.`],
+      apply(){setSelect(els.mode,"chord");setSelect(els.chordRoot,key);setSelect(els.chordType,"major");setSelect(els.shapeStyle,"all");setSelect(els.chordLabels,"fingers");setSelect(els.chordWindow,"auto");shapeIdx=0}
+    },
+    songFreeFallin:{
+      badge:"Song practice",
+      title:"Make the Dsus movement feel like music",
+      why:`${copy} This is built around your Free Fallin' work: D, Dsus4, Dsus2, and the little D-to-E-to-D color move you found by ear.`,
+      steps:["Set the chord root to D and compare D, Dsus4, and Dsus2. Listen for stable, lifted, and open.","Keep the right hand steady while the fretting hand changes only the suspended note.","Make a two-bar loop: D, Dsus4, Dsus2, D. The win is even rhythm, not speed."],
+      apply(){setSelect(els.mode,"chord");setSelect(els.chordRoot,"D");setSelect(els.chordType,"sus4");setSelect(els.shapeStyle,"open");setSelect(els.chordLabels,"fingers");setSelect(els.chordWindow,"0");shapeIdx=0}
+    },
+    modes:{
+      badge:"Mode lab",
+      title:`Compare ${key} Mixolydian and Dorian without drowning in theory`,
+      why:`${copy} You kept circling the useful question: what changes when the notes are almost the same but the mood is different?`,
+      steps:[`Start in ${key} Mixolydian. Notice the major 3rd and flat 7: confident, but less polished than major.`,`Switch to Dorian on the same root. The flat 3rd makes it minor; the natural 6 keeps it from getting too gloomy.`,`Play one phrase in each mode and keep the rhythm identical. That isolates the sound of the notes.`],
+      apply(){setSelect(els.mode,"map");setSelect(els.key,key);setSelect(els.scale,"mixolydian");setSelect(els.overlay,"dominant7");setSelect(els.pattern,"p2");setSelect(els.mapWindow,"auto")}
+    },
+    progression:{
+      badge:"Progression",
+      title:`Play a ${key} progression in one fretboard area`,
+      why:`${copy} This answers the practical question: can I move through changes without the neck turning into a geography exam?`,
+      steps:[`Tap each chord chip once and notice which shapes stay near each other.`,`Use Shape only when a chord feels awkward; do not chase every possible inversion.`,`Strum once per chord, then twice per chord, then add one embellishment only after the changes are calm.`],
+      apply(){setSelect(els.mode,"progression");setSelect(els.progKey,key);setSelect(els.progType,skill==="song"?"classic":"romantic");setSelect(els.progStyle,"all");setSelect(els.progLabels,"fingers");setSelect(els.near,"0");progChordIdx=0;progShapeOffset=0}
+    },
+    solo:{
+      badge:"Simple solo",
+      title:`Make a tiny ${key} solo you can remember`,
+      why:`${copy} This borrows from your Sultans first-solo/memorization thread: make a small phrase memorable before making it impressive.`,
+      steps:[`Use ${key} major pentatonic and pick four highlighted notes only.`,`Create a call-and-response: two notes up, two notes down, then land on ${key}.`,`Move the same rhythm to a nearby string. That teaches the pattern without rote memorization.`],
+      apply(){setSelect(els.mode,"map");setSelect(els.key,key);setSelect(els.scale,"majorPent");setSelect(els.overlay,"major");setSelect(els.pattern,"p5");setSelect(els.mapWindow,"auto")}
+    }
+  };
+  return plans[goal]||plans.orientation;
+}
+function startPractice(){
+  let plan=planFor(els.skillLevel.value,els.todayGoal.value,els.practiceKey.value);
+  setPracticeCard(plan);
+  plan.apply();
+  render();
+}
+function nextPracticeIdea(){
+  let i=goalOrder.indexOf(els.todayGoal.value);
+  els.todayGoal.value=goalOrder[(i+1+goalOrder.length)%goalOrder.length];
+  startPractice();
 }
 function win(v,shape=null){
   if(v==="all")return{start:0,end:15,all:true};
@@ -319,7 +434,10 @@ els.prevChord.onclick=()=>{let a=progChords();progChordIdx=(progChordIdx-1+a.len
 els.nextChord.onclick=()=>{let a=progChords();progChordIdx=(progChordIdx+1)%a.length;progShapeOffset=0;render()};
 els.prevProgShape.onclick=()=>{progShapeOffset--;render()};
 els.nextProgShape.onclick=()=>{progShapeOffset++;render()};
-render();
+els.startToday.onclick=startPractice;
+els.nextIdea.onclick=nextPracticeIdea;
+["skillLevel","todayGoal","practiceKey"].forEach(id=>els[id].addEventListener("change",startPractice));
+startPractice();
 </script>
 </body>
 </html>
