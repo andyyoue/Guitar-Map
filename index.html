@@ -89,9 +89,9 @@ button{font-weight:900;cursor:pointer}
 <h2>What kind of guitar brain do you have today?</h2>
 <p>This alpha turns your earlier questions into short practice paths: pentatonic boxes, open-string shortcuts, chord shapes, sus embellishments, modes, and song-first practice.</p>
 <div class="coach-form">
-<label>Skill level<select id="skillLevel"><option value="early">Early learner</option><option value="new">Just orienting</option><option value="curious">Theory curious</option><option value="song">Song focused</option></select></label>
-<label>What do you want today?<select id="todayGoal"><option value="orientation">Stop the fretboard feeling huge</option><option value="pentatonic">Find a pentatonic path</option><option value="chordShapes">Recognize chord shapes</option><option value="songFreeFallin">Make Free Fallin' musical</option><option value="modes">Understand Dorian / Mixolydian</option><option value="progression">Practice a progression</option><option value="solo">Start a simple solo</option></select></label>
-<label>Home key<select id="practiceKey"></select></label>
+<label>Skill level<select id="skillLevel"><option value="new">Just orienting</option><option value="early">Early learner</option><option value="curious">Theory curious</option><option value="manual">Manual mode</option></select></label>
+<label id="todayGoalWrap">What do you want today?<select id="todayGoal"></select></label>
+<label id="practiceKeyWrap">Home key<select id="practiceKey"></select></label>
 </div>
 <div class="practice-actions"><button id="startToday">Take me there</button><button id="nextIdea">Give me another idea</button></div>
 </div>
@@ -103,7 +103,7 @@ button{font-weight:900;cursor:pointer}
 </div>
 </section>
 
-<section class="card mode"><label>Manual View<select id="mode"><option value="map">Note map</option><option value="chord">Chord fingering</option><option value="progression">Progression</option></select></label></section>
+<section id="manualModeCard" class="card mode hidden"><label>Manual View<select id="mode"><option value="map">Note map</option><option value="chord">Chord fingering</option><option value="progression">Progression</option></select></label></section>
 
 <section id="mapControls" class="card controls">
 <label>Key<select id="key"></select></label>
@@ -160,7 +160,7 @@ const chords={
   dominant7:["Dominant 7","7",[0,4,7,10],"1-3-5-b7"], sus2:["Sus2","sus2",[0,2,7],"1-2-5"], sus4:["Sus4","sus4",[0,5,7],"1-4-5"]
 };
 const $=id=>document.getElementById(id), els={};
-["skillLevel","todayGoal","practiceKey","startToday","nextIdea","practiceBadge","practiceTitle","practiceWhy","practiceSteps","mode","mapControls","chordControls","progControls","key","scale","overlay","display","pattern","mapWindow","chordRoot","chordType","shapeStyle","chordLabels","chordWindow","prevShape","nextShape","shapeName","shapeText","progKey","progType","progStyle","progLabels","near","prevChord","nextChord","prevProgShape","nextProgShape","progLine","title","subtitle","whyTitle","why","board","legend"].forEach(id=>els[id]=$(id));
+["skillLevel","todayGoalWrap","todayGoal","practiceKeyWrap","practiceKey","startToday","nextIdea","practiceBadge","practiceTitle","practiceWhy","practiceSteps","manualModeCard","mode","mapControls","chordControls","progControls","key","scale","overlay","display","pattern","mapWindow","chordRoot","chordType","shapeStyle","chordLabels","chordWindow","prevShape","nextShape","shapeName","shapeText","progKey","progType","progStyle","progLabels","near","prevChord","nextChord","prevProgShape","nextProgShape","progLine","title","subtitle","whyTitle","why","board","legend"].forEach(id=>els[id]=$(id));
 let shapeIdx=0, progChordIdx=0, progShapeOffset=0;
 KEYS.forEach(k=>{["key","progKey","chordRoot","practiceKey"].forEach(id=>{let o=document.createElement("option");o.value=k;o.textContent=k;els[id].appendChild(o)})});
 els.key.value=els.progKey.value=els.chordRoot.value=els.practiceKey.value="A";
@@ -212,10 +212,11 @@ function shapes(root,q,style="all"){
 }
 function closest(arr,target){let b=0,score=1e9;arr.forEach((s,i)=>{let d=Math.abs(s.position-target);if(d<score){score=d;b=i}});return b}
 function setVis(){
-  let m=els.mode.value;
-  els.mapControls.classList.toggle("hidden",m!=="map");
-  els.chordControls.classList.toggle("hidden",m!=="chord");
-  els.progControls.classList.toggle("hidden",m!=="progression");
+  let m=els.mode.value, manual=els.skillLevel.value==="manual";
+  els.manualModeCard.classList.toggle("hidden",!manual);
+  els.mapControls.classList.toggle("hidden",!manual||m!=="map");
+  els.chordControls.classList.toggle("hidden",!manual||m!=="chord");
+  els.progControls.classList.toggle("hidden",!manual||m!=="progression");
   els.progLine.classList.toggle("hidden",m!=="progression");
   renderLegend(m);
 }
@@ -224,12 +225,26 @@ function renderLegend(m){
   if(m==="map") els.legend.innerHTML=base;
   else els.legend.innerHTML=base+'<span><i class="fingering"></i>Fingering</span><span><span class="openmark">O</span>Open</span><span><span class="mutemark">X</span>Muted</span>';
 }
-const goalOrder=["orientation","pentatonic","chordShapes","songFreeFallin","modes","progression","solo"];
+const goalMeta={
+  orientation:"Stop the fretboard feeling huge",
+  pentatonic:"Find a pentatonic path",
+  chordShapes:"Recognize chord shapes",
+  songFreeFallin:"Make Free Fallin' musical",
+  modes:"Understand Dorian / Mixolydian",
+  progression:"Practice a progression",
+  solo:"Start a simple solo"
+};
+const goalsBySkill={
+  new:["orientation","songFreeFallin"],
+  early:["orientation","pentatonic","chordShapes","songFreeFallin","progression"],
+  curious:["pentatonic","chordShapes","modes","progression","solo"],
+  manual:[]
+};
 const skillCopy={
   new:"Keep the board small. One sound, one area, one win.",
   early:"Use shapes first, then let the note names explain what your fingers already found.",
   curious:"Use the fretboard as a lab: change one interval and listen for the emotional shift.",
-  song:"Start with a musical job. Theory is only invited if it helps the song sound better."
+  manual:"You are driving. The controls are open and the coach will stay out of the way."
 };
 function majorFourth(key){return nm(idx(key)+5,key)}
 function majorFifth(key){return nm(idx(key)+7,key)}
@@ -240,6 +255,24 @@ function setPracticeCard(plan){
   els.practiceTitle.textContent=plan.title;
   els.practiceWhy.textContent=plan.why;
   els.practiceSteps.innerHTML=plan.steps.map(s=>`<li>${s}</li>`).join("");
+}
+function refreshGoalOptions(){
+  let skill=els.skillLevel.value, goals=goalsBySkill[skill]||goalsBySkill.early, current=els.todayGoal.value;
+  els.todayGoal.innerHTML=goals.map(g=>`<option value="${g}">${goalMeta[g]}</option>`).join("");
+  if(goals.includes(current)) els.todayGoal.value=current;
+  else if(goals.length) els.todayGoal.value=goals[0];
+  els.todayGoalWrap.classList.toggle("hidden",skill==="manual");
+  els.practiceKeyWrap.classList.toggle("hidden",skill==="new"||skill==="manual");
+  els.startToday.classList.toggle("hidden",skill==="manual");
+  els.nextIdea.classList.toggle("hidden",skill==="manual");
+}
+function showManualIntro(){
+  setPracticeCard({
+    badge:"Manual mode",
+    title:"Manual controls are open",
+    why:"Use this when you already know the question you want to ask: scale map, chord shape, progression, or fret window.",
+    steps:["Pick Manual View: Note Map, Chord, or Progression.","Use the controls below to choose key, shape, scale, or progression.","Switch back to a guided skill level when you want the app to suggest the next move."]
+  });
 }
 function planFor(skill,goal,key){
   let copy=skillCopy[skill]||skillCopy.early;
@@ -284,7 +317,7 @@ function planFor(skill,goal,key){
       title:`Play a ${key} progression in one fretboard area`,
       why:`${copy} This answers the practical question: can I move through changes without the neck turning into a geography exam?`,
       steps:[`Tap each chord chip once and notice which shapes stay near each other.`,`Use Shape only when a chord feels awkward; do not chase every possible inversion.`,`Strum once per chord, then twice per chord, then add one embellishment only after the changes are calm.`],
-      apply(){setSelect(els.mode,"progression");setSelect(els.progKey,key);setSelect(els.progType,skill==="song"?"classic":"romantic");setSelect(els.progStyle,"all");setSelect(els.progLabels,"fingers");setSelect(els.near,"0");progChordIdx=0;progShapeOffset=0}
+      apply(){setSelect(els.mode,"progression");setSelect(els.progKey,key);setSelect(els.progType,"romantic");setSelect(els.progStyle,"all");setSelect(els.progLabels,"fingers");setSelect(els.near,"0");progChordIdx=0;progShapeOffset=0}
     },
     solo:{
       badge:"Simple solo",
@@ -297,14 +330,16 @@ function planFor(skill,goal,key){
   return plans[goal]||plans.orientation;
 }
 function startPractice(){
+  refreshGoalOptions();
+  if(els.skillLevel.value==="manual"){showManualIntro();render();return}
   let plan=planFor(els.skillLevel.value,els.todayGoal.value,els.practiceKey.value);
   setPracticeCard(plan);
   plan.apply();
   render();
 }
 function nextPracticeIdea(){
-  let i=goalOrder.indexOf(els.todayGoal.value);
-  els.todayGoal.value=goalOrder[(i+1+goalOrder.length)%goalOrder.length];
+  let order=goalsBySkill[els.skillLevel.value]||goalsBySkill.early, i=order.indexOf(els.todayGoal.value);
+  els.todayGoal.value=order[(i+1+order.length)%order.length];
   startPractice();
 }
 function win(v,shape=null){

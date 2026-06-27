@@ -4,7 +4,9 @@ Single-file release: upload index.html to GitHub Pages.
 
 V3 alpha idea:
 - Adds a Today Coach above the existing fretboard.
-- Asks skill level, what the player wants to do today, and home key.
+- Asks skill level, then shows only the goals that make sense for that level.
+- Home key appears only for higher guided levels.
+- Manual mode is a skill level and reveals the full manual control set.
 - Generates a short practice path and configures the fretboard automatically.
 - Keeps the manual Note Map, Chord, and Progression controls from V2.1.6.
 
