@@ -1,4 +1,4 @@
-NOTE MAP GUITAR - V2.1.4
+NOTE MAP GUITAR - V2.1.6
 
 Single-file release: upload index.html to GitHub Pages.
 
@@ -10,3 +10,5 @@ Changes from V2.1.3:
 - Open strings show note names when note labels are selected in Chord/Progression modes.
 - Pattern stepping now normalizes root-linked positions, including A major pentatonic Pattern 5 at frets 2-5.
 - Added Romantic and Suspense / resolve progression themes.
+- Fixed compact triads such as A Major (2 of 9) so they show finger-number suggestions instead of generic dots.
+- Removed the open/closed column entirely from Note Map / scale view; Chord and Progression still keep it for O/X fingering.

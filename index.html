@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#34251d" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-title" content="Note Map" />
-<title>Note Map Guitar V2.1.4</title>
+<title>Note Map Guitar V2.1.6</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#f6f3ee;color:#221f1c;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
@@ -35,6 +35,7 @@ button{font-weight:900;cursor:pointer}
 .fretboard{min-width:520px}
 .fretboard.all{min-width:930px}
 .row{display:grid;grid-template-columns:38px 31px repeat(var(--frets),minmax(47px,1fr));align-items:center}
+.row.no-nut{grid-template-columns:38px repeat(var(--frets),minmax(47px,1fr))}
 .cell,.string,.fret,.nuthead{min-height:39px;display:flex;align-items:center;justify-content:center}
 .fret{color:#e8ded5;font-size:12px;font-weight:800}
 .nuthead{color:#e8ded5;font-size:10px;font-weight:900;text-transform:uppercase}
@@ -61,13 +62,13 @@ button{font-weight:900;cursor:pointer}
 .legend span{display:inline-flex;align-items:center;gap:6px}
 .legend i{width:16px;height:16px;border-radius:5px;border:1px solid #0002;display:inline-block}
 @media(max-width:940px){.controls{grid-template-columns:1fr 1fr}.buttons{align-items:stretch;flex-direction:column}}
-@media(max-width:620px){.controls{grid-template-columns:1fr}.mode{max-width:none}h1{font-size:24px}.app{padding-left:8px;padding-right:8px}.neck{padding:8px}.hint{display:block}.fretboard{min-width:500px}.row{grid-template-columns:36px 28px repeat(var(--frets),minmax(43px,1fr))}.cell,.string,.fret,.nuthead{min-height:37px}.dot{width:27px;height:25px;font-size:11px}.open-note,.openmark,.mutemark{width:22px;height:22px;font-size:10px}}
-@media(orientation:landscape) and (max-height:520px){header,header p{display:none}.app{padding-top:6px}.controls{grid-template-columns:repeat(6,minmax(112px,1fr))}.card{margin-bottom:7px;padding:8px}.summary h2{font-size:16px}.cell,.string,.fret,.nuthead{min-height:33px}.dot{width:26px;height:24px;font-size:11px}.neck{padding:7px}.row{grid-template-columns:36px 26px repeat(var(--frets),minmax(42px,1fr))}}
+@media(max-width:620px){.controls{grid-template-columns:1fr}.mode{max-width:none}h1{font-size:24px}.app{padding-left:8px;padding-right:8px}.neck{padding:8px}.hint{display:block}.fretboard{min-width:500px}.row{grid-template-columns:36px 28px repeat(var(--frets),minmax(43px,1fr))}.row.no-nut{grid-template-columns:36px repeat(var(--frets),minmax(43px,1fr))}.cell,.string,.fret,.nuthead{min-height:37px}.dot{width:27px;height:25px;font-size:11px}.open-note,.openmark,.mutemark{width:22px;height:22px;font-size:10px}}
+@media(orientation:landscape) and (max-height:520px){header,header p{display:none}.app{padding-top:6px}.controls{grid-template-columns:repeat(6,minmax(112px,1fr))}.card{margin-bottom:7px;padding:8px}.summary h2{font-size:16px}.cell,.string,.fret,.nuthead{min-height:33px}.dot{width:26px;height:24px;font-size:11px}.neck{padding:7px}.row{grid-template-columns:36px 26px repeat(var(--frets),minmax(42px,1fr))}.row.no-nut{grid-template-columns:36px repeat(var(--frets),minmax(42px,1fr))}}
 </style>
 </head>
 <body>
 <main class="app">
-<header><div><h1>Note Map Guitar</h1><p>One fretboard. One question. Everything else is a filter.</p></div><b>V2.1.4</b></header>
+<header><div><h1>Note Map Guitar</h1><p>One fretboard. One question. Everything else is a filter.</p></div><b>V2.1.6</b></header>
 <section class="hint">Phone tip: rotate sideways. Pattern mode works best with Fret Window set to Auto.</section>
 
 <section class="card mode"><label>View Mode<select id="mode"><option value="map">Note map</option><option value="chord">Chord fingering</option><option value="progression">Progression</option></select></label></section>
@@ -197,12 +198,12 @@ function win(v,shape=null){
   let s=Number(v||0); return{start:s,end:s+(s===0?7:6)}
 }
 function frets(w){let a=[];for(let f=Math.max(1,w.start);f<=w.end;f++)a.push(f);return a}
-function boardStart(w){let fs=frets(w);document.documentElement.style.setProperty("--frets",fs.length);return `<div class="fretboard ${w.all?"all":""}"><div class="row"><div></div><div class="nuthead"></div>${fs.map(f=>`<div class="fret">${f}</div>`).join("")}</div>`}
+function boardStart(w,withNut=true){let fs=frets(w);document.documentElement.style.setProperty("--frets",fs.length);let nut=withNut?'<div class="nuthead"></div>':"";return `<div class="fretboard ${w.all?"all":""}"><div class="row ${withNut?"":"no-nut"}"><div></div>${nut}${fs.map(f=>`<div class="fret">${f}</div>`).join("")}</div>`}
 function zeroShapeCell(label, cls){return `<div class="cell nutcell"><span class="${cls}">${label}</span></div>`}
 function zeroMapCell(label, cls){return `<div class="cell nutcell">${label?`<span class="open-note ${cls}">${label}</span>`:""}</div>`}
 function fingerLabels(frets,fingers){
   let played=frets.map((f,i)=>({f,i})).filter(x=>typeof x.f==="number"&&x.f>0).sort((a,b)=>a.f-b.f||a.i-b.i), map={}, n=1, last=null;
-  played.forEach(x=>{if(fingers[x.i]) map[x.i]=fingers[x.i]; else {if(last!==x.f){last=x.f;n=Math.min(n,4)} map[x.i]=String(n); n=Math.min(n+1,4)}});
+  played.forEach(x=>{if(fingers[x.i]&&fingers[x.i]!=="●") map[x.i]=fingers[x.i]; else {if(last!==x.f){last=x.f;n=Math.min(n,4)} map[x.i]=String(n); n=Math.min(n+1,4)}});
   return map;
 }
 function noteAtString(viewIndex,fret,key){
@@ -220,7 +221,7 @@ function drawShape(s,title,sub,why,wv="auto",labelMode="fingers",noteKey=s.root|
     else html+=zeroShapeCell("","openmark ghost");
     fs.forEach(f=>{
       let lab=".",cl="outside";
-      if(tf===f){lab=labelMode==="notes"?noteAtString(vi,f,noteKey):(fg||suggested[5-vi]||"●");cl="fingering"}
+      if(tf===f){lab=labelMode==="notes"?noteAtString(vi,f,noteKey):((fg&&fg!=="●")?fg:(suggested[5-vi]||"●"));cl="fingering"}
       html+=`<div class="cell"><span class="dot ${cl}">${lab}</span></div>`
     });
     html+=`</div>`
@@ -258,15 +259,10 @@ function renderMap(){
   if(ch[2].length)why+=` The ${key} ${ch[0]} overlay highlights ${ch[3]}: ${chNotes.join(", ")}.`;
   if(pr)why+=` ${pr.name} is transposed for ${key}; the selected position is bright and other scale notes are deliberately pushed back.`;
   els.whyTitle.textContent=pr?"Pattern and root resolution":"Why this works"; els.why.textContent=why; els.progLine.innerHTML="";
-  let html=boardStart(w);
+  let html=boardStart(w,false);
   TUNING.forEach(open=>{
-    html+=`<div class="row"><div class="string">${open}</div>`;
+    html+=`<div class="row no-nut"><div class="string">${open}</div>`;
     let oi=idx(open);
-    let openInter=(oi-ri+12)%12, openInScale=sc[1].includes(openInter), openInChord=ch[2].includes(openInter), openRoot=openInter===0;
-    let openInPat=pr&&openInScale&&0>=pr.activeStart&&0<=pr.activeEnd, openGhost=pr&&openInScale&&!openInPat&&!openRoot&&!openInChord;
-    let openCls=openInPat?"pattern":openRoot?"root":openInChord?"chord":openInScale?"scale":"outside"; if(openGhost)openCls+=" ghost";
-    let openLab=openInScale||openInChord||openRoot?(els.display.value==="degrees"?(sc[2][sc[1].indexOf(openInter)]||"") : nm(oi,key)):"";
-    html+=zeroMapCell(openLab,openCls);
     fs.forEach(f=>{
       let ci=(oi+f)%12,inter=(ci-ri+12)%12,inScale=sc[1].includes(inter),inChord=ch[2].includes(inter),isRoot=inter===0;
       let inPat=pr&&inScale&&f>=pr.activeStart&&f<=pr.activeEnd,outPat=pr&&inScale&&!inPat&&!isRoot&&!inChord;
