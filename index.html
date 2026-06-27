@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#34251d" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-title" content="Note Map" />
-<title>Note Map Guitar V2.1.3</title>
+<title>Note Map Guitar V2.1.4</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#f6f3ee;color:#221f1c;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
@@ -67,7 +67,7 @@ button{font-weight:900;cursor:pointer}
 </head>
 <body>
 <main class="app">
-<header><div><h1>Note Map Guitar</h1><p>One fretboard. One question. Everything else is a filter.</p></div><b>V2.1.3</b></header>
+<header><div><h1>Note Map Guitar</h1><p>One fretboard. One question. Everything else is a filter.</p></div><b>V2.1.4</b></header>
 <section class="hint">Phone tip: rotate sideways. Pattern mode works best with Fret Window set to Auto.</section>
 
 <section class="card mode"><label>View Mode<select id="mode"><option value="map">Note map</option><option value="chord">Chord fingering</option><option value="progression">Progression</option></select></label></section>
@@ -85,6 +85,7 @@ button{font-weight:900;cursor:pointer}
 <label>Root<select id="chordRoot"></select></label>
 <label>Type<select id="chordType"><option value="major">Major</option><option value="minor">Minor</option><option value="minor7">Minor 7</option><option value="major7">Major 7</option><option value="dominant7">Dominant 7</option><option value="sus2">Sus2</option><option value="sus4">Sus4</option></select></label>
 <label>Shape style<select id="shapeStyle"><option value="all">All practical</option><option value="easy">Easy / cheat</option><option value="open">Open</option><option value="movable">Movable / barre</option><option value="triad">Small triads</option></select></label>
+<label>Show on chord<select id="chordLabels"><option value="fingers">Finger numbers</option><option value="notes">Note names</option></select></label>
 <label>Fret window<select id="chordWindow"><option value="auto">Auto</option><option value="0">Open-7</option><option value="3">3-9</option><option value="5">5-11</option><option value="7">7-13</option><option value="10">10-16</option><option value="12">12-18</option></select></label>
 <div class="buttons"><button id="prevShape">◀ Previous</button><button id="nextShape">Next ▶</button></div>
 <div class="note-card"><strong id="shapeName"></strong><p id="shapeText"></p></div>
@@ -92,8 +93,9 @@ button{font-weight:900;cursor:pointer}
 
 <section id="progControls" class="card controls hidden">
 <label>Key<select id="progKey"></select></label>
-<label>Music type<select id="progType"><option value="classic">Classic rock / folk</option><option value="pop">Pop / anthem</option><option value="sad">Sad / emotional</option><option value="blues">Blues</option><option value="funk">Funk / Dorian-ish</option></select></label>
+<label>Music type<select id="progType"><option value="classic">Classic rock / folk</option><option value="pop">Pop / anthem</option><option value="sad">Sad / emotional</option><option value="romantic">Romantic</option><option value="suspense">Suspense / resolve</option><option value="blues">Blues</option><option value="funk">Funk / Dorian-ish</option></select></label>
 <label>Shape style<select id="progStyle"><option value="all">All practical</option><option value="easy">Easy / cheat</option><option value="open">Open</option><option value="movable">Movable / barre</option><option value="triad">Small triads</option></select></label>
+<label>Show on chord<select id="progLabels"><option value="fingers">Finger numbers</option><option value="notes">Note names</option></select></label>
 <label>Keep me near<select id="near"><option value="0">Open / low</option><option value="5">5th fret</option><option value="9">9th fret</option><option value="12">12th fret</option><option value="14">14th fret</option></select></label>
 <div class="buttons"><button id="prevChord">◀ Chord</button><button id="nextChord">Chord ▶</button></div>
 <div class="buttons"><button id="prevProgShape">◀ Shape</button><button id="nextProgShape">Shape ▶</button></div>
@@ -125,7 +127,7 @@ const chords={
   dominant7:["Dominant 7","7",[0,4,7,10],"1-3-5-b7"], sus2:["Sus2","sus2",[0,2,7],"1-2-5"], sus4:["Sus4","sus4",[0,5,7],"1-4-5"]
 };
 const $=id=>document.getElementById(id), els={};
-["mode","mapControls","chordControls","progControls","key","scale","overlay","display","pattern","mapWindow","chordRoot","chordType","shapeStyle","chordWindow","prevShape","nextShape","shapeName","shapeText","progKey","progType","progStyle","near","prevChord","nextChord","prevProgShape","nextProgShape","progLine","title","subtitle","whyTitle","why","board","legend"].forEach(id=>els[id]=$(id));
+["mode","mapControls","chordControls","progControls","key","scale","overlay","display","pattern","mapWindow","chordRoot","chordType","shapeStyle","chordLabels","chordWindow","prevShape","nextShape","shapeName","shapeText","progKey","progType","progStyle","progLabels","near","prevChord","nextChord","prevProgShape","nextProgShape","progLine","title","subtitle","whyTitle","why","board","legend"].forEach(id=>els[id]=$(id));
 let shapeIdx=0, progChordIdx=0, progShapeOffset=0;
 KEYS.forEach(k=>{["key","progKey","chordRoot"].forEach(id=>{let o=document.createElement("option");o.value=k;o.textContent=k;els[id].appendChild(o)})});
 els.key.value=els.progKey.value=els.chordRoot.value="A";
@@ -195,20 +197,30 @@ function win(v,shape=null){
   let s=Number(v||0); return{start:s,end:s+(s===0?7:6)}
 }
 function frets(w){let a=[];for(let f=Math.max(1,w.start);f<=w.end;f++)a.push(f);return a}
-function boardStart(w){let fs=frets(w);document.documentElement.style.setProperty("--frets",fs.length);return `<div class="fretboard ${w.all?"all":""}"><div class="row"><div></div><div class="nuthead">Open</div>${fs.map(f=>`<div class="fret">${f}</div>`).join("")}</div>`}
+function boardStart(w){let fs=frets(w);document.documentElement.style.setProperty("--frets",fs.length);return `<div class="fretboard ${w.all?"all":""}"><div class="row"><div></div><div class="nuthead"></div>${fs.map(f=>`<div class="fret">${f}</div>`).join("")}</div>`}
 function zeroShapeCell(label, cls){return `<div class="cell nutcell"><span class="${cls}">${label}</span></div>`}
 function zeroMapCell(label, cls){return `<div class="cell nutcell">${label?`<span class="open-note ${cls}">${label}</span>`:""}</div>`}
-function drawShape(s,title,sub,why,wv="auto"){
+function fingerLabels(frets,fingers){
+  let played=frets.map((f,i)=>({f,i})).filter(x=>typeof x.f==="number"&&x.f>0).sort((a,b)=>a.f-b.f||a.i-b.i), map={}, n=1, last=null;
+  played.forEach(x=>{if(fingers[x.i]) map[x.i]=fingers[x.i]; else {if(last!==x.f){last=x.f;n=Math.min(n,4)} map[x.i]=String(n); n=Math.min(n+1,4)}});
+  return map;
+}
+function noteAtString(viewIndex,fret,key){
+  let open=TUNING[viewIndex], oi=idx(open);
+  return nm(oi+fret,key)
+}
+function drawShape(s,title,sub,why,wv="auto",labelMode="fingers",noteKey=s.root||"A"){
   let w=win(wv,s),fs=frets(w),html=boardStart(w),vf=[...s.frets].reverse(),vg=[...s.fingers].reverse();
+  let suggested=fingerLabels(s.frets,s.fingers);
   TUNING.forEach((open,vi)=>{
     html+=`<div class="row"><div class="string">${open}</div>`;
     let tf=vf[vi],fg=vg[vi];
     if(tf==="x") html+=zeroShapeCell("X","mutemark");
-    else if(tf===0) html+=zeroShapeCell("O","openmark");
+    else if(tf===0) html+=zeroShapeCell(labelMode==="notes"?noteAtString(vi,0,noteKey):"O","openmark");
     else html+=zeroShapeCell("","openmark ghost");
     fs.forEach(f=>{
       let lab=".",cl="outside";
-      if(tf===f){lab=fg||"●";cl="fingering"}
+      if(tf===f){lab=labelMode==="notes"?noteAtString(vi,f,noteKey):(fg||suggested[5-vi]||"●");cl="fingering"}
       html+=`<div class="cell"><span class="dot ${cl}">${lab}</span></div>`
     });
     html+=`</div>`
@@ -218,14 +230,22 @@ function drawShape(s,title,sub,why,wv="auto"){
 }
 function patternInfo(key, scaleKey, p){
   if(p==="none")return null;
-  let i=Number(p.slice(1))-1, sc=scales[scaleKey][1], anchors=sc.slice(0,5);
-  while(anchors.length<5)anchors.push(anchors[anchors.length-1]+2);
+  let i=Number(p.slice(1))-1;
+  let starts={
+    major:[0,2,4,5,7],
+    mixolydian:[0,2,4,5,7],
+    majorPent:[0,2,4,7,9],
+    minor:[0,2,3,5,7],
+    dorian:[0,2,3,5,7],
+    minorPent:[0,3,5,7,10],
+    blues:[0,3,5,7,10]
+  }[scaleKey]||scales[scaleKey][1].slice(0,5);
   let rootOnLowE=(idx(key)-idx("E")+12)%12;
-  let anchor=rootOnLowE+anchors[i];
-  while(anchor>14)anchor-=12;
+  let anchor=rootOnLowE+starts[i];
+  while(anchor>12)anchor-=12;
   let pentLike=["majorPent","minorPent","blues"].includes(scaleKey);
-  let cleanRootBox=i===0&&["minorPent","blues","minor"].includes(scaleKey);
-  let activeStart=Math.max(0,anchor-(cleanRootBox?0:1)), activeEnd=anchor+(pentLike?3:4);
+  let cleanBox=(scaleKey==="majorPent"&&i===4)||(i===0&&["minorPent","blues","minor"].includes(scaleKey));
+  let activeStart=Math.max(0,anchor-(cleanBox?0:1)), activeEnd=anchor+(pentLike?3:4);
   return {name:`Pattern ${i+1}`,anchor,activeStart,activeEnd,windowStart:activeStart,windowEnd:activeStart+(activeStart===0?7:6)}
 }
 function renderMap(){
@@ -262,16 +282,18 @@ function renderMap(){
 function renderChord(){
   let r=els.chordRoot.value,q=els.chordType.value,st=els.shapeStyle.value,arr=shapes(r,q,st); if(shapeIdx>=arr.length)shapeIdx=0;
   let s=arr[shapeIdx]; els.shapeName.textContent=`${s.name} (${shapeIdx+1} of ${arr.length})`; els.shapeText.textContent=s.note; els.progLine.innerHTML="";
-  drawShape(s,`${r}${chords[q][1]} chord fingering`,`Numbers indicate fingers; O = open; X = muted; filled circles can mean barre or compact notes.`,`Shape Style lets you choose practical cheats, open grips, movable shapes, or compact triads.`,els.chordWindow.value)
+  drawShape(s,`${r}${chords[q][1]} chord fingering`,`${els.chordLabels.value==="notes"?"Note names":"Numbers indicate fingers"}; O = open; X = muted.`,`Shape Style lets you choose practical cheats, open grips, movable shapes, or compact triads.`,els.chordWindow.value,els.chordLabels.value,r)
 }
 const progs={
   classic:["Classic rock / folk",["I","IV","V","I"],"Simple, strong and familiar."],
   pop:["Pop / anthem",["I","V","vi","IV"],"The big modern pop progression."],
   sad:["Sad / emotional",["vi","IV","I","V"],"Starts on the relative minor for emotional pull."],
+  romantic:["Romantic",["I","vi","ii","V7"],"A classic warm movement: home, relative minor, gentle pull, then a stronger return."],
+  suspense:["Suspense / resolve",["i","bVI","bVII","V7"],"Dark lift, rising tension, then a dominant chord that wants to resolve back home."],
   blues:["Blues",["I7","IV7","I7","V7"],"Dominant 7 chords give the blues flavor."],
   funk:["Funk / Dorian-ish",["i7","IV7","i7","bVII"],"Minor 7 center with a brighter, funkier movement."]
 };
-const roman={I:[0,"major"],i:[0,"minor"],"i7":[0,"minor7"],"I7":[0,"dominant7"],IV:[5,"major"],"IV7":[5,"dominant7"],V:[7,"major"],"V7":[7,"dominant7"],vi:[9,"minor"],bVII:[10,"major"]};
+const roman={I:[0,"major"],i:[0,"minor"],"i7":[0,"minor7"],"I7":[0,"dominant7"],ii:[2,"minor"],iii:[4,"minor"],IV:[5,"major"],"IV7":[5,"dominant7"],V:[7,"major"],"V7":[7,"dominant7"],vi:[9,"minor"],bVI:[8,"major"],bVII:[10,"major"]};
 function progChords(){let key=els.progKey.value,p=progs[els.progType.value],ri=idx(key);return p[1].map(n=>{let [it,q]=roman[n],root=nm(ri+it,key);return{n,root,display:root,q}})}
 function renderProgLine(cs){
   els.progLine.innerHTML="";
@@ -286,11 +308,11 @@ function renderProg(){
   let c=cs[progChordIdx],target=Number(els.near.value),arr=shapes(c.root,c.q,els.progStyle.value),base=closest(arr,target);
   let si=(base+progShapeOffset)%arr.length; if(si<0)si+=arr.length;
   let s=arr[si],labels=cs.map((x,i)=>`${i===progChordIdx?"Current: ":""}${x.display}${chords[x.q][1]}`).join("  ");
-  drawShape(s,`${key} ${p[0]}`,`Tap a chord name to jump. ${labels}`,`${p[2]} The app chooses a nearby shape so the progression stays in the same fretboard area. Use Shape to try alternatives.`,String(Math.max(0,target-1)));
+  drawShape(s,`${key} ${p[0]}`,`Tap a chord name to jump. ${labels}`,`${p[2]} The app chooses a nearby shape so the progression stays in the same fretboard area. Use Shape to try alternatives.`,String(Math.max(0,target-1)),els.progLabels.value,c.root);
   renderProgLine(cs)
 }
 function render(){setVis(); if(els.mode.value==="map")renderMap(); else if(els.mode.value==="chord")renderChord(); else renderProg()}
-["key","scale","overlay","display","pattern","mapWindow","mode","chordRoot","chordType","shapeStyle","chordWindow","progKey","progType","progStyle","near"].forEach(id=>els[id].addEventListener("change",()=>{
+["key","scale","overlay","display","pattern","mapWindow","mode","chordRoot","chordType","shapeStyle","chordLabels","chordWindow","progKey","progType","progStyle","progLabels","near"].forEach(id=>els[id].addEventListener("change",()=>{
   if(["chordRoot","chordType","shapeStyle"].includes(id))shapeIdx=0;
   if(["progKey","progType","progStyle","near"].includes(id)){progChordIdx=0;progShapeOffset=0}
   render()
