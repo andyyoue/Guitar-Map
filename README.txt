@@ -1,4 +1,4 @@
-NOTE MAP GUITAR - V3 ALPHA
+NOTE MAP GUITAR - V3 ALPHA 3
 
 Single-file release: upload index.html to GitHub Pages.
 
@@ -25,7 +25,19 @@ Learning themes used:
 - Dorian and Mixolydian curiosity.
 - Memorizing small solo phrases instead of brute-force pattern practice.
 
-Latest alpha fix:
+Alpha 3 fix:
+- Removed the redundant Early Learner "Show me" button; guided views now update directly from the selectors.
+- Reviewed and tightened the right-side guidance so it matches the active screen function.
+- Reordered the Neck Notes selector to start at A.
+- Early Learner major pentatonic now opens on the root-based lower-fret box, so A major pentatonic starts at the fret 2-5 pattern.
+- Root notes now keep the yellow root color inside pattern views, matching the guidance text.
+
+Alpha 2 fix:
+- Versioned this build as V3 alpha 2, with a separate zip/package name.
+- Fixed Early Learner C major so the first shape is the standard open C grip: x32010.
+- Reinstated the Early Learner chord label option: show finger numbers or note names on chord diagrams.
+
+Previous alpha fix:
 - Replaced the odd G major shortcut shapes with standard open G shapes: 320003 and 320033.
 - Tightened compact chord generation so small shapes must include the defining chord tones; this fixes ambiguous Bm shapes that looked like B major.
 - Fixed barre fingering fallback so repeated notes on the barre fret render as the same finger, e.g. F#m shows 1-1-1 plus 2 and 3 rather than splitting the barre across 1/2/3/4.

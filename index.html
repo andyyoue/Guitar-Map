@@ -83,7 +83,7 @@ button{font-weight:900;cursor:pointer}
 </head>
 <body>
 <main class="app">
-<header><div><h1>Note Map Guitar</h1><p>V3 alpha: tell it where your head is, then let the fretboard become the lesson.</p></div><b>V3 alpha</b></header>
+<header><div><h1>Note Map Guitar</h1><p>V3 alpha 3: tell it where your head is, then let the fretboard become the lesson.</p></div><b>V3 alpha 3</b></header>
 <section class="hint">Phone tip: rotate sideways. Pattern mode works best with Fret Window set to Auto.</section>
 
 <section class="coach">
@@ -96,10 +96,10 @@ button{font-weight:900;cursor:pointer}
 <label id="todayGoalWrap">What do you want today?<select id="todayGoal"></select></label>
 <label id="coachRootWrap">Root note<select id="coachRoot"></select></label>
 <label id="coachChordTypeWrap">Chord type<select id="coachChordType"><option value="major">Major</option><option value="minor">Minor</option><option value="minor7">Minor 7</option><option value="major7">Major 7</option><option value="dominant7">Dominant 7</option><option value="sus2">Sus2</option><option value="sus4">Sus4</option></select></label>
+<label id="coachChordLabelsWrap">Show on chord<select id="coachChordLabels"><option value="fingers">Finger numbers</option><option value="notes">Note names</option></select></label>
 <label id="coachNoteWrap">Show note<select id="coachNote"></select></label>
 <label id="coachPentTypeWrap">Pentatonic<select id="coachPentType"><option value="majorPent">Major pentatonic</option><option value="minorPent">Minor pentatonic</option></select></label>
 </div>
-<div class="practice-actions"><button id="startToday">Show me</button></div>
 </div>
 <div class="practice-card">
 <span class="pill" id="practiceBadge">Suggested path</span>
@@ -173,10 +173,10 @@ const chords={
   dominant7:["Dominant 7","7",[0,4,7,10],"1-3-5-b7"], dim:["Diminished","dim",[0,3,6],"1-b3-b5"], sus2:["Sus2","sus2",[0,2,7],"1-2-5"], sus4:["Sus4","sus4",[0,5,7],"1-4-5"]
 };
 const $=id=>document.getElementById(id), els={};
-["skillLevel","todayGoalWrap","todayGoal","coachRootWrap","coachRoot","coachChordTypeWrap","coachChordType","coachNoteWrap","coachNote","coachPentTypeWrap","coachPentType","startToday","practiceBadge","practiceTitle","practiceWhy","practiceSteps","manualModeCard","mode","mapControls","chordControls","progControls","soloControls","key","scale","overlay","display","pattern","mapWindow","chordRoot","chordType","shapeStyle","chordLabels","chordWindow","prevShape","nextShape","shapeName","shapeText","progKey","progType","progStyle","progLabels","near","prevChord","nextChord","prevProgShape","nextProgShape","soloKey","soloScale","soloBlueprint","soloArea","progLine","title","subtitle","whyTitle","why","board","legend"].forEach(id=>els[id]=$(id));
+["skillLevel","todayGoalWrap","todayGoal","coachRootWrap","coachRoot","coachChordTypeWrap","coachChordType","coachChordLabelsWrap","coachChordLabels","coachNoteWrap","coachNote","coachPentTypeWrap","coachPentType","practiceBadge","practiceTitle","practiceWhy","practiceSteps","manualModeCard","mode","mapControls","chordControls","progControls","soloControls","key","scale","overlay","display","pattern","mapWindow","chordRoot","chordType","shapeStyle","chordLabels","chordWindow","prevShape","nextShape","shapeName","shapeText","progKey","progType","progStyle","progLabels","near","prevChord","nextChord","prevProgShape","nextProgShape","soloKey","soloScale","soloBlueprint","soloArea","progLine","title","subtitle","whyTitle","why","board","legend"].forEach(id=>els[id]=$(id));
 let shapeIdx=0, progChordIdx=0, progShapeOffset=0;
 KEYS.forEach(k=>{["key","progKey","chordRoot","coachRoot","soloKey"].forEach(id=>{let o=document.createElement("option");o.value=k;o.textContent=k;els[id].appendChild(o)})});
-N.forEach(n=>{let o=document.createElement("option");o.value=n;o.textContent=n;els.coachNote.appendChild(o)});
+["A","B","C","D","E","F","G"].forEach(n=>{let o=document.createElement("option");o.value=n;o.textContent=n;els.coachNote.appendChild(o)});
 els.key.value=els.progKey.value=els.chordRoot.value=els.coachRoot.value=els.coachNote.value=els.soloKey.value="A";
 function flats(k){return k.includes("b")||["F","Bb","Eb","Ab","Db","Gb"].includes(k)}
 function idx(n){let i=N.indexOf(n);return i>=0?i:NF.indexOf(n)}
@@ -193,6 +193,7 @@ const manual=[
   {root:"G",q:"major",style:"easy",name:"G open three-finger",frets:[3,2,0,0,0,3],fingers:["2","1","","","","3"],note:"Standard open G. Clear major sound with the B string open providing the major third."},
   {root:"G",q:"major",style:"easy",name:"G open four-finger",frets:[3,2,0,0,3,3],fingers:["2","1","","","3","4"],note:"Common fuller G grip. Useful when moving to or from Cadd9, Dsus4, and other folk/rock shapes."},
   {root:"A",q:"major",style:"easy",name:"A one-finger mini barre",frets:["x",0,2,2,2,0],fingers:["","","1","1","1",""],note:"Easy A using one finger across D/G/B strings if comfortable."},
+  {root:"C",q:"major",style:"easy",name:"C open",frets:["x",3,2,0,1,0],fingers:["","3","2","","1",""],note:"Standard open C. Clear beginner grip with C on the A string and open G and E strings."},
   {root:"C",q:"major",style:"easy",name:"C small three-string",frets:["x","x","x",0,1,0],fingers:["","","","","1",""],note:"Tiny C color shape on top strings."}
 ];
 function shapes(root,q,style="all"){
@@ -265,27 +266,27 @@ function refreshGoalOptions(){
   let goal=els.todayGoal.value, manual=skill==="manual";
   els.coachRootWrap.classList.toggle("hidden",manual||goal==="neckNotes");
   els.coachChordTypeWrap.classList.toggle("hidden",manual||goal!=="chordShapes");
+  els.coachChordLabelsWrap.classList.toggle("hidden",manual||goal!=="chordShapes");
   els.coachNoteWrap.classList.toggle("hidden",manual||goal!=="neckNotes");
   els.coachPentTypeWrap.classList.toggle("hidden",manual||goal!=="pentatonicShapes");
-  els.startToday.classList.toggle("hidden",skill==="manual");
 }
 function showManualIntro(){
   setPracticeCard({
     badge:"Manual mode",
     title:"Manual controls are open",
-    why:"Use this when you already know the question you want to ask: scale map, chord shape, progression, or fret window.",
-    steps:["Pick Manual View: Note Map, Chord, or Progression.","Use the controls below to choose key, shape, scale, or progression.","Switch back to a guided skill level when you want the app to suggest the next move."]
+    why:"The guided learner controls are hidden. The manual controls below now drive the fretboard directly.",
+    steps:["Pick Manual View: Note Map, Chord, Progression, or Solo Blueprint.","Use the controls below to choose key, shape, scale, fret window, or progression.","Switch back to Early Learner when you want the app to keep the screen narrower."]
   });
 }
 function planFor(goal){
-  let root=els.coachRoot.value, chordType=els.coachChordType.value, note=els.coachNote.value, pent=els.coachPentType.value;
+  let root=els.coachRoot.value, chordType=els.coachChordType.value, chordLabels=els.coachChordLabels.value, note=els.coachNote.value, pent=els.coachPentType.value;
   let plans={
     chordShapes:{
       badge:"Chord shape vision",
       title:`${root}${chords[chordType][1]} chord shapes`,
-      why:"Start with the shape under your fingers, then use note names only after the grip looks familiar. Small triads are treated as valid cheats because they still contain the defining chord tones.",
-      steps:["Use the finger numbers first. Do not worry about every note yet.","Tap Next Shape to compare open grips, compact triads, and movable versions.","Switch Manual Mode on later if you want full control of fret window and labels."],
-      apply(){setSelect(els.mode,"chord");setSelect(els.chordRoot,root);setSelect(els.chordType,chordType);setSelect(els.shapeStyle,"all");setSelect(els.chordLabels,"fingers");setSelect(els.chordWindow,"auto");shapeIdx=0;render()}
+      why:"This view is about the fretting hand: where the fingers go, which strings are open or muted, and optionally which chord tones are inside the grip.",
+      steps:[chordLabels==="notes"?"Read the note names as chord tones inside the grip.":"Use the finger numbers as the primary target.", "Use O for open strings and X for muted strings.", "Tap Next Shape to compare open grips, compact triads, and movable versions."],
+      apply(){setSelect(els.mode,"chord");setSelect(els.chordRoot,root);setSelect(els.chordType,chordType);setSelect(els.shapeStyle,"all");setSelect(els.chordLabels,chordLabels);setSelect(els.chordWindow,"auto");shapeIdx=0;render()}
     },
     neckNotes:{
       badge:"Neck notes",
@@ -297,9 +298,9 @@ function planFor(goal){
     pentatonicShapes:{
       badge:"Pentatonic shapes",
       title:`${root} ${pent==="majorPent"?"major":"minor"} pentatonic shapes`,
-      why:"Major and minor pentatonic are the safest first maps: fewer notes, stronger patterns, and less theory noise.",
-      steps:["Use Pattern 1 first, then step through the other patterns when the first one feels familiar.","Find the root notes inside the pattern before running it up and down.","Make a four-note phrase and land on the root."],
-      apply(){setSelect(els.mode,"map");setSelect(els.key,root);setSelect(els.scale,pent);setSelect(els.overlay,"none");setSelect(els.pattern,"p1");setSelect(els.mapWindow,"auto");render()}
+      why:"This view is about one playable box at a time. For major pentatonic, the first box shown is the familiar root-based shape around the lower frets when the key allows it.",
+      steps:["Start with the bright green notes only; the grey notes are context, not today’s assignment.","Find the yellow root notes inside the box before running it up and down.","Make a four-note phrase and land on the root."],
+      apply(){setSelect(els.mode,"map");setSelect(els.key,root);setSelect(els.scale,pent);setSelect(els.overlay,"none");setSelect(els.pattern,pent==="majorPent"?"p5":"p1");setSelect(els.mapWindow,"auto");render()}
     }
   };
   return plans[goal]||plans.chordShapes;
@@ -392,7 +393,7 @@ function renderMap(){
     fs.forEach(f=>{
       let ci=(oi+f)%12,inter=(ci-ri+12)%12,inScale=sc[1].includes(inter),inChord=ch[2].includes(inter),isRoot=inter===0;
       let inPat=pr&&inScale&&f>=pr.activeStart&&f<=pr.activeEnd,outPat=pr&&inScale&&!inPat&&!isRoot&&!inChord;
-      let cl=inPat?"pattern":isRoot?"root":inChord?"chord":inScale?"scale":"outside"; if(outPat)cl+=" ghost";
+      let cl=isRoot?"root":inChord?"chord":inPat?"pattern":inScale?"scale":"outside"; if(outPat)cl+=" ghost";
       let lab=els.display.value==="degrees"?(sc[2][sc[1].indexOf(inter)]||"."):nm(ci,key);
       if(!inScale&&!inChord&&!isRoot)lab=".";
       html+=`<div class="cell"><span class="dot ${cl}">${lab}</span></div>`
@@ -512,8 +513,7 @@ els.prevChord.onclick=()=>{let a=progChords();progChordIdx=(progChordIdx-1+a.len
 els.nextChord.onclick=()=>{let a=progChords();progChordIdx=(progChordIdx+1)%a.length;progShapeOffset=0;render()};
 els.prevProgShape.onclick=()=>{progShapeOffset--;render()};
 els.nextProgShape.onclick=()=>{progShapeOffset++;render()};
-els.startToday.onclick=startPractice;
-["skillLevel","todayGoal","coachRoot","coachChordType","coachNote","coachPentType"].forEach(id=>els[id].addEventListener("change",startPractice));
+["skillLevel","todayGoal","coachRoot","coachChordType","coachChordLabels","coachNote","coachPentType"].forEach(id=>els[id].addEventListener("change",startPractice));
 startPractice();
 </script>
 </body>
