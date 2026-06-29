@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#34251d" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-title" content="Note Map" />
-<title>Note Map Guitar V3 Alpha</title>
+<title>Note Map Guitar V3 Alpha 4</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#f6f3ee;color:#221f1c;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
@@ -44,8 +44,12 @@ button{font-weight:900;cursor:pointer}
 .prog-line button{border-radius:999px;min-height:36px;padding:7px 13px;background:#fffdfa}
 .prog-line button.active{background:#34251d;color:#fff8ef;border-color:#34251d}
 .phrase{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
-.phrase span{border:1px solid #d7ccc0;background:#fffdfa;border-radius:999px;padding:6px 10px;font-weight:900}
+.phrase span{border:1px solid #d7ccc0;background:#fffdfa;border-radius:999px;padding:6px 10px;font-weight:900;transition:transform .18s ease,background .18s ease,color .18s ease}
 .phrase .pause{background:#efe6dc;color:#65594f}
+.phrase span.active{background:#34251d;color:#fff8ef;transform:translateY(-2px)}
+.audio-card{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.audio-card button{min-height:38px;padding:7px 12px}
+.audio-card span{font-size:13px;color:#5b5148;font-weight:800}
 .neck{overflow-x:auto;background:#34251d;padding:10px;border-radius:14px;box-shadow:inset 0 0 0 1px #ffffff14;margin-bottom:10px;-webkit-overflow-scrolling:touch}
 .fretboard{min-width:520px}
 .fretboard.all{min-width:930px}
@@ -59,6 +63,8 @@ button{font-weight:900;cursor:pointer}
 .nutcell{border-left:5px solid #f5eadf;background:#2b1f18}
 .row:last-child .cell{border-bottom:none}
 .dot{width:30px;height:28px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:12px;border:2px solid #fffc}
+.dot.playing{animation:pulseNote .42s ease-in-out 2;box-shadow:0 0 0 7px #fff4}
+@keyframes pulseNote{50%{transform:scale(1.22)}}
 .open-note{width:24px;min-width:24px;height:24px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:10px;border:1px solid #ffffff66}
 .openmark,.mutemark{width:24px;height:24px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:12px;border:2px solid #f5eadf}
 .openmark{background:transparent;color:#f5eadf}
@@ -83,7 +89,7 @@ button{font-weight:900;cursor:pointer}
 </head>
 <body>
 <main class="app">
-<header><div><h1>Note Map Guitar</h1><p>V3 alpha 3: tell it where your head is, then let the fretboard become the lesson.</p></div><b>V3 alpha 3</b></header>
+<header><div><h1>Note Map Guitar</h1><p>V3 alpha 4: tell it where your head is, then let the fretboard become the lesson.</p></div><b>V3 alpha 4</b></header>
 <section class="hint">Phone tip: rotate sideways. Pattern mode works best with Fret Window set to Auto.</section>
 
 <section class="coach">
@@ -148,6 +154,7 @@ button{font-weight:900;cursor:pointer}
 </section>
 
 <section class="card summary"><h2 id="title"></h2><p id="subtitle"></p><div id="progLine" class="prog-line hidden"></div></section>
+<section class="card audio-card"><button id="playCurrent">Play</button><button id="playPhrase">Play phrase</button><span id="audioHint">Audio uses your browser speaker.</span></section>
 <section class="neck"><div id="board"></div></section>
 <section class="card explain"><h2 id="whyTitle">Why this works</h2><p id="why"></p></section>
 
@@ -157,7 +164,7 @@ button{font-weight:900;cursor:pointer}
 </main>
 <script>
 const N=["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"], NF=["C","Db","D","Eb","E","F","Gb","G","Ab","A","Bb","B"];
-const KEYS=["C","C#","Db","D","D#","Eb","E","F","F#","Gb","G","G#","Ab","A","A#","Bb","B"], TUNING=["E","B","G","D","A","E"];
+const KEYS=["C","C#","Db","D","D#","Eb","E","F","F#","Gb","G","G#","Ab","A","A#","Bb","B"], KEY_ORDER=["A","A#","Bb","B","C","C#","Db","D","D#","Eb","E","F","F#","Gb","G","G#","Ab"], TUNING=["E","B","G","D","A","E"];
 const scales={
   major:["Major scale",[0,2,4,5,7,9,11],["1","2","3","4","5","6","7"],"The major scale is the full seven-note home map. Chords, pentatonics and modes are filters on this same map."],
   minor:["Natural minor",[0,2,3,5,7,8,10],["1","2","b3","4","5","b6","b7"],"Natural minor changes the 3rd, 6th and 7th compared with major."],
@@ -173,9 +180,9 @@ const chords={
   dominant7:["Dominant 7","7",[0,4,7,10],"1-3-5-b7"], dim:["Diminished","dim",[0,3,6],"1-b3-b5"], sus2:["Sus2","sus2",[0,2,7],"1-2-5"], sus4:["Sus4","sus4",[0,5,7],"1-4-5"]
 };
 const $=id=>document.getElementById(id), els={};
-["skillLevel","todayGoalWrap","todayGoal","coachRootWrap","coachRoot","coachChordTypeWrap","coachChordType","coachChordLabelsWrap","coachChordLabels","coachNoteWrap","coachNote","coachPentTypeWrap","coachPentType","practiceBadge","practiceTitle","practiceWhy","practiceSteps","manualModeCard","mode","mapControls","chordControls","progControls","soloControls","key","scale","overlay","display","pattern","mapWindow","chordRoot","chordType","shapeStyle","chordLabels","chordWindow","prevShape","nextShape","shapeName","shapeText","progKey","progType","progStyle","progLabels","near","prevChord","nextChord","prevProgShape","nextProgShape","soloKey","soloScale","soloBlueprint","soloArea","progLine","title","subtitle","whyTitle","why","board","legend"].forEach(id=>els[id]=$(id));
-let shapeIdx=0, progChordIdx=0, progShapeOffset=0;
-KEYS.forEach(k=>{["key","progKey","chordRoot","coachRoot","soloKey"].forEach(id=>{let o=document.createElement("option");o.value=k;o.textContent=k;els[id].appendChild(o)})});
+["skillLevel","todayGoalWrap","todayGoal","coachRootWrap","coachRoot","coachChordTypeWrap","coachChordType","coachChordLabelsWrap","coachChordLabels","coachNoteWrap","coachNote","coachPentTypeWrap","coachPentType","practiceBadge","practiceTitle","practiceWhy","practiceSteps","manualModeCard","mode","mapControls","chordControls","progControls","soloControls","key","scale","overlay","display","pattern","mapWindow","chordRoot","chordType","shapeStyle","chordLabels","chordWindow","prevShape","nextShape","shapeName","shapeText","progKey","progType","progStyle","progLabels","near","prevChord","nextChord","prevProgShape","nextProgShape","soloKey","soloScale","soloBlueprint","soloArea","playCurrent","playPhrase","audioHint","progLine","title","subtitle","whyTitle","why","board","legend"].forEach(id=>els[id]=$(id));
+let shapeIdx=0, progChordIdx=0, progShapeOffset=0, audioCtx=null, currentSound={kind:"scale",root:"A",quality:"major",notes:["A"]};
+KEY_ORDER.forEach(k=>{["key","progKey","chordRoot","coachRoot","soloKey"].forEach(id=>{let o=document.createElement("option");o.value=k;o.textContent=k;els[id].appendChild(o)})});
 ["A","B","C","D","E","F","G"].forEach(n=>{let o=document.createElement("option");o.value=n;o.textContent=n;els.coachNote.appendChild(o)});
 els.key.value=els.progKey.value=els.chordRoot.value=els.coachRoot.value=els.coachNote.value=els.soloKey.value="A";
 function flats(k){return k.includes("b")||["F","Bb","Eb","Ab","Db","Gb"].includes(k)}
@@ -337,6 +344,61 @@ function noteAtString(viewIndex,fret,key){
   let open=TUNING[viewIndex], oi=idx(open);
   return nm(oi+fret,key)
 }
+function noteMidi(note,oct=4){return 60+idx(note)+((oct-4)*12)}
+function ensureAudio(){
+  audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();
+  if(audioCtx.state==="suspended")audioCtx.resume();
+  return audioCtx
+}
+function playTone(midi,when,dur,gain=0.12){
+  let ctx=ensureAudio(), osc=ctx.createOscillator(), amp=ctx.createGain();
+  osc.type="triangle";
+  osc.frequency.setValueAtTime(440*Math.pow(2,(midi-69)/12),when);
+  amp.gain.setValueAtTime(0.0001,when);
+  amp.gain.exponentialRampToValueAtTime(gain,when+0.018);
+  amp.gain.exponentialRampToValueAtTime(0.0001,when+dur);
+  osc.connect(amp).connect(ctx.destination);
+  osc.start(when); osc.stop(when+dur+0.04)
+}
+function playChord(root,q){
+  let ctx=ensureAudio(), ints=chords[q]?.[2]||[0,4,7], base=noteMidi(root,3);
+  ints.forEach((it,i)=>playTone(base+it+(i>1?12:0),ctx.currentTime+i*.035,.9,.09))
+}
+function playMelody(notes,step=.38){
+  let ctx=ensureAudio(), t=ctx.currentTime;
+  notes.forEach((n,i)=>{if(n!=="pause")playTone(noteMidi(n,4),t+i*step,.32,.12)})
+}
+function clearAnimation(){
+  document.querySelectorAll(".active,.playing").forEach(el=>{el.classList.remove("active");el.classList.remove("playing")})
+}
+function animatePhrase(phrase){
+  clearAnimation();
+  phrase.forEach((n,i)=>{
+    setTimeout(()=>{
+      document.querySelectorAll("[data-step]").forEach(el=>el.classList.toggle("active",Number(el.dataset.step)===i));
+      document.querySelectorAll(".dot.playing").forEach(el=>el.classList.remove("playing"));
+      if(n!=="pause")document.querySelectorAll(`.dot[data-note="${n}"]`).forEach(el=>el.classList.add("playing"))
+    },i*380)
+  });
+  setTimeout(clearAnimation,phrase.length*380+650)
+}
+function updateAudioControls(){
+  let solo=currentSound.kind==="phrase";
+  els.playPhrase.classList.toggle("hidden",!solo);
+  if(currentSound.kind==="chord"){let suffix=chords[currentSound.quality][1]||" major";els.playCurrent.textContent="Play chord";els.audioHint.textContent=`Hear ${currentSound.root}${suffix} chord.`}
+  else if(currentSound.kind==="note"){els.playCurrent.textContent="Play note";els.audioHint.textContent=`Hear ${currentSound.notes[0]}.`}
+  else if(currentSound.kind==="phrase"){els.playCurrent.textContent="Play notes";els.audioHint.textContent="Use Play phrase to hear and watch the blueprint step through."}
+  else {els.playCurrent.textContent="Play scale";els.audioHint.textContent="Hear the active notes from low to high."}
+}
+function playCurrentSound(){
+  if(currentSound.kind==="chord")playChord(currentSound.root,currentSound.quality);
+  else playMelody(currentSound.notes||["A"])
+}
+function playCurrentPhrase(){
+  let phrase=currentSound.phrase||[];
+  playMelody(phrase);
+  animatePhrase(phrase)
+}
 function drawShape(s,title,sub,why,wv="auto",labelMode="fingers",noteKey=s.root||"A"){
   let w=win(wv,s),fs=frets(w),html=boardStart(w),vf=[...s.frets].reverse(),vg=[...s.fingers].reverse();
   let suggested=fingerLabels(s.frets,s.fingers);
@@ -386,6 +448,7 @@ function renderMap(){
   if(ch[2].length)why+=` The ${key} ${ch[0]} overlay highlights ${ch[3]}: ${chNotes.join(", ")}.`;
   if(pr)why+=` ${pr.name} is transposed for ${key}; the selected position is bright and other scale notes are deliberately pushed back.`;
   els.whyTitle.textContent=pr?"Pattern and root resolution":"Why this works"; els.why.textContent=why; els.progLine.innerHTML="";
+  currentSound={kind:"scale",notes:scaleNotes};
   let html=boardStart(w,false);
   TUNING.forEach(open=>{
     html+=`<div class="row no-nut"><div class="string">${open}</div>`;
@@ -405,6 +468,7 @@ function renderMap(){
 function renderChord(){
   let r=els.chordRoot.value,q=els.chordType.value,st=els.shapeStyle.value,arr=shapes(r,q,st); if(shapeIdx>=arr.length)shapeIdx=0;
   let s=arr[shapeIdx]; els.shapeName.textContent=`${s.name} (${shapeIdx+1} of ${arr.length})`; els.shapeText.textContent=s.note; els.progLine.innerHTML="";
+  currentSound={kind:"chord",root:r,quality:q};
   drawShape(s,`${r}${chords[q][1]} chord fingering`,`${els.chordLabels.value==="notes"?"Note names":"Numbers indicate fingers"}; O = open; X = muted.`,`Shape Style lets you choose practical cheats, open grips, movable shapes, or compact triads.`,els.chordWindow.value,els.chordLabels.value,r)
 }
 function renderNoteMap(note){
@@ -414,6 +478,7 @@ function renderNoteMap(note){
   els.whyTitle.textContent="Neck notes";
   els.why.textContent=`Use this as a landmark drill: say the string name, find ${note}, then check the highlighted notes. Start with one string at a time.`;
   els.progLine.innerHTML="";
+  currentSound={kind:"note",notes:[note]};
   TUNING.forEach(open=>{
     html+=`<div class="row no-nut"><div class="string">${open}</div>`;
     let oi=idx(open);
@@ -441,15 +506,16 @@ function soloData(){
   return{key,scaleKey,scaleName:sc[0],plan,subset,notes,phrase,root:key};
 }
 function renderPhrase(phrase){
-  els.progLine.innerHTML=`<div class="phrase">${phrase.map(n=>n==="pause"?'<span class="pause">pause</span>':`<span>${n}</span>`).join("")}</div>`;
+  els.progLine.innerHTML=`<div class="phrase">${phrase.map((n,i)=>n==="pause"?`<span class="pause" data-step="${i}">pause</span>`:`<span data-step="${i}" data-note="${n}">${n}</span>`).join("")}</div>`;
   els.progLine.classList.remove("hidden");
 }
 function renderSolo(){
   let d=soloData(), w=els.soloArea.value==="auto"?{start:patternInfo(d.key,d.scaleKey,"p1").windowStart,end:patternInfo(d.key,d.scaleKey,"p1").windowEnd}:win(els.soloArea.value), fs=frets(w), ri=idx(d.key), html=boardStart(w,false);
   els.title.textContent=`${d.key} ${d.scaleName}: ${d.plan.name}`;
-  els.subtitle.textContent=`Use only: ${d.notes.join("  ")} | Phrase: ${d.phrase.map(n=>n==="pause"?"-":n).join("  ")}`;
+  els.subtitle.textContent=`Do this: press Play phrase, copy the note order, pause where it says pause, then change only the last note.`;
   els.whyTitle.textContent="Solo blueprint";
-  els.why.textContent=`${d.plan.why} Rule: play the phrase once, leave space, then change only the ending note.`;
+  els.why.textContent=`Use only these notes: ${d.notes.join(", ")}. Phrase: ${d.phrase.map(n=>n==="pause"?"pause":n).join(" - ")}. ${d.plan.why}`;
+  currentSound={kind:"phrase",notes:d.notes,phrase:d.phrase};
   renderPhrase(d.phrase);
   TUNING.forEach(open=>{
     html+=`<div class="row no-nut"><div class="string">${open}</div>`;
@@ -458,7 +524,7 @@ function renderSolo(){
       let ci=(oi+f)%12, inter=(ci-ri+12)%12, isRoot=inter===0, inSubset=d.subset.includes(inter), inScale=scales[d.scaleKey][1].includes(inter);
       let cl=isRoot&&inSubset?"root":inSubset?"pattern":inScale?"scale ghost":"outside ghost";
       let lab=inSubset||isRoot?nm(ci,d.key):".";
-      html+=`<div class="cell"><span class="dot ${cl}">${lab}</span></div>`
+      html+=`<div class="cell"><span class="dot ${cl}" data-note="${nm(ci,d.key)}">${lab}</span></div>`
     });
     html+=`</div>`
   });
@@ -498,10 +564,11 @@ function renderProg(){
   let c=cs[progChordIdx],target=Number(els.near.value),arr=shapes(c.root,c.q,els.progStyle.value),base=closest(arr,target);
   let si=(base+progShapeOffset)%arr.length; if(si<0)si+=arr.length;
   let s=arr[si],labels=cs.map((x,i)=>`${i===progChordIdx?"Current: ":""}${x.display}${chords[x.q][1]}`).join("  ");
+  currentSound={kind:"chord",root:c.root,quality:c.q};
   drawShape(s,`${key} ${p[0]}`,`Tap a chord name to jump. ${labels}`,`${p[2]} The app chooses a nearby shape so the progression stays in the same fretboard area. Use Shape to try alternatives.`,String(Math.max(0,target-1)),els.progLabels.value,c.root);
   renderProgLine(cs)
 }
-function render(){setVis(); if(els.mode.value==="map")renderMap(); else if(els.mode.value==="chord")renderChord(); else if(els.mode.value==="progression")renderProg(); else renderSolo()}
+function render(){setVis(); if(els.mode.value==="map")renderMap(); else if(els.mode.value==="chord")renderChord(); else if(els.mode.value==="progression")renderProg(); else renderSolo(); updateAudioControls()}
 ["key","scale","overlay","display","pattern","mapWindow","mode","chordRoot","chordType","shapeStyle","chordLabels","chordWindow","progKey","progType","progStyle","progLabels","near","soloKey","soloScale","soloBlueprint","soloArea"].forEach(id=>els[id].addEventListener("change",()=>{
   if(["chordRoot","chordType","shapeStyle"].includes(id))shapeIdx=0;
   if(["progKey","progType","progStyle","near"].includes(id)){progChordIdx=0;progShapeOffset=0}
@@ -513,6 +580,8 @@ els.prevChord.onclick=()=>{let a=progChords();progChordIdx=(progChordIdx-1+a.len
 els.nextChord.onclick=()=>{let a=progChords();progChordIdx=(progChordIdx+1)%a.length;progShapeOffset=0;render()};
 els.prevProgShape.onclick=()=>{progShapeOffset--;render()};
 els.nextProgShape.onclick=()=>{progShapeOffset++;render()};
+els.playCurrent.onclick=playCurrentSound;
+els.playPhrase.onclick=playCurrentPhrase;
 ["skillLevel","todayGoal","coachRoot","coachChordType","coachChordLabels","coachNote","coachPentType"].forEach(id=>els[id].addEventListener("change",startPractice));
 startPractice();
 </script>

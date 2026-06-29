@@ -1,4 +1,4 @@
-NOTE MAP GUITAR - V3 ALPHA 3
+NOTE MAP GUITAR - V3 ALPHA 4
 
 Single-file release: upload index.html to GitHub Pages.
 
@@ -24,6 +24,12 @@ Learning themes used:
 - Sus2/sus4 embellishments from Free Fallin'.
 - Dorian and Mixolydian curiosity.
 - Memorizing small solo phrases instead of brute-force pattern practice.
+
+Alpha 4 fix:
+- Resequenced root/key selectors so chord-shape and pentatonic root choices start at A.
+- Added browser-native Web Audio playback: chord views play the selected chord, note drills play the selected note, and scale/pattern views play the active scale notes.
+- Added Solo Blueprint phrase playback with visual animation through the phrase chips and matching fretboard notes.
+- Reworked Solo Blueprint text to give a concrete instruction on first view: play the phrase, copy it, pause, then change the ending.
 
 Alpha 3 fix:
 - Removed the redundant Early Learner "Show me" button; guided views now update directly from the selectors.
