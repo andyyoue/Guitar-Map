@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#34251d" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-title" content="Note Map" />
-<title>Note Map Guitar V3 Alpha 4</title>
+<title>Note Map Guitar V3 Alpha 6</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#f6f3ee;color:#221f1c;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
@@ -89,7 +89,7 @@ button{font-weight:900;cursor:pointer}
 </head>
 <body>
 <main class="app">
-<header><div><h1>Note Map Guitar</h1><p>V3 alpha 4: tell it where your head is, then let the fretboard become the lesson.</p></div><b>V3 alpha 4</b></header>
+<header><div><h1>Note Map Guitar</h1><p>V3 alpha 4: tell it where your head is, then let the fretboard become the lesson.</p></div><b>V3 alpha 6</b></header>
 <section class="hint">Phone tip: rotate sideways. Pattern mode works best with Fret Window set to Auto.</section>
 
 <section class="coach">
@@ -366,7 +366,27 @@ function playChord(root,q){
 }
 function playMelody(notes,step=.38){
   let ctx=ensureAudio(), t=ctx.currentTime;
-  notes.forEach((n,i)=>{if(n!=="pause")playTone(noteMidi(n,4),t+i*step,.32,.12)})
+  notes.forEach((n,i)=>{
+    if(n==="pause")return;
+    let midi=typeof n==="object" ? n.midi : noteMidi(n,4);
+    playTone(midi,t+i*step,.32,.12)
+  })
+}
+function scalePlayback(root,scaleKey){
+  let sc=scales[scaleKey], base=noteMidi(root,3);
+  return [...sc[1],12].map((it,i)=>({note:nm(idx(root)+it,root),midi:base+it,step:i}));
+}
+function animateNotes(sequence){
+  clearAnimation();
+  sequence.forEach((item,i)=>{
+    if(item==="pause")return;
+    let note=typeof item==="object" ? item.note : item;
+    setTimeout(()=>{
+      document.querySelectorAll(".dot.playing").forEach(el=>el.classList.remove("playing"));
+      document.querySelectorAll(`.dot[data-note="${note}"]`).forEach(el=>el.classList.add("playing"))
+    },i*380)
+  });
+  setTimeout(clearAnimation,sequence.length*380+650)
 }
 function clearAnimation(){
   document.querySelectorAll(".active,.playing").forEach(el=>{el.classList.remove("active");el.classList.remove("playing")})
@@ -392,15 +412,26 @@ function updateAudioControls(){
 }
 function playCurrentSound(){
   if(currentSound.kind==="chord")playChord(currentSound.root,currentSound.quality);
-  else playMelody(currentSound.notes||["A"])
+  else {
+    let seq=currentSound.playback||currentSound.notes||["A"];
+    playMelody(seq);
+    if(currentSound.kind==="scale"||currentSound.kind==="note")animateNotes(seq)
+  }
 }
 function playCurrentPhrase(){
   let phrase=currentSound.phrase||[];
   playMelody(phrase);
   animatePhrase(phrase)
 }
+function shapeVisibleInWindow(shape,w){
+  let played=shape.frets.filter(f=>typeof f==="number"&&f>0);
+  if(!played.length)return true;
+  return played.some(f=>f>=Math.max(1,w.start)&&f<=w.end)
+}
 function drawShape(s,title,sub,why,wv="auto",labelMode="fingers",noteKey=s.root||"A"){
-  let w=win(wv,s),fs=frets(w),html=boardStart(w),vf=[...s.frets].reverse(),vg=[...s.fingers].reverse();
+  let w=win(wv,s);
+  if(wv!=="all"&&!shapeVisibleInWindow(s,w))w=win("auto",s);
+  let fs=frets(w),html=boardStart(w),vf=[...s.frets].reverse(),vg=[...s.fingers].reverse();
   let suggested=fingerLabels(s.frets,s.fingers);
   TUNING.forEach((open,vi)=>{
     html+=`<div class="row"><div class="string">${open}</div>`;
@@ -411,7 +442,7 @@ function drawShape(s,title,sub,why,wv="auto",labelMode="fingers",noteKey=s.root|
     fs.forEach(f=>{
       let lab=".",cl="outside";
       if(tf===f){lab=labelMode==="notes"?noteAtString(vi,f,noteKey):((fg&&fg!=="●")?fg:(suggested[5-vi]||"●"));cl="fingering"}
-      html+=`<div class="cell"><span class="dot ${cl}">${lab}</span></div>`
+      html+=`<div class="cell"><span class="dot ${cl}" data-note="${nm(ci,key)}">${lab}</span></div>`
     });
     html+=`</div>`
   });
@@ -448,7 +479,7 @@ function renderMap(){
   if(ch[2].length)why+=` The ${key} ${ch[0]} overlay highlights ${ch[3]}: ${chNotes.join(", ")}.`;
   if(pr)why+=` ${pr.name} is transposed for ${key}; the selected position is bright and other scale notes are deliberately pushed back.`;
   els.whyTitle.textContent=pr?"Pattern and root resolution":"Why this works"; els.why.textContent=why; els.progLine.innerHTML="";
-  currentSound={kind:"scale",notes:scaleNotes};
+  currentSound={kind:"scale",notes:scaleNotes,playback:scalePlayback(key,els.scale.value)};
   let html=boardStart(w,false);
   TUNING.forEach(open=>{
     html+=`<div class="row no-nut"><div class="string">${open}</div>`;
@@ -459,7 +490,7 @@ function renderMap(){
       let cl=isRoot?"root":inChord?"chord":inPat?"pattern":inScale?"scale":"outside"; if(outPat)cl+=" ghost";
       let lab=els.display.value==="degrees"?(sc[2][sc[1].indexOf(inter)]||"."):nm(ci,key);
       if(!inScale&&!inChord&&!isRoot)lab=".";
-      html+=`<div class="cell"><span class="dot ${cl}">${lab}</span></div>`
+      html+=`<div class="cell"><span class="dot ${cl}" data-note="${note}">${lab}</span></div>`
     });
     html+=`</div>`
   });
@@ -490,6 +521,7 @@ function renderNoteMap(note){
   });
   html+=`</div>`;
   els.board.innerHTML=html;
+  if (typeof updateAudioControls === "function") updateAudioControls();
 }
 const soloPlans={
   threeNote:{name:"3-note answer",idx:[0,1,2],phrase:[0,1,2,"pause",1,0],why:"A tiny phrase is easier to remember than a scale. Walk up, breathe, answer down."},
@@ -555,7 +587,7 @@ function renderProgLine(cs){
   els.progLine.innerHTML="";
   cs.forEach((c,i)=>{
     let b=document.createElement("button"); b.type="button"; b.className=i===progChordIdx?"active":""; b.textContent=`${c.display}${chords[c.q][1]}`;
-    b.onclick=()=>{progChordIdx=i;progShapeOffset=0;renderProg()};
+    b.onclick=()=>{progChordIdx=i;progShapeOffset=0;renderProg();updateAudioControls()};
     els.progLine.appendChild(b)
   })
 }
