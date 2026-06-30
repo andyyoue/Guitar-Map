@@ -1,13 +1,21 @@
-NOTE MAP GUITAR - V3 ALPHA 6
+NOTE MAP GUITAR - V3 ALPHA 7
 
-Based on V3 alpha 5.
+Based on V3 alpha 6.
 
-Fixes and refinements:
-- Scale playback now uses a root-to-root ascending path instead of fixed-octave note names.
-  Example: A major pentatonic plays A B C# E F# A upward.
-- Scale and note playback now pulse matching notes on the fretboard while audio plays.
-- Progression audio label now refreshes when tapping progression chord chips.
-  Example: A Jazz blues shell should no longer keep saying "Hear A7 chord" after selecting another chord.
-- Shape navigation now forces the fretboard window to show the selected shape if the current window would hide it.
+Fixes:
+- Restored the fretboard after the alpha-6 regression caused by wrong data-note variables in map/chord renderers.
+- Fixed Manual chord view showing stale/non-contextual guidance from the prior mode.
 
-Upload index.html to GitHub Pages.
+Instruction-box improvements:
+- Manual chord view now shows chord tones, interval names, and semitone gap recipe.
+- Manual note map, progression, and solo blueprint views now get context-specific guidance rather than a generic Manual mode message.
+
+Validation:
+- JavaScript syntax check passes.
+- Runtime smoke test passes for:
+  - initial load
+  - Manual chord
+  - Manual note map
+  - Manual progression
+  - Solo Blueprint
+  - Early Learner neck notes

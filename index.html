@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#34251d" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-title" content="Note Map" />
-<title>Note Map Guitar V3 Alpha 6</title>
+<title>Note Map Guitar V3 Alpha 7</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#f6f3ee;color:#221f1c;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
@@ -89,7 +89,7 @@ button{font-weight:900;cursor:pointer}
 </head>
 <body>
 <main class="app">
-<header><div><h1>Note Map Guitar</h1><p>V3 alpha 4: tell it where your head is, then let the fretboard become the lesson.</p></div><b>V3 alpha 6</b></header>
+<header><div><h1>Note Map Guitar</h1><p>V3 alpha 4: tell it where your head is, then let the fretboard become the lesson.</p></div><b>V3 alpha 7</b></header>
 <section class="hint">Phone tip: rotate sideways. Pattern mode works best with Fret Window set to Auto.</section>
 
 <section class="coach">
@@ -258,6 +258,69 @@ const goalMeta={
 };
 const goalsBySkill={early:["chordShapes","neckNotes","pentatonicShapes"],manual:[]};
 function setSelect(el,value){el.value=value}
+function semitoneGapText(intervals){
+  let steps=[...intervals].sort((a,b)=>a-b);
+  let gaps=[];
+  for(let i=0;i<steps.length;i++){
+    let a=steps[i], b=steps[(i+1)%steps.length]+(i===steps.length-1?12:0);
+    gaps.push(b-a);
+  }
+  return gaps.join(" - ");
+}
+function intervalNamesFor(q){
+  return {
+    major:["1/root","major 3rd","5th"],
+    minor:["1/root","minor 3rd","5th"],
+    minor7:["1/root","minor 3rd","5th","flat 7th"],
+    major7:["1/root","major 3rd","5th","major 7th"],
+    dominant7:["1/root","major 3rd","5th","flat 7th"],
+    sus2:["1/root","2nd","5th"],
+    sus4:["1/root","4th","5th"],
+    dim:["1/root","minor 3rd","flat 5th"]
+  }[q]||["chord tones"];
+}
+function chordToneNotes(root,q){
+  let ints=chords[q]?.[2]||[0,4,7];
+  return ints.map((it,i)=>`${nm(idx(root)+it,root)} (${intervalNamesFor(q)[i]||it})`);
+}
+function manualHelp(kind,data={}){
+  if(els.skillLevel.value!=="manual")return;
+  if(kind==="chord"){
+    let ints=chords[data.quality]?.[2]||[0,4,7], suffix=chords[data.quality]?.[1]||"";
+    setPracticeCard({
+      badge:"Manual chord view",
+      title:`${data.root}${suffix || " major"} chord`,
+      why:`Chord tones: ${chordToneNotes(data.root,data.quality).join(", ")}. Semitone gaps around the chord are ${semitoneGapText(ints)}. That is the interval recipe that makes this chord sound like itself.`,
+      steps:[
+        `Current shape: ${data.shapeName}.`,
+        `Look for the root (${data.root}) first, then the third — the third is what tells your ear major, minor, sus, or diminished.`,
+        `Switch to Note names to see the actual chord tones; switch to Finger numbers when you want to practice the grip.`
+      ]
+    });
+  } else if(kind==="map"){
+    setPracticeCard({
+      badge:"Manual note map",
+      title:`${data.key} ${data.scaleName}`,
+      why:`The map is showing ${data.notes.join(", ")}. Roots are your home base; pattern notes are the smaller playable box inside the larger note map.`,
+      steps:["Find the root notes first.","Play only the highlighted pattern before worrying about the full neck.","Use Play scale to hear the note set root-to-root."]
+    });
+  } else if(kind==="progression"){
+    setPracticeCard({
+      badge:"Manual progression",
+      title:`${data.key} ${data.name}`,
+      why:`Current chord: ${data.current}. Progression work is about moving between shapes without losing your place on the neck.`,
+      steps:["Tap a chord chip to jump to that chord.","Use Near fret to keep the progression in one neighborhood.","Use Shape to compare nearby voicings."]
+    });
+  } else if(kind==="solo"){
+    setPracticeCard({
+      badge:"Manual solo blueprint",
+      title:data.title,
+      why:`Use only the blueprint notes first: ${data.notes.join(", ")}. The point is phrasing, not note quantity.`,
+      steps:["Press Play phrase and copy the rhythm.","Pause where the phrase says pause.","Change one note at a time, then return to the root."]
+    });
+  }
+}
+
 function setPracticeCard(plan){
   els.practiceBadge.textContent=plan.badge;
   els.practiceTitle.textContent=plan.title;
@@ -442,7 +505,7 @@ function drawShape(s,title,sub,why,wv="auto",labelMode="fingers",noteKey=s.root|
     fs.forEach(f=>{
       let lab=".",cl="outside";
       if(tf===f){lab=labelMode==="notes"?noteAtString(vi,f,noteKey):((fg&&fg!=="●")?fg:(suggested[5-vi]||"●"));cl="fingering"}
-      html+=`<div class="cell"><span class="dot ${cl}" data-note="${nm(ci,key)}">${lab}</span></div>`
+      html+=`<div class="cell"><span class="dot ${cl}" data-note="${tf===f?noteAtString(vi,f,noteKey):""}">${lab}</span></div>`
     });
     html+=`</div>`
   });
@@ -490,17 +553,19 @@ function renderMap(){
       let cl=isRoot?"root":inChord?"chord":inPat?"pattern":inScale?"scale":"outside"; if(outPat)cl+=" ghost";
       let lab=els.display.value==="degrees"?(sc[2][sc[1].indexOf(inter)]||"."):nm(ci,key);
       if(!inScale&&!inChord&&!isRoot)lab=".";
-      html+=`<div class="cell"><span class="dot ${cl}" data-note="${note}">${lab}</span></div>`
+      html+=`<div class="cell"><span class="dot ${cl}" data-note="${nm(ci,key)}">${lab}</span></div>`
     });
     html+=`</div>`
   });
   html+=`</div>`; els.board.innerHTML=html;
+  manualHelp("map",{key,scaleName:sc[0],notes:scaleNotes});
 }
 function renderChord(){
   let r=els.chordRoot.value,q=els.chordType.value,st=els.shapeStyle.value,arr=shapes(r,q,st); if(shapeIdx>=arr.length)shapeIdx=0;
   let s=arr[shapeIdx]; els.shapeName.textContent=`${s.name} (${shapeIdx+1} of ${arr.length})`; els.shapeText.textContent=s.note; els.progLine.innerHTML="";
   currentSound={kind:"chord",root:r,quality:q};
-  drawShape(s,`${r}${chords[q][1]} chord fingering`,`${els.chordLabels.value==="notes"?"Note names":"Numbers indicate fingers"}; O = open; X = muted.`,`Shape Style lets you choose practical cheats, open grips, movable shapes, or compact triads.`,els.chordWindow.value,els.chordLabels.value,r)
+  drawShape(s,`${r}${chords[q][1]} chord fingering`,`${els.chordLabels.value==="notes"?"Note names":"Numbers indicate fingers"}; O = open; X = muted.`,`Shape Style lets you choose practical cheats, open grips, movable shapes, or compact triads.`,els.chordWindow.value,els.chordLabels.value,r);
+  manualHelp("chord",{root:r,quality:q,shapeName:s.name});
 }
 function renderNoteMap(note){
   let w={start:0,end:15,all:true}, fs=frets(w), target=idx(note), html=boardStart(w,false);
@@ -515,7 +580,7 @@ function renderNoteMap(note){
     let oi=idx(open);
     fs.forEach(f=>{
       let ci=(oi+f)%12, match=ci===target, lab=match?note:".", cl=match?"root":"outside ghost";
-      html+=`<div class="cell"><span class="dot ${cl}">${lab}</span></div>`
+      html+=`<div class="cell"><span class="dot ${cl}" data-note="${match?note:""}">${lab}</span></div>`
     });
     html+=`</div>`
   });
@@ -562,6 +627,7 @@ function renderSolo(){
   });
   html+=`</div>`;
   els.board.innerHTML=html;
+  manualHelp("solo",{title:`${d.key} ${d.scaleName}: ${d.plan.name}`,notes:d.notes});
 }
 const progs={
   classic:["Classic rock / folk",["I","IV","V","I"],"Simple, strong and familiar."],
@@ -598,7 +664,8 @@ function renderProg(){
   let s=arr[si],labels=cs.map((x,i)=>`${i===progChordIdx?"Current: ":""}${x.display}${chords[x.q][1]}`).join("  ");
   currentSound={kind:"chord",root:c.root,quality:c.q};
   drawShape(s,`${key} ${p[0]}`,`Tap a chord name to jump. ${labels}`,`${p[2]} The app chooses a nearby shape so the progression stays in the same fretboard area. Use Shape to try alternatives.`,String(Math.max(0,target-1)),els.progLabels.value,c.root);
-  renderProgLine(cs)
+  renderProgLine(cs);
+  manualHelp("progression",{key,name:p[0],current:`${c.display}${chords[c.q][1]}`});
 }
 function render(){setVis(); if(els.mode.value==="map")renderMap(); else if(els.mode.value==="chord")renderChord(); else if(els.mode.value==="progression")renderProg(); else renderSolo(); updateAudioControls()}
 ["key","scale","overlay","display","pattern","mapWindow","mode","chordRoot","chordType","shapeStyle","chordLabels","chordWindow","progKey","progType","progStyle","progLabels","near","soloKey","soloScale","soloBlueprint","soloArea"].forEach(id=>els[id].addEventListener("change",()=>{
