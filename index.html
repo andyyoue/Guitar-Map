@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#34251d" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-title" content="Note Map" />
-<title>Note Map Guitar V3 Alpha 7</title>
+<title>Note Map Guitar V3 Alpha 8</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#f6f3ee;color:#221f1c;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
@@ -89,7 +89,7 @@ button{font-weight:900;cursor:pointer}
 </head>
 <body>
 <main class="app">
-<header><div><h1>Note Map Guitar</h1><p>V3 alpha 4: tell it where your head is, then let the fretboard become the lesson.</p></div><b>V3 alpha 7</b></header>
+<header><div><h1>Note Map Guitar</h1><p>V3 alpha 8: tell it where your head is, then let the fretboard become the lesson.</p></div><b>V3 alpha 8</b></header>
 <section class="hint">Phone tip: rotate sideways. Pattern mode works best with Fret Window set to Auto.</section>
 
 <section class="coach">
@@ -106,12 +106,6 @@ button{font-weight:900;cursor:pointer}
 <label id="coachNoteWrap">Show note<select id="coachNote"></select></label>
 <label id="coachPentTypeWrap">Pentatonic<select id="coachPentType"><option value="majorPent">Major pentatonic</option><option value="minorPent">Minor pentatonic</option></select></label>
 </div>
-</div>
-<div class="practice-card">
-<span class="pill" id="practiceBadge">Suggested path</span>
-<h3 id="practiceTitle"></h3>
-<p id="practiceWhy"></p>
-<ol id="practiceSteps" class="practice-steps"></ol>
 </div>
 </section>
 
@@ -153,9 +147,15 @@ button{font-weight:900;cursor:pointer}
 <label>Fret area<select id="soloArea"><option value="auto">Auto</option><option value="0">Open-7</option><option value="3">3-9</option><option value="5">5-11</option><option value="7">7-13</option><option value="10">10-16</option></select></label>
 </section>
 
-<section class="card summary"><h2 id="title"></h2><p id="subtitle"></p><div id="progLine" class="prog-line hidden"></div></section>
-<section class="card audio-card"><button id="playCurrent">Play</button><button id="playPhrase">Play phrase</button><span id="audioHint">Audio uses your browser speaker.</span></section>
+<section class="card audio-card"><button id="playCurrent">Play</button><button id="playPhrase">Play phrase</button><button id="nextCoachChordType" class="hidden">Next type</button><button id="nextCoachRoot" class="hidden">Next root</button><span id="audioHint">Audio uses your browser speaker.</span></section>
 <section class="neck"><div id="board"></div></section>
+<section class="card summary"><h2 id="title"></h2><p id="subtitle"></p><div id="progLine" class="prog-line hidden"></div></section>
+<section class="practice-card">
+<span class="pill" id="practiceBadge">Suggested path</span>
+<h3 id="practiceTitle"></h3>
+<p id="practiceWhy"></p>
+<ol id="practiceSteps" class="practice-steps"></ol>
+</section>
 <section class="card explain"><h2 id="whyTitle">Why this works</h2><p id="why"></p></section>
 
 <section class="card bottom-legend">
@@ -180,7 +180,7 @@ const chords={
   dominant7:["Dominant 7","7",[0,4,7,10],"1-3-5-b7"], dim:["Diminished","dim",[0,3,6],"1-b3-b5"], sus2:["Sus2","sus2",[0,2,7],"1-2-5"], sus4:["Sus4","sus4",[0,5,7],"1-4-5"]
 };
 const $=id=>document.getElementById(id), els={};
-["skillLevel","todayGoalWrap","todayGoal","coachRootWrap","coachRoot","coachChordTypeWrap","coachChordType","coachChordLabelsWrap","coachChordLabels","coachNoteWrap","coachNote","coachPentTypeWrap","coachPentType","practiceBadge","practiceTitle","practiceWhy","practiceSteps","manualModeCard","mode","mapControls","chordControls","progControls","soloControls","key","scale","overlay","display","pattern","mapWindow","chordRoot","chordType","shapeStyle","chordLabels","chordWindow","prevShape","nextShape","shapeName","shapeText","progKey","progType","progStyle","progLabels","near","prevChord","nextChord","prevProgShape","nextProgShape","soloKey","soloScale","soloBlueprint","soloArea","playCurrent","playPhrase","audioHint","progLine","title","subtitle","whyTitle","why","board","legend"].forEach(id=>els[id]=$(id));
+["skillLevel","todayGoalWrap","todayGoal","coachRootWrap","coachRoot","coachChordTypeWrap","coachChordType","coachChordLabelsWrap","coachChordLabels","coachNoteWrap","coachNote","coachPentTypeWrap","coachPentType","practiceBadge","practiceTitle","practiceWhy","practiceSteps","manualModeCard","mode","mapControls","chordControls","progControls","soloControls","key","scale","overlay","display","pattern","mapWindow","chordRoot","chordType","shapeStyle","chordLabels","chordWindow","prevShape","nextShape","shapeName","shapeText","progKey","progType","progStyle","progLabels","near","prevChord","nextChord","prevProgShape","nextProgShape","soloKey","soloScale","soloBlueprint","soloArea","playCurrent","playPhrase","nextCoachChordType","nextCoachRoot","audioHint","progLine","title","subtitle","whyTitle","why","board","legend"].forEach(id=>els[id]=$(id));
 let shapeIdx=0, progChordIdx=0, progShapeOffset=0, audioCtx=null, currentSound={kind:"scale",root:"A",quality:"major",notes:["A"]};
 KEY_ORDER.forEach(k=>{["key","progKey","chordRoot","coachRoot","soloKey"].forEach(id=>{let o=document.createElement("option");o.value=k;o.textContent=k;els[id].appendChild(o)})});
 ["A","B","C","D","E","F","G"].forEach(n=>{let o=document.createElement("option");o.value=n;o.textContent=n;els.coachNote.appendChild(o)});
@@ -251,6 +251,14 @@ function renderLegend(m){
   if(m==="map") els.legend.innerHTML=base;
   else els.legend.innerHTML=base+'<span><i class="fingering"></i>Fingering</span><span><span class="openmark">O</span>Open</span><span><span class="mutemark">X</span>Muted</span>';
 }
+function isCoachChordMode(){
+  return els.skillLevel.value==="early"&&els.todayGoal.value==="chordShapes"
+}
+function updateCoachActionButtons(){
+  let show=isCoachChordMode();
+  els.nextCoachChordType.classList.toggle("hidden",!show);
+  els.nextCoachRoot.classList.toggle("hidden",!show)
+}
 const goalMeta={
   chordShapes:"Chord shapes",
   neckNotes:"Neck notes",
@@ -258,74 +266,45 @@ const goalMeta={
 };
 const goalsBySkill={early:["chordShapes","neckNotes","pentatonicShapes"],manual:[]};
 function setSelect(el,value){el.value=value}
-function semitoneGapText(intervals){
-  let steps=[...intervals].sort((a,b)=>a-b);
-  let gaps=[];
-  for(let i=0;i<steps.length;i++){
-    let a=steps[i], b=steps[(i+1)%steps.length]+(i===steps.length-1?12:0);
-    gaps.push(b-a);
-  }
-  return gaps.join(" - ");
-}
-function intervalNamesFor(q){
-  return {
-    major:["1/root","major 3rd","5th"],
-    minor:["1/root","minor 3rd","5th"],
-    minor7:["1/root","minor 3rd","5th","flat 7th"],
-    major7:["1/root","major 3rd","5th","major 7th"],
-    dominant7:["1/root","major 3rd","5th","flat 7th"],
-    sus2:["1/root","2nd","5th"],
-    sus4:["1/root","4th","5th"],
-    dim:["1/root","minor 3rd","flat 5th"]
-  }[q]||["chord tones"];
-}
-function chordToneNotes(root,q){
-  let ints=chords[q]?.[2]||[0,4,7];
-  return ints.map((it,i)=>`${nm(idx(root)+it,root)} (${intervalNamesFor(q)[i]||it})`);
-}
-function manualHelp(kind,data={}){
-  if(els.skillLevel.value!=="manual")return;
-  if(kind==="chord"){
-    let ints=chords[data.quality]?.[2]||[0,4,7], suffix=chords[data.quality]?.[1]||"";
-    setPracticeCard({
-      badge:"Manual chord view",
-      title:`${data.root}${suffix || " major"} chord`,
-      why:`Chord tones: ${chordToneNotes(data.root,data.quality).join(", ")}. Semitone gaps around the chord are ${semitoneGapText(ints)}. That is the interval recipe that makes this chord sound like itself.`,
-      steps:[
-        `Current shape: ${data.shapeName}.`,
-        `Look for the root (${data.root}) first, then the third — the third is what tells your ear major, minor, sus, or diminished.`,
-        `Switch to Note names to see the actual chord tones; switch to Finger numbers when you want to practice the grip.`
-      ]
-    });
-  } else if(kind==="map"){
-    setPracticeCard({
-      badge:"Manual note map",
-      title:`${data.key} ${data.scaleName}`,
-      why:`The map is showing ${data.notes.join(", ")}. Roots are your home base; pattern notes are the smaller playable box inside the larger note map.`,
-      steps:["Find the root notes first.","Play only the highlighted pattern before worrying about the full neck.","Use Play scale to hear the note set root-to-root."]
-    });
-  } else if(kind==="progression"){
-    setPracticeCard({
-      badge:"Manual progression",
-      title:`${data.key} ${data.name}`,
-      why:`Current chord: ${data.current}. Progression work is about moving between shapes without losing your place on the neck.`,
-      steps:["Tap a chord chip to jump to that chord.","Use Near fret to keep the progression in one neighborhood.","Use Shape to compare nearby voicings."]
-    });
-  } else if(kind==="solo"){
-    setPracticeCard({
-      badge:"Manual solo blueprint",
-      title:data.title,
-      why:`Use only the blueprint notes first: ${data.notes.join(", ")}. The point is phrasing, not note quantity.`,
-      steps:["Press Play phrase and copy the rhythm.","Pause where the phrase says pause.","Change one note at a time, then return to the root."]
-    });
-  }
-}
-
 function setPracticeCard(plan){
   els.practiceBadge.textContent=plan.badge;
   els.practiceTitle.textContent=plan.title;
   els.practiceWhy.textContent=plan.why;
   els.practiceSteps.innerHTML=plan.steps.map(s=>`<li>${s}</li>`).join("");
+}
+function semitoneGapText(intervals){
+  let steps=[...intervals].sort((a,b)=>a-b);
+  return steps.map((a,i)=>((steps[(i+1)%steps.length]||0)+(i===steps.length-1?12:0))-a).join(" - ")
+}
+function intervalNamesFor(q){
+  return {
+    major:["1/root","major 3rd","5th"], minor:["1/root","minor 3rd","5th"],
+    minor7:["1/root","minor 3rd","5th","flat 7th"], major7:["1/root","major 3rd","5th","major 7th"],
+    dominant7:["1/root","major 3rd","5th","flat 7th"], sus2:["1/root","2nd","5th"],
+    sus4:["1/root","4th","5th"], dim:["1/root","minor 3rd","flat 5th"]
+  }[q]||["chord tones"]
+}
+function chordToneNotes(root,q){
+  let ints=chords[q]?.[2]||[0,4,7], names=intervalNamesFor(q);
+  return ints.map((it,i)=>`${nm(idx(root)+it,root)} (${names[i]||it})`)
+}
+function manualHelp(kind,data={}){
+  if(els.skillLevel.value!=="manual")return;
+  if(kind==="chord"){
+    let ints=chords[data.quality]?.[2]||[0,4,7], suffix=chords[data.quality]?.[1]||" major";
+    setPracticeCard({
+      badge:"Manual chord view",
+      title:`${data.root}${suffix} chord`,
+      why:`Chord tones: ${chordToneNotes(data.root,data.quality).join(", ")}. Semitone gaps around the chord are ${semitoneGapText(ints)}.`,
+      steps:[`Current shape: ${data.shapeName}.`,`Find the root first, then the third; the third tells your ear major, minor, sus, or diminished.`,`Use Note names to inspect chord tones; use Finger numbers to practice the grip.`]
+    })
+  } else if(kind==="map"){
+    setPracticeCard({badge:"Manual note map",title:`${data.key} ${data.scaleName}`,why:`The map is showing ${data.notes.join(", ")}. Roots are home base; pattern notes are the smaller playable box.`,steps:["Find the root notes first.","Play only the highlighted pattern before worrying about the full neck.","Use Play scale to hear the note set root-to-root."]})
+  } else if(kind==="progression"){
+    setPracticeCard({badge:"Manual progression",title:`${data.key} ${data.name}`,why:`Current chord: ${data.current}. Progression work is about moving between shapes without losing your place on the neck.`,steps:["Tap a chord chip to jump to that chord.","Use Near fret to keep the progression in one neighborhood.","Use Shape to compare nearby voicings."]})
+  } else if(kind==="solo"){
+    setPracticeCard({badge:"Manual solo blueprint",title:data.title,why:`Use only the blueprint notes first: ${data.notes.join(", ")}. The point is phrasing, not note quantity.`,steps:["Press Play phrase and copy the rhythm.","Pause where the phrase says pause.","Change one note at a time, then return to the root."]})
+  }
 }
 function refreshGoalOptions(){
   let skill=els.skillLevel.value, goals=goalsBySkill[skill]||goalsBySkill.early, current=els.todayGoal.value;
@@ -339,6 +318,7 @@ function refreshGoalOptions(){
   els.coachChordLabelsWrap.classList.toggle("hidden",manual||goal!=="chordShapes");
   els.coachNoteWrap.classList.toggle("hidden",manual||goal!=="neckNotes");
   els.coachPentTypeWrap.classList.toggle("hidden",manual||goal!=="pentatonicShapes");
+  updateCoachActionButtons();
 }
 function showManualIntro(){
   setPracticeCard({
@@ -431,28 +411,28 @@ function playMelody(notes,step=.38){
   let ctx=ensureAudio(), t=ctx.currentTime;
   notes.forEach((n,i)=>{
     if(n==="pause")return;
-    let midi=typeof n==="object" ? n.midi : noteMidi(n,4);
+    let midi=typeof n==="object"?n.midi:noteMidi(n,4);
     playTone(midi,t+i*step,.32,.12)
   })
 }
 function scalePlayback(root,scaleKey){
   let sc=scales[scaleKey], base=noteMidi(root,3);
-  return [...sc[1],12].map((it,i)=>({note:nm(idx(root)+it,root),midi:base+it,step:i}));
+  return [...sc[1],12].map((it,i)=>({note:nm(idx(root)+it,root),midi:base+it,step:i}))
+}
+function clearAnimation(){
+  document.querySelectorAll(".active,.playing").forEach(el=>{el.classList.remove("active");el.classList.remove("playing")})
 }
 function animateNotes(sequence){
   clearAnimation();
   sequence.forEach((item,i)=>{
     if(item==="pause")return;
-    let note=typeof item==="object" ? item.note : item;
+    let note=typeof item==="object"?item.note:item;
     setTimeout(()=>{
       document.querySelectorAll(".dot.playing").forEach(el=>el.classList.remove("playing"));
       document.querySelectorAll(`.dot[data-note="${note}"]`).forEach(el=>el.classList.add("playing"))
     },i*380)
   });
   setTimeout(clearAnimation,sequence.length*380+650)
-}
-function clearAnimation(){
-  document.querySelectorAll(".active,.playing").forEach(el=>{el.classList.remove("active");el.classList.remove("playing")})
 }
 function animatePhrase(phrase){
   clearAnimation();
@@ -468,6 +448,7 @@ function animatePhrase(phrase){
 function updateAudioControls(){
   let solo=currentSound.kind==="phrase";
   els.playPhrase.classList.toggle("hidden",!solo);
+  updateCoachActionButtons();
   if(currentSound.kind==="chord"){let suffix=chords[currentSound.quality][1]||" major";els.playCurrent.textContent="Play chord";els.audioHint.textContent=`Hear ${currentSound.root}${suffix} chord.`}
   else if(currentSound.kind==="note"){els.playCurrent.textContent="Play note";els.audioHint.textContent=`Hear ${currentSound.notes[0]}.`}
   else if(currentSound.kind==="phrase"){els.playCurrent.textContent="Play notes";els.audioHint.textContent="Use Play phrase to hear and watch the blueprint step through."}
@@ -485,6 +466,18 @@ function playCurrentPhrase(){
   let phrase=currentSound.phrase||[];
   playMelody(phrase);
   animatePhrase(phrase)
+}
+function stepCoachChordType(){
+  let opts=["major","minor","minor7","major7","dominant7","sus2","sus4"], i=opts.indexOf(els.coachChordType.value);
+  els.coachChordType.value=opts[(i+1+opts.length)%opts.length];
+  shapeIdx=0;
+  startPractice()
+}
+function stepCoachRoot(){
+  let i=KEY_ORDER.indexOf(els.coachRoot.value);
+  els.coachRoot.value=KEY_ORDER[(i+1+KEY_ORDER.length)%KEY_ORDER.length];
+  shapeIdx=0;
+  startPractice()
 }
 function shapeVisibleInWindow(shape,w){
   let played=shape.frets.filter(f=>typeof f==="number"&&f>0);
@@ -586,7 +579,7 @@ function renderNoteMap(note){
   });
   html+=`</div>`;
   els.board.innerHTML=html;
-  if (typeof updateAudioControls === "function") updateAudioControls();
+  updateAudioControls();
 }
 const soloPlans={
   threeNote:{name:"3-note answer",idx:[0,1,2],phrase:[0,1,2,"pause",1,0],why:"A tiny phrase is easier to remember than a scale. Walk up, breathe, answer down."},
@@ -681,6 +674,8 @@ els.prevProgShape.onclick=()=>{progShapeOffset--;render()};
 els.nextProgShape.onclick=()=>{progShapeOffset++;render()};
 els.playCurrent.onclick=playCurrentSound;
 els.playPhrase.onclick=playCurrentPhrase;
+els.nextCoachChordType.onclick=stepCoachChordType;
+els.nextCoachRoot.onclick=stepCoachRoot;
 ["skillLevel","todayGoal","coachRoot","coachChordType","coachChordLabels","coachNote","coachPentType"].forEach(id=>els[id].addEventListener("change",startPractice));
 startPractice();
 </script>
