@@ -21,6 +21,7 @@ header b{background:#34251d;color:#fff8ef;border-radius:12px;padding:8px 10px;he
 .controls{display:grid;grid-template-columns:repeat(4,minmax(135px,1fr));gap:9px}
 .coach{display:grid;grid-template-columns:1.1fr 1fr;gap:10px;align-items:stretch}
 .coach-panel{background:#fff8ef;border:1px solid #eadfce;border-radius:12px;padding:12px}
+.coach-panel{grid-column:1/-1}
 .coach-panel h2{font-size:21px;margin:0 0 5px}
 .coach-panel p{margin:0;color:#554a41}
 .coach-form{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:9px;margin-top:10px}
@@ -127,7 +128,7 @@ button{font-weight:900;cursor:pointer}
 <label>Shape style<select id="shapeStyle"><option value="all">All practical</option><option value="easy">Cheats / triads</option><option value="open">Open</option><option value="movable">Movable / barre</option><option value="triad">Small triads only</option></select></label>
 <label>Show on chord<select id="chordLabels"><option value="fingers">Finger numbers</option><option value="notes">Note names</option></select></label>
 <label>Fret window<select id="chordWindow"><option value="auto">Auto</option><option value="0">Open-7</option><option value="3">3-9</option><option value="5">5-11</option><option value="7">7-13</option><option value="10">10-16</option><option value="12">12-18</option></select></label>
-<div class="buttons"><button id="prevShape">◀ Previous</button><button id="nextShape">Next ▶</button></div>
+<div class="buttons"><button id="prevShape">◀ Prev shape/window</button><button id="nextShape">Next shape/window ▶</button></div>
 <div class="note-card"><strong id="shapeName"></strong><p id="shapeText"></p></div>
 </section>
 
@@ -264,8 +265,11 @@ function renderLegend(m){
 function isCoachChordMode(){
   return els.skillLevel.value==="early"&&els.todayGoal.value==="chordShapes"
 }
+function isManualChordMode(){
+  return els.skillLevel.value==="manual"&&els.mode.value==="chord"
+}
 function updateCoachActionButtons(){
-  let show=isCoachChordMode();
+  let show=isCoachChordMode()||isManualChordMode();
   els.nextCoachChordType.classList.toggle("hidden",!show);
   els.nextCoachRoot.classList.toggle("hidden",!show)
 }
@@ -460,7 +464,7 @@ function updateAudioControls(){
   els.playPhrase.classList.toggle("hidden",!solo);
   updateCoachActionButtons();
   els.actionTitle.textContent=currentSound.title||"";
-  if(currentSound.kind==="chord"){let suffix=chords[currentSound.quality][1]||" major";els.playCurrent.textContent="Play chord";els.audioHint.textContent=`Hear ${currentSound.root}${suffix} chord.`}
+  if(currentSound.kind==="chord"){els.playCurrent.textContent="Play chord";els.audioHint.textContent="Audio uses your browser speaker."}
   else if(currentSound.kind==="note"){els.playCurrent.textContent="Play note";els.audioHint.textContent=`Hear ${currentSound.notes[0]}.`}
   else if(currentSound.kind==="phrase"){els.playCurrent.textContent="Play notes";els.audioHint.textContent="Use Play phrase to hear and watch the blueprint step through."}
   else {els.playCurrent.textContent="Play tones";els.audioHint.textContent="Hear the scale tones root-to-root. This is an ear check, not a fingering path."}
@@ -480,12 +484,26 @@ function playCurrentPhrase(){
 }
 function stepCoachChordType(){
   let opts=["major","minor","minor7","major7","dominant7","sus2","sus4"], i=opts.indexOf(els.coachChordType.value);
+  if(isManualChordMode()){
+    i=opts.indexOf(els.chordType.value);
+    els.chordType.value=opts[(i+1+opts.length)%opts.length];
+    shapeIdx=0;
+    render();
+    return
+  }
   els.coachChordType.value=opts[(i+1+opts.length)%opts.length];
   shapeIdx=0;
   startPractice()
 }
 function stepCoachRoot(){
   let i=KEY_ORDER.indexOf(els.coachRoot.value);
+  if(isManualChordMode()){
+    i=KEY_ORDER.indexOf(els.chordRoot.value);
+    els.chordRoot.value=KEY_ORDER[(i+1+KEY_ORDER.length)%KEY_ORDER.length];
+    shapeIdx=0;
+    render();
+    return
+  }
   els.coachRoot.value=KEY_ORDER[(i+1+KEY_ORDER.length)%KEY_ORDER.length];
   shapeIdx=0;
   startPractice()

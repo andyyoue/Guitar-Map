@@ -15,6 +15,11 @@ Single-file release: upload index.html to GitHub Pages.
   - It is not yet a physical fingering/path playback feature.
 - Fixed movable E/A/D-family chord fingerings so transposed shapes do not reuse impossible open-position finger numbers.
 - Reviewed generated chord shapes with a validation script to catch duplicated finger numbers on different frets.
+- Usability update:
+  - Early Learner top control box now spans the full page width.
+  - Chord audio hint no longer repeats the chord name.
+  - Manual chord shape buttons now read Prev/Next shape/window.
+  - Manual chord mode now also has Next root and Next chord action buttons.
 
 Included from the V3 alpha line:
 - Early Learner mode with Chord shapes, Neck notes, and Pentatonic shapes.
