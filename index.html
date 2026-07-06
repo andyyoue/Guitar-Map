@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#34251d" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-title" content="Note Map" />
-<title>Note Map Guitar 3.1</title>
+<title>Note Map Guitar 3.2</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#f6f3ee;color:#221f1c;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
@@ -53,6 +53,17 @@ button{font-weight:900;cursor:pointer}
 .audio-card span{font-size:13px;color:#5b5148;font-weight:800}
 .action-title{font-weight:900;color:#221f1c;font-size:18px;margin-right:4px}
 .neck{overflow-x:auto;background:#34251d;padding:10px;border-radius:14px;box-shadow:inset 0 0 0 1px #ffffff14;margin-bottom:10px;-webkit-overflow-scrolling:touch}
+.tonnetz{min-width:680px;background:#2b1f18;border-radius:12px;padding:10px;color:#fff8ef}
+.tonnetz svg{width:100%;height:360px;display:block}
+.tonnetz-line{stroke:#ffffff35;stroke-width:2}
+.tonnetz-note{fill:#5b463b;stroke:#ffffff66;stroke-width:2}
+.tonnetz-note.in-key{fill:#a6e6a2;stroke:#f1fff7}
+.tonnetz-note.root{fill:#ffdd68;stroke:#fff8cb}
+.tonnetz-note.chord{fill:#82c7ff;stroke:#e5f5ff}
+.tonnetz-label{font-size:14px;font-weight:900;text-anchor:middle;dominant-baseline:middle;fill:#221f1c}
+.tonnetz-label.out{fill:#dacdc2}
+.tonnetz-caption{display:grid;grid-template-columns:repeat(3,minmax(160px,1fr));gap:8px;margin-top:8px}
+.tonnetz-caption div{background:#fff8ef;color:#302a25;border-radius:8px;padding:8px;font-size:13px;font-weight:800}
 .fretboard{min-width:520px}
 .fretboard.all{min-width:930px}
 .row{display:grid;grid-template-columns:38px 31px repeat(var(--frets),minmax(47px,1fr));align-items:center}
@@ -91,7 +102,7 @@ button{font-weight:900;cursor:pointer}
 </head>
 <body>
 <main class="app">
-<header><div><h1>Note Map Guitar</h1><p>Version 3.1: tell it where your head is, then let the fretboard become the lesson.</p></div><b>3.1</b></header>
+<header><div><h1>Note Map Guitar</h1><p>Version 3.2: tell it where your head is, then let the fretboard become the lesson.</p></div><b>3.2</b></header>
 <section class="hint">Phone tip: rotate sideways. Pattern mode works best with Fret Window set to Auto.</section>
 
 <section class="coach">
@@ -100,7 +111,7 @@ button{font-weight:900;cursor:pointer}
 <h2>What kind of guitar brain do you have today?</h2>
 <p>The beginner path stays deliberately small: chord shapes, neck notes, and major/minor pentatonic shapes.</p>
 <div class="coach-form">
-<label>Skill level<select id="skillLevel"><option value="early">Early learner</option><option value="manual">Manual mode</option></select></label>
+<label>Skill level<select id="skillLevel"><option value="early">Early learner</option><option value="intermediate">Intermediate</option><option value="manual">Manual mode</option></select></label>
 <label id="todayGoalWrap">What do you want today?<select id="todayGoal"></select></label>
 <label id="coachRootWrap">Root<select id="coachRoot"></select></label>
 <label id="coachChordTypeWrap">Chord type<select id="coachChordType"><option value="major">Major</option><option value="minor">Minor</option><option value="minor7">Minor 7</option><option value="major7">Major 7</option><option value="dominant7">Dominant 7</option><option value="sus2">Sus2</option><option value="sus4">Sus4</option></select></label>
@@ -276,9 +287,10 @@ function updateCoachActionButtons(){
 const goalMeta={
   chordShapes:"Chord shapes",
   neckNotes:"Neck notes",
-  pentatonicShapes:"Pentatonic shapes"
+  pentatonicShapes:"Pentatonic shapes",
+  tonnetz:"Harmony / Tonnetz"
 };
-const goalsBySkill={early:["chordShapes","neckNotes","pentatonicShapes"],manual:[]};
+const goalsBySkill={early:["chordShapes","neckNotes","pentatonicShapes"],intermediate:["tonnetz"],manual:[]};
 function setSelect(el,value){el.value=value}
 function setPracticeCard(plan){
   els.practiceBadge.textContent=plan.badge;
@@ -365,6 +377,13 @@ function planFor(goal){
       why:"This view is about one playable box at a time. For major pentatonic, the first box shown is the familiar root-based shape around the lower frets when the key allows it.",
       steps:["Start with the bright green notes only; the grey notes are context, not today’s assignment.","Find the yellow root notes inside the box before running it up and down.","Make a four-note phrase and land on the root."],
       apply(){setSelect(els.mode,"map");setSelect(els.key,root);setSelect(els.scale,pent);setSelect(els.overlay,"none");setSelect(els.pattern,pent==="majorPent"?"p5":"p1");setSelect(els.mapWindow,"auto");render()}
+    },
+    tonnetz:{
+      badge:"Intermediate harmony",
+      title:`${root} major harmony map`,
+      why:"This diagram is not a fretboard. It shows harmonic distance: nearby notes and chords share more tones, so they tend to feel more related.",
+      steps:["Start at the yellow root, then look left/right for fifth relationships.","Green notes belong to the major key; blue notes are the tonic chord tones.","Use this beside Progressions to see why I, IV, V, and vi feel close rather than random."],
+      apply(){setSelect(els.mode,"map");setVis();renderTonnetz(root)}
     }
   };
   return plans[goal]||plans.chordShapes;
@@ -609,6 +628,41 @@ function renderNoteMap(note){
   html+=`</div>`;
   els.board.innerHTML=html;
   updateAudioControls();
+}
+function tonnetzNodes(key){
+  let rows=[1,0,-1], cols=[-3,-2,-1,0,1,2,3], nodes=[];
+  rows.forEach((r,ri)=>{
+    cols.forEach((c,ci)=>{
+      let semitone=(idx("C")+c*7+r*4+120)%12;
+      nodes.push({id:`${c}:${r}`,c,r,x:62+ci*88+(ri%2)*28,y:64+ri*96,note:nm(semitone,key),pc:semitone})
+    })
+  });
+  return nodes
+}
+function renderTonnetz(key){
+  let ri=idx(key), major=scales.major[1], tonic=chords.major[2], nodes=tonnetzNodes(key), byId={};
+  nodes.forEach(n=>byId[n.id]=n);
+  let pairs=[];
+  nodes.forEach(n=>{
+    [[n.c+1,n.r],[n.c,n.r-1],[n.c+1,n.r-1]].forEach(([c,r])=>{
+      let b=byId[`${c}:${r}`]; if(b)pairs.push([n,b])
+    })
+  });
+  let lines=pairs.map(([a,b])=>`<line class="tonnetz-line" x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}"></line>`).join("");
+  let circles=nodes.map(n=>{
+    let inter=(n.pc-ri+12)%12, cls=inter===0?"root":tonic.includes(inter)?"chord":major.includes(inter)?"in-key":"";
+    let out=cls?"":" out";
+    return `<g><circle class="tonnetz-note ${cls}" cx="${n.x}" cy="${n.y}" r="23"></circle><text class="tonnetz-label${out}" x="${n.x}" y="${n.y}">${n.note}</text></g>`
+  }).join("");
+  let scaleNotes=major.map(i=>nm(ri+i,key));
+  currentSound={kind:"scale",title:`${key} Major Harmony`,notes:scaleNotes,playback:scalePlayback(key,"major")};
+  els.title.textContent=`${key} Major Harmony / Tonnetz`;
+  els.subtitle.textContent=`Scale: ${scaleNotes.join("  ")} | Yellow = root, blue = tonic chord, green = other in-key notes.`;
+  els.whyTitle.textContent="How to read this";
+  els.why.textContent=`Horizontal neighbors are fifth relationships. Diagonal neighbors are third relationships. Chords that sit close together share notes, which is why common progressions feel connected rather than arbitrary.`;
+  els.progLine.innerHTML="";
+  els.board.innerHTML=`<div class="tonnetz"><svg viewBox="0 0 650 300" role="img" aria-label="${key} major Tonnetz harmony diagram">${lines}${circles}</svg><div class="tonnetz-caption"><div>Left/right: fifths, like the circle of fifths flattened into a map.</div><div>Diagonals: thirds, the sound that makes major/minor harmony.</div><div>Nearby triangles suggest chords that share notes and move smoothly.</div></div></div>`;
+  updateAudioControls()
 }
 const soloPlans={
   threeNote:{name:"3-note answer",idx:[0,1,2],phrase:[0,1,2,"pause",1,0],why:"A tiny phrase is easier to remember than a scale. Walk up, breathe, answer down."},
