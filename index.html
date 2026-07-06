@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#34251d" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-title" content="Note Map" />
-<title>Note Map Guitar 3.4</title>
+<title>Note Map Guitar 3.5</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#f6f3ee;color:#221f1c;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
@@ -102,7 +102,7 @@ button{font-weight:900;cursor:pointer}
 </head>
 <body>
 <main class="app">
-<header><div><h1>Note Map Guitar</h1><p>Version 3.4: tell it where your head is, then let the fretboard become the lesson.</p></div><b>3.4</b></header>
+<header><div><h1>Note Map Guitar</h1><p>Version 3.5: tell it where your head is, then let the fretboard become the lesson.</p></div><b>3.5</b></header>
 <section class="hint">Phone tip: rotate sideways. Pattern mode works best with Fret Window set to Auto.</section>
 
 <section class="coach">
@@ -127,7 +127,7 @@ button{font-weight:900;cursor:pointer}
 <section id="mapControls" class="card controls">
 <label>Key<select id="key"></select></label>
 <label>Scale<select id="scale"><option value="major">Major</option><option value="minor">Natural minor</option><option value="majorPent">Major pentatonic</option><option value="minorPent">Minor pentatonic</option><option value="blues">Minor blues</option><option value="mixolydian">Mixolydian</option><option value="dorian">Dorian</option></select></label>
-<label>Chord overlay<select id="overlay"><option value="major">Major</option><option value="minor">Minor</option><option value="minor7">Minor 7</option><option value="major7">Major 7</option><option value="dominant7">Dominant 7</option><option value="sus2">Sus2</option><option value="sus4">Sus4</option><option value="none">None</option></select></label>
+<label>Optional chord tones<select id="overlay"><option value="none">None</option><option value="major">Major chord</option><option value="minor">Minor chord</option><option value="minor7">Minor 7 chord</option><option value="major7">Major 7 chord</option><option value="dominant7">Dominant 7 chord</option><option value="sus2">Sus2 chord</option><option value="sus4">Sus4 chord</option></select></label>
 <label>Display<select id="display"><option value="notes">Note names</option><option value="degrees">Scale degrees</option></select></label>
 <label>Pattern highlight<select id="pattern"><option value="none">None</option><option value="p1">Pattern 1</option><option value="p2">Pattern 2</option><option value="p3">Pattern 3</option><option value="p4">Pattern 4</option><option value="p5">Pattern 5</option></select></label>
 <label>Fret window<select id="mapWindow"><option value="auto">Auto</option><option value="0">Open-7</option><option value="3">3-9</option><option value="5">5-11</option><option value="7">7-13</option><option value="10">10-16</option><option value="all">All 0-15</option></select></label>
@@ -199,6 +199,7 @@ let shapeIdx=0, progChordIdx=0, progShapeOffset=0, audioCtx=null, currentSound={
 KEY_ORDER.forEach(k=>{["key","progKey","chordRoot","coachRoot","soloKey"].forEach(id=>{let o=document.createElement("option");o.value=k;o.textContent=k;els[id].appendChild(o)})});
 ["A","B","C","D","E","F","G"].forEach(n=>{let o=document.createElement("option");o.value=n;o.textContent=n;els.coachNote.appendChild(o)});
 els.key.value=els.progKey.value=els.chordRoot.value=els.coachRoot.value=els.coachNote.value=els.soloKey.value="A";
+els.overlay.value="none";
 function flats(k){return k.includes("b")||["F","Bb","Eb","Ab","Db","Gb"].includes(k)}
 function idx(n){let i=N.indexOf(n);return i>=0?i:NF.indexOf(n)}
 function nm(i,k="C"){let a=flats(k)?NF:N;return a[((i%12)+12)%12]}
@@ -459,7 +460,7 @@ function visibleScalePath(key,scaleKey,w,limit=14){
     let stringIndex=TUNING.length-1-vi, oi=idx(open);
     frets(w).forEach(f=>{
       let ci=(oi+f)%12, inter=(ci-ri+12)%12;
-      if(sc[1].includes(inter))candidates.push({note:nm(ci,key),midi:40+stringIndex*5+f,string:stringIndex,fret:f,degree:inter,cell:`${open}:${f}`})
+      if(sc[1].includes(inter))candidates.push({note:nm(ci,key),midi:40+stringIndex*5+f,string:stringIndex,fret:f,degree:inter,cell:`${vi}:${f}`})
     })
   });
   candidates.sort((a,b)=>a.midi-b.midi||a.string-b.string||a.fret-b.fret);
@@ -518,7 +519,7 @@ function playCurrentSound(){
   else {
     let seq=currentSound.playback||currentSound.notes||["A"];
     playMelody(seq);
-    if(currentSound.kind==="scale"||currentSound.kind==="note")animateNotes(seq)
+    if(currentSound.kind==="scale"||currentSound.kind==="scalePath"||currentSound.kind==="note")animateNotes(seq)
   }
 }
 function playCurrentPhrase(){
@@ -606,13 +607,13 @@ function renderMap(){
   els.title.textContent=`${key} ${sc[0]}`;
   els.subtitle.textContent=(practice?`Practice path: one playable sequence in the visible box.`:`Key tones: ${scaleNotes.join("  ")}`)+(ch[2].length?` | ${key} ${ch[0]} tones: ${chNotes.join("  ")}`:"");
   let why=sc[3];
-  if(ch[2].length)why+=` The ${key} ${ch[0]} overlay highlights ${ch[3]}: ${chNotes.join(", ")}.`;
+  if(ch[2].length)why+=` Optional chord tones are an overlay on top of the selected scale, not a scale change. ${key} ${ch[0]} highlights ${ch[3]}: ${chNotes.join(", ")}.`;
   if(pr)why+=` ${pr.name} is transposed for ${key}; the selected position is bright and other scale notes are deliberately pushed back.`;
   els.whyTitle.textContent=pr?"Pattern and root resolution":"Why this works"; els.why.textContent=why; els.progLine.innerHTML="";
   let practicePath=visibleScalePath(key,els.scale.value,w);
   currentSound=practice?{kind:"scalePath",title:`${key} ${sc[0]} Practice`,notes:scaleNotes,playback:practicePath}:{kind:"scale",title:`${key} ${sc[0]}`,notes:scaleNotes,playback:scalePlayback(key,els.scale.value)};
   let html=boardStart(w,false);
-  TUNING.forEach(open=>{
+  TUNING.forEach((open,vi)=>{
     html+=`<div class="row no-nut"><div class="string">${open}</div>`;
     let oi=idx(open);
     fs.forEach(f=>{
@@ -621,7 +622,7 @@ function renderMap(){
       let cl=isRoot?"root":inChord?"chord":inPat?"pattern":inScale?"scale":"outside"; if(outPat)cl+=" ghost";
       let lab=els.display.value==="degrees"?(sc[2][sc[1].indexOf(inter)]||"."):nm(ci,key);
       if(!inScale&&!inChord&&!isRoot)lab=".";
-      html+=`<div class="cell"><span class="dot ${cl}" data-note="${nm(ci,key)}" data-cell="${open}:${f}">${lab}</span></div>`
+      html+=`<div class="cell"><span class="dot ${cl}" data-note="${nm(ci,key)}" data-cell="${vi}:${f}">${lab}</span></div>`
     });
     html+=`</div>`
   });
@@ -771,7 +772,7 @@ function renderProg(){
   manualHelp("progression",{key,name:p[0],current:`${c.display}${chords[c.q][1]}`});
 }
 function render(){setVis(); if(els.mode.value==="map")renderMap(); else if(els.mode.value==="chord")renderChord(); else if(els.mode.value==="progression")renderProg(); else renderSolo(); updateAudioControls()}
-["key","scale","overlay","display","pattern","mapWindow","mode","chordRoot","chordType","shapeStyle","chordLabels","chordWindow","progKey","progType","progStyle","progLabels","near","soloKey","soloScale","soloBlueprint","soloArea"].forEach(id=>els[id].addEventListener("change",()=>{
+["key","scale","overlay","display","pattern","mapWindow","scaleAction","mode","chordRoot","chordType","shapeStyle","chordLabels","chordWindow","progKey","progType","progStyle","progLabels","near","soloKey","soloScale","soloBlueprint","soloArea"].forEach(id=>els[id].addEventListener("change",()=>{
   if(["chordRoot","chordType","shapeStyle"].includes(id))shapeIdx=0;
   if(["progKey","progType","progStyle","near"].includes(id)){progChordIdx=0;progShapeOffset=0}
   render()
