@@ -1,17 +1,20 @@
-NOTE MAP GUITAR - VERSION 3.7
+NOTE MAP GUITAR - VERSION 4.0
 
 Single-file release: upload index.html to GitHub Pages.
 
-3.7 changes:
-- Focus-first UI: coaching notes and theory text are hidden by default.
-- Added a Show/Hide coaching notes button so the fretboard stays visually dominant.
-- Added a compact focus chip beside the action buttons:
-  - chord tones for chords
-  - active pattern and fret range for scale practice
-  - current progression chord position
-  - solo phrase note set
-- Practice Scale now auto-selects Pattern 1 if Pattern is set to None, so practice mode always has a real scale box.
+4.0 changes:
+- Early Learner root choices now combine enharmonic notes:
+  - A#/Bb, C#/Db, D#/Eb, F#/Gb, G#/Ab
+- Early Learner labels are more beginner-friendly:
+  - Chord starts on
+  - Chord sound
+  - Show
+- Coaching text now starts with a more direct "do this now" action.
+- Book chord view toggle wording is clearer.
+- Manual chord shape buttons clarify that shape changes may also move the fret window.
+- Harmony / Tonnetz now labels connected chord triangles for the main diatonic major/minor chords.
 
-Included from 3.6:
-- Practice Scale playback is constrained to the selected scale pattern.
-- Hear the Key remains the broader ear-training mode that highlights matching note names across the fretboard.
+Included from 3.9:
+- Book view / Neck view toggle for chord-shaped screens.
+- Pattern Auto window shows the exact selected pattern fret range.
+- Wider manual fret windows dim scale notes outside the selected pattern, including roots.
