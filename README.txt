@@ -1,8 +1,12 @@
-NOTE MAP GUITAR - VERSION 3.5
+NOTE MAP GUITAR - VERSION 3.6
 
 Single-file release: upload index.html to GitHub Pages.
 
-3.5 fixes:
+3.6 fixes:
+- Practice Scale playback is now constrained to the selected scale pattern.
+- Hear the Key remains the broader ear-training mode that highlights matching note names across the fretboard.
+
+Included from 3.5:
 - Manual > Scale Map now refreshes immediately when switching Scale action:
   - Hear the Key
   - Practice Scale

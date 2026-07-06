@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#34251d" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-title" content="Note Map" />
-<title>Note Map Guitar 3.5</title>
+<title>Note Map Guitar 3.6</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#f6f3ee;color:#221f1c;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
@@ -102,7 +102,7 @@ button{font-weight:900;cursor:pointer}
 </head>
 <body>
 <main class="app">
-<header><div><h1>Note Map Guitar</h1><p>Version 3.5: tell it where your head is, then let the fretboard become the lesson.</p></div><b>3.5</b></header>
+<header><div><h1>Note Map Guitar</h1><p>Version 3.6: tell it where your head is, then let the fretboard become the lesson.</p></div><b>3.6</b></header>
 <section class="hint">Phone tip: rotate sideways. Pattern mode works best with Fret Window set to Auto.</section>
 
 <section class="coach">
@@ -327,7 +327,7 @@ function manualHelp(kind,data={}){
       steps:[`Current shape: ${data.shapeName}.`,`Find the root first, then the third; the third tells your ear major, minor, sus, or diminished.`,`Use Note names to inspect chord tones; use Finger numbers to practice the grip.`]
     })
   } else if(kind==="map"){
-    setPracticeCard({badge:data.practice?"Practice Scale":"Hear the Key",title:`${data.key} ${data.scaleName}`,why:data.practice?`This is a guitarist exercise: one playable fingering path through the visible scale box.`:`This is an ear-training and fretboard-location exercise: every ${data.key} key tone is visible across the neck.`,steps:data.practice?["Press Practice scale and follow one highlighted fret at a time.","Use the same fingering path until it feels automatic.","Then change pattern or fret window and repeat."]:["Press Hear the Key to hear the scale tones root-to-root.","Watch every matching note name light up across the neck.","Use this to learn where the notes in the key live, not as a fingering drill."]})
+    setPracticeCard({badge:data.practice?"Practice Scale":"Hear the Key",title:`${data.key} ${data.scaleName}`,why:data.practice?`This is a guitarist exercise: one playable fingering path inside the selected pattern.`:`This is an ear-training and fretboard-location exercise: every ${data.key} key tone is visible across the neck.`,steps:data.practice?["Press Practice scale and follow one highlighted fret at a time.","Use the same pattern path until it feels automatic.","Then change pattern and repeat."]:["Press Hear the Key to hear the scale tones root-to-root.","Watch every matching note name light up across the neck.","Use this to learn where the notes in the key live, not as a fingering drill."]})
   } else if(kind==="progression"){
     setPracticeCard({badge:"Manual progression",title:`${data.key} ${data.name}`,why:`Current chord: ${data.current}. Progression work is about moving between shapes without losing your place on the neck.`,steps:["Tap a chord chip to jump to that chord.","Use Near fret to keep the progression in one neighborhood.","Use Shape to compare nearby voicings."]})
   } else if(kind==="solo"){
@@ -454,13 +454,14 @@ function scalePlayback(root,scaleKey){
   let sc=scales[scaleKey], base=noteMidi(root,3);
   return [...sc[1],12].map((it,i)=>({note:nm(idx(root)+it,root),midi:base+it,step:i}))
 }
-function visibleScalePath(key,scaleKey,w,limit=14){
+function visibleScalePath(key,scaleKey,w,pattern=null,limit=14){
   let sc=scales[scaleKey], ri=idx(key), candidates=[];
   TUNING.forEach((open,vi)=>{
     let stringIndex=TUNING.length-1-vi, oi=idx(open);
     frets(w).forEach(f=>{
       let ci=(oi+f)%12, inter=(ci-ri+12)%12;
-      if(sc[1].includes(inter))candidates.push({note:nm(ci,key),midi:40+stringIndex*5+f,string:stringIndex,fret:f,degree:inter,cell:`${vi}:${f}`})
+      let inPattern=!pattern||(f>=pattern.activeStart&&f<=pattern.activeEnd);
+      if(inPattern&&sc[1].includes(inter))candidates.push({note:nm(ci,key),midi:40+stringIndex*5+f,string:stringIndex,fret:f,degree:inter,cell:`${vi}:${f}`})
     })
   });
   candidates.sort((a,b)=>a.midi-b.midi||a.string-b.string||a.fret-b.fret);
@@ -511,7 +512,7 @@ function updateAudioControls(){
   if(currentSound.kind==="chord"){els.playCurrent.textContent="Play chord";els.audioHint.textContent="Audio uses your browser speaker."}
   else if(currentSound.kind==="note"){els.playCurrent.textContent="Play note";els.audioHint.textContent=`Hear ${currentSound.notes[0]}.`}
   else if(currentSound.kind==="phrase"){els.playCurrent.textContent="Play notes";els.audioHint.textContent="Use Play phrase to hear and watch the blueprint step through."}
-  else if(currentSound.kind==="scalePath"){els.playCurrent.textContent="Practice scale";els.audioHint.textContent="Animate one playable fingering path, one fret at a time."}
+  else if(currentSound.kind==="scalePath"){els.playCurrent.textContent="Practice scale";els.audioHint.textContent="Animate one playable path inside the selected pattern."}
   else {els.playCurrent.textContent="Hear the Key";els.audioHint.textContent="Highlight every location for each scale tone while hearing the key root-to-root."}
 }
 function playCurrentSound(){
@@ -605,12 +606,12 @@ function renderMap(){
   let scaleNotes=sc[1].map(i=>nm(ri+i,key)),chNotes=ch[2].map(i=>nm(ri+i,key));
   let practice=els.scaleAction.value==="practiceScale";
   els.title.textContent=`${key} ${sc[0]}`;
-  els.subtitle.textContent=(practice?`Practice path: one playable sequence in the visible box.`:`Key tones: ${scaleNotes.join("  ")}`)+(ch[2].length?` | ${key} ${ch[0]} tones: ${chNotes.join("  ")}`:"");
+  els.subtitle.textContent=(practice?`Practice path: one playable sequence in the selected pattern.`:`Key tones: ${scaleNotes.join("  ")}`)+(ch[2].length?` | ${key} ${ch[0]} tones: ${chNotes.join("  ")}`:"");
   let why=sc[3];
   if(ch[2].length)why+=` Optional chord tones are an overlay on top of the selected scale, not a scale change. ${key} ${ch[0]} highlights ${ch[3]}: ${chNotes.join(", ")}.`;
   if(pr)why+=` ${pr.name} is transposed for ${key}; the selected position is bright and other scale notes are deliberately pushed back.`;
   els.whyTitle.textContent=pr?"Pattern and root resolution":"Why this works"; els.why.textContent=why; els.progLine.innerHTML="";
-  let practicePath=visibleScalePath(key,els.scale.value,w);
+  let practicePath=visibleScalePath(key,els.scale.value,w,pr);
   currentSound=practice?{kind:"scalePath",title:`${key} ${sc[0]} Practice`,notes:scaleNotes,playback:practicePath}:{kind:"scale",title:`${key} ${sc[0]}`,notes:scaleNotes,playback:scalePlayback(key,els.scale.value)};
   let html=boardStart(w,false);
   TUNING.forEach((open,vi)=>{
