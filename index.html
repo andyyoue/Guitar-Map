@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#34251d" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-title" content="Note Map" />
-<title>Note Map Guitar 3.2</title>
+<title>Note Map Guitar 3.3</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#f6f3ee;color:#221f1c;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
@@ -102,7 +102,7 @@ button{font-weight:900;cursor:pointer}
 </head>
 <body>
 <main class="app">
-<header><div><h1>Note Map Guitar</h1><p>Version 3.2: tell it where your head is, then let the fretboard become the lesson.</p></div><b>3.2</b></header>
+<header><div><h1>Note Map Guitar</h1><p>Version 3.3: tell it where your head is, then let the fretboard become the lesson.</p></div><b>3.3</b></header>
 <section class="hint">Phone tip: rotate sideways. Pattern mode works best with Fret Window set to Auto.</section>
 
 <section class="coach">
@@ -630,11 +630,11 @@ function renderNoteMap(note){
   updateAudioControls();
 }
 function tonnetzNodes(key){
-  let rows=[1,0,-1], cols=[-3,-2,-1,0,1,2,3], nodes=[];
+  let rows=[2,1,0,-1], cols=[-1,0,1,2,3], nodes=[], root=idx(key);
   rows.forEach((r,ri)=>{
     cols.forEach((c,ci)=>{
-      let semitone=(idx("C")+c*7+r*4+120)%12;
-      nodes.push({id:`${c}:${r}`,c,r,x:62+ci*88+(ri%2)*28,y:64+ri*96,note:nm(semitone,key),pc:semitone})
+      let semitone=(root+c*7+r*4+120)%12;
+      nodes.push({id:`${c}:${r}`,c,r,x:72+ci*108+(ri%2)*28,y:48+ri*72,note:nm(semitone,key),pc:semitone})
     })
   });
   return nodes
@@ -644,7 +644,7 @@ function renderTonnetz(key){
   nodes.forEach(n=>byId[n.id]=n);
   let pairs=[];
   nodes.forEach(n=>{
-    [[n.c+1,n.r],[n.c,n.r-1],[n.c+1,n.r-1]].forEach(([c,r])=>{
+    [[n.c+1,n.r],[n.c,n.r+1],[n.c+1,n.r-1]].forEach(([c,r])=>{
       let b=byId[`${c}:${r}`]; if(b)pairs.push([n,b])
     })
   });
@@ -659,9 +659,9 @@ function renderTonnetz(key){
   els.title.textContent=`${key} Major Harmony / Tonnetz`;
   els.subtitle.textContent=`Scale: ${scaleNotes.join("  ")} | Yellow = root, blue = tonic chord, green = other in-key notes.`;
   els.whyTitle.textContent="How to read this";
-  els.why.textContent=`Horizontal neighbors are fifth relationships. Diagonal neighbors are third relationships. Chords that sit close together share notes, which is why common progressions feel connected rather than arbitrary.`;
+  els.why.textContent=`This is intended to be a mathematically correct Tonnetz slice for major and minor triads in the visible area. Horizontal neighbors are fifths, vertical neighbors are major thirds, and diagonals are minor thirds. Complete triangles are playable major/minor triads. It is still simplified: enharmonic spellings and more advanced chord types are not fully expanded.`;
   els.progLine.innerHTML="";
-  els.board.innerHTML=`<div class="tonnetz"><svg viewBox="0 0 650 300" role="img" aria-label="${key} major Tonnetz harmony diagram">${lines}${circles}</svg><div class="tonnetz-caption"><div>Left/right: fifths, like the circle of fifths flattened into a map.</div><div>Diagonals: thirds, the sound that makes major/minor harmony.</div><div>Nearby triangles suggest chords that share notes and move smoothly.</div></div></div>`;
+  els.board.innerHTML=`<div class="tonnetz"><svg viewBox="0 0 650 300" role="img" aria-label="${key} major Tonnetz harmony diagram">${lines}${circles}</svg><div class="tonnetz-caption"><div>Left/right: fifths, like the circle of fifths flattened into a map.</div><div>Up/down: major thirds. Diagonals: minor thirds.</div><div>Complete triangles show major or minor triads that share close harmonic relationships.</div></div></div>`;
   updateAudioControls()
 }
 const soloPlans={
