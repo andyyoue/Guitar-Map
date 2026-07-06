@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#34251d" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-title" content="Note Map" />
-<title>Note Map Guitar 3.6</title>
+<title>Note Map Guitar 3.7</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#f6f3ee;color:#221f1c;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
@@ -52,6 +52,8 @@ button{font-weight:900;cursor:pointer}
 .audio-card button{min-height:38px;padding:7px 12px}
 .audio-card span{font-size:13px;color:#5b5148;font-weight:800}
 .action-title{font-weight:900;color:#221f1c;font-size:18px;margin-right:4px}
+.focus-meta{background:#fff8ef;border:1px solid #eadfce;border-radius:999px;padding:7px 10px;color:#3d332b!important}
+.details-toggle{margin-left:auto}
 .neck{overflow-x:auto;background:#34251d;padding:10px;border-radius:14px;box-shadow:inset 0 0 0 1px #ffffff14;margin-bottom:10px;-webkit-overflow-scrolling:touch}
 .tonnetz{min-width:680px;background:#2b1f18;border-radius:12px;padding:10px;color:#fff8ef}
 .tonnetz svg{width:100%;height:360px;display:block}
@@ -102,14 +104,14 @@ button{font-weight:900;cursor:pointer}
 </head>
 <body>
 <main class="app">
-<header><div><h1>Note Map Guitar</h1><p>Version 3.6: tell it where your head is, then let the fretboard become the lesson.</p></div><b>3.6</b></header>
+<header><div><h1>Note Map Guitar</h1><p>Version 3.7: less text on the strings, more attention on the fretboard.</p></div><b>3.7</b></header>
 <section class="hint">Phone tip: rotate sideways. Pattern mode works best with Fret Window set to Auto.</section>
 
 <section class="coach">
 <div class="coach-panel">
 <span class="pill">Today coach</span>
-<h2>What kind of guitar brain do you have today?</h2>
-<p>The beginner path stays deliberately small: chord shapes, neck notes, and major/minor pentatonic shapes.</p>
+<h2>Pick today's guitar task.</h2>
+<p>Controls stay close to the fretboard. Coaching notes are tucked away until you ask for them.</p>
 <div class="coach-form">
 <label>Skill level<select id="skillLevel"><option value="early">Early learner</option><option value="intermediate">Intermediate</option><option value="manual">Manual mode</option></select></label>
 <label id="todayGoalWrap">What do you want today?<select id="todayGoal"></select></label>
@@ -161,16 +163,16 @@ button{font-weight:900;cursor:pointer}
 <label>Fret area<select id="soloArea"><option value="auto">Auto</option><option value="0">Open-7</option><option value="3">3-9</option><option value="5">5-11</option><option value="7">7-13</option><option value="10">10-16</option></select></label>
 </section>
 
-<section class="card audio-card"><span id="actionTitle" class="action-title"></span><button id="nextCoachRoot" class="hidden">Next root</button><button id="nextCoachChordType" class="hidden">Next chord</button><button id="playCurrent">Play</button><button id="playPhrase">Play phrase</button><span id="audioHint">Audio uses your browser speaker.</span></section>
+<section class="card audio-card"><span id="actionTitle" class="action-title"></span><span id="focusMeta" class="focus-meta"></span><button id="nextCoachRoot" class="hidden">Next root</button><button id="nextCoachChordType" class="hidden">Next chord</button><button id="playCurrent">Play</button><button id="playPhrase">Play phrase</button><button id="toggleDetails" class="details-toggle">Show coaching notes</button><span id="audioHint">Audio uses your browser speaker.</span></section>
 <section class="neck"><div id="board"></div></section>
 <section class="card summary"><h2 id="title"></h2><p id="subtitle"></p><div id="progLine" class="prog-line hidden"></div></section>
-<section class="practice-card">
+<section class="practice-card lesson-extra hidden">
 <span class="pill" id="practiceBadge">Suggested path</span>
 <h3 id="practiceTitle"></h3>
 <p id="practiceWhy"></p>
 <ol id="practiceSteps" class="practice-steps"></ol>
 </section>
-<section class="card explain"><h2 id="whyTitle">Why this works</h2><p id="why"></p></section>
+<section class="card explain lesson-extra hidden"><h2 id="whyTitle">Why this works</h2><p id="why"></p></section>
 
 <section class="card bottom-legend">
 <div id="legend" class="legend"></div>
@@ -194,8 +196,8 @@ const chords={
   dominant7:["Dominant 7","7",[0,4,7,10],"1-3-5-b7"], dim:["Diminished","dim",[0,3,6],"1-b3-b5"], sus2:["Sus2","sus2",[0,2,7],"1-2-5"], sus4:["Sus4","sus4",[0,5,7],"1-4-5"]
 };
 const $=id=>document.getElementById(id), els={};
-["skillLevel","todayGoalWrap","todayGoal","coachRootWrap","coachRoot","coachChordTypeWrap","coachChordType","coachChordLabelsWrap","coachChordLabels","coachNoteWrap","coachNote","coachPentTypeWrap","coachPentType","practiceBadge","practiceTitle","practiceWhy","practiceSteps","manualModeCard","mode","mapControls","chordControls","progControls","soloControls","key","scale","overlay","display","pattern","mapWindow","scaleAction","chordRoot","chordType","shapeStyle","chordLabels","chordWindow","prevShape","nextShape","shapeName","shapeText","progKey","progType","progStyle","progLabels","near","prevChord","nextChord","prevProgShape","nextProgShape","soloKey","soloScale","soloBlueprint","soloArea","actionTitle","playCurrent","playPhrase","nextCoachChordType","nextCoachRoot","audioHint","progLine","title","subtitle","whyTitle","why","board","legend"].forEach(id=>els[id]=$(id));
-let shapeIdx=0, progChordIdx=0, progShapeOffset=0, audioCtx=null, currentSound={kind:"scale",root:"A",quality:"major",notes:["A"]};
+["skillLevel","todayGoalWrap","todayGoal","coachRootWrap","coachRoot","coachChordTypeWrap","coachChordType","coachChordLabelsWrap","coachChordLabels","coachNoteWrap","coachNote","coachPentTypeWrap","coachPentType","practiceBadge","practiceTitle","practiceWhy","practiceSteps","manualModeCard","mode","mapControls","chordControls","progControls","soloControls","key","scale","overlay","display","pattern","mapWindow","scaleAction","chordRoot","chordType","shapeStyle","chordLabels","chordWindow","prevShape","nextShape","shapeName","shapeText","progKey","progType","progStyle","progLabels","near","prevChord","nextChord","prevProgShape","nextProgShape","soloKey","soloScale","soloBlueprint","soloArea","actionTitle","focusMeta","playCurrent","playPhrase","toggleDetails","nextCoachChordType","nextCoachRoot","audioHint","progLine","title","subtitle","whyTitle","why","board","legend"].forEach(id=>els[id]=$(id));
+let shapeIdx=0, progChordIdx=0, progShapeOffset=0, audioCtx=null, detailsOpen=false, currentSound={kind:"scale",root:"A",quality:"major",notes:["A"]};
 KEY_ORDER.forEach(k=>{["key","progKey","chordRoot","coachRoot","soloKey"].forEach(id=>{let o=document.createElement("option");o.value=k;o.textContent=k;els[id].appendChild(o)})});
 ["A","B","C","D","E","F","G"].forEach(n=>{let o=document.createElement("option");o.value=n;o.textContent=n;els.coachNote.appendChild(o)});
 els.key.value=els.progKey.value=els.chordRoot.value=els.coachRoot.value=els.coachNote.value=els.soloKey.value="A";
@@ -206,6 +208,11 @@ function nm(i,k="C"){let a=flats(k)?NF:N;return a[((i%12)+12)%12]}
 function tr(x,o){return typeof x==="number"?x+o:x}
 function pos(f){let a=f.filter(x=>typeof x==="number"&&x>0);return a.length?Math.min(...a):0}
 function maxf(f){let a=f.filter(x=>typeof x==="number");return a.length?Math.max(...a):0}
+function setFocusMeta(text){els.focusMeta.textContent=text||"";els.focusMeta.classList.toggle("hidden",!text)}
+function updateDetails(){
+  document.querySelectorAll(".lesson-extra").forEach(el=>el.classList.toggle("hidden",!detailsOpen));
+  els.toggleDetails.textContent=detailsOpen?"Hide coaching notes":"Show coaching notes"
+}
 function movableFingers(fam,q,off,fingers){
   if(off===0)return [...fingers];
   const overrides={
@@ -605,6 +612,7 @@ function renderMap(){
   let w=(els.mapWindow.value==="auto"&&pr)?{start:pr.windowStart,end:pr.windowEnd}:win(els.mapWindow.value==="auto"?"0":els.mapWindow.value),fs=frets(w);
   let scaleNotes=sc[1].map(i=>nm(ri+i,key)),chNotes=ch[2].map(i=>nm(ri+i,key));
   let practice=els.scaleAction.value==="practiceScale";
+  if(practice&&!pr){els.pattern.value="p1";pr=patternInfo(key,els.scale.value,els.pattern.value);w={start:pr.windowStart,end:pr.windowEnd};fs=frets(w)}
   els.title.textContent=`${key} ${sc[0]}`;
   els.subtitle.textContent=(practice?`Practice path: one playable sequence in the selected pattern.`:`Key tones: ${scaleNotes.join("  ")}`)+(ch[2].length?` | ${key} ${ch[0]} tones: ${chNotes.join("  ")}`:"");
   let why=sc[3];
@@ -613,6 +621,7 @@ function renderMap(){
   els.whyTitle.textContent=pr?"Pattern and root resolution":"Why this works"; els.why.textContent=why; els.progLine.innerHTML="";
   let practicePath=visibleScalePath(key,els.scale.value,w,pr);
   currentSound=practice?{kind:"scalePath",title:`${key} ${sc[0]} Practice`,notes:scaleNotes,playback:practicePath}:{kind:"scale",title:`${key} ${sc[0]}`,notes:scaleNotes,playback:scalePlayback(key,els.scale.value)};
+  setFocusMeta(pr?`${practice?"Practice":"Pattern"}: ${pr.name}, frets ${pr.activeStart}-${pr.activeEnd}`:"Hear the whole key");
   let html=boardStart(w,false);
   TUNING.forEach((open,vi)=>{
     html+=`<div class="row no-nut"><div class="string">${open}</div>`;
@@ -634,6 +643,7 @@ function renderChord(){
   let r=els.chordRoot.value,q=els.chordType.value,st=els.shapeStyle.value,arr=shapes(r,q,st); if(shapeIdx>=arr.length)shapeIdx=0;
   let s=arr[shapeIdx]; els.shapeName.textContent=`${s.name} (${shapeIdx+1} of ${arr.length})`; els.shapeText.textContent=s.note; els.progLine.innerHTML="";
   currentSound={kind:"chord",title:`${r}${chords[q][1]||" major"}`,root:r,quality:q};
+  setFocusMeta(`${r}${chords[q][1]||" major"}: ${chordToneNotes(r,q).map(x=>x.split(" ")[0]).join(" ")}`);
   drawShape(s,`${r}${chords[q][1]} chord fingering`,`${els.chordLabels.value==="notes"?"Note names":"Numbers indicate fingers"}; O = open; X = muted.`,`Shape Style lets you choose practical cheats, open grips, movable shapes, or compact triads.`,els.chordWindow.value,els.chordLabels.value,r);
   manualHelp("chord",{root:r,quality:q,shapeName:s.name});
 }
@@ -645,6 +655,7 @@ function renderNoteMap(note){
   els.why.textContent=`Use this as a landmark drill: say the string name, find ${note}, then check the highlighted notes. Start with one string at a time.`;
   els.progLine.innerHTML="";
   currentSound={kind:"note",title:`${note} note`,notes:[note]};
+  setFocusMeta(`Find every ${note}`);
   TUNING.forEach(open=>{
     html+=`<div class="row no-nut"><div class="string">${open}</div>`;
     let oi=idx(open);
@@ -685,6 +696,7 @@ function renderTonnetz(key){
   }).join("");
   let scaleNotes=major.map(i=>nm(ri+i,key));
   currentSound={kind:"scale",title:`${key} Major Harmony`,notes:scaleNotes,playback:scalePlayback(key,"major")};
+  setFocusMeta("Harmony map: fifths, major thirds, minor thirds");
   els.title.textContent=`${key} Major Harmony / Tonnetz`;
   els.subtitle.textContent=`Scale: ${scaleNotes.join("  ")} | Yellow = root, blue = tonic chord, green = other in-key notes.`;
   els.whyTitle.textContent="How to read this";
@@ -718,6 +730,7 @@ function renderSolo(){
   els.whyTitle.textContent="Solo Trainer";
   els.why.textContent=`Use only these notes: ${d.notes.join(", ")}. Phrase: ${d.phrase.map(n=>n==="pause"?"pause":n).join(" - ")}. ${d.plan.why}`;
   currentSound={kind:"phrase",title:`${d.key} ${d.plan.name}`,notes:d.notes,phrase:d.phrase};
+  setFocusMeta(`${d.notes.length}-note phrase: ${d.notes.join(" ")}`);
   renderPhrase(d.phrase);
   TUNING.forEach(open=>{
     html+=`<div class="row no-nut"><div class="string">${open}</div>`;
@@ -768,6 +781,7 @@ function renderProg(){
   let si=(base+progShapeOffset)%arr.length; if(si<0)si+=arr.length;
   let s=arr[si],labels=cs.map((x,i)=>`${i===progChordIdx?"Current: ":""}${x.display}${chords[x.q][1]}`).join("  ");
   currentSound={kind:"chord",title:`${c.display}${chords[c.q][1]||" major"}`,root:c.root,quality:c.q};
+  setFocusMeta(`Progression chord ${progChordIdx+1}/${cs.length}: ${c.display}${chords[c.q][1]}`);
   drawShape(s,`${key} ${p[0]}`,`Tap a chord name to jump. ${labels}`,`${p[2]} The app chooses a nearby shape so the progression stays in the same fretboard area. Use Shape to try alternatives.`,String(Math.max(0,target-1)),els.progLabels.value,c.root);
   renderProgLine(cs);
   manualHelp("progression",{key,name:p[0],current:`${c.display}${chords[c.q][1]}`});
@@ -788,8 +802,9 @@ els.playCurrent.onclick=playCurrentSound;
 els.playPhrase.onclick=playCurrentPhrase;
 els.nextCoachChordType.onclick=stepCoachChordType;
 els.nextCoachRoot.onclick=stepCoachRoot;
+els.toggleDetails.onclick=()=>{detailsOpen=!detailsOpen;updateDetails()};
 ["skillLevel","todayGoal","coachRoot","coachChordType","coachChordLabels","coachNote","coachPentType"].forEach(id=>els[id].addEventListener("change",startPractice));
-startPractice();
+updateDetails(); startPractice();
 </script>
 </body>
 </html>
