@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#34251d" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-title" content="Note Map" />
-<title>Note Map Guitar 4.2</title>
+<title>Note Map Guitar 4.3</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#f6f3ee;color:#221f1c;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
@@ -116,7 +116,7 @@ button{font-weight:900;cursor:pointer}
 </head>
 <body>
 <main class="app">
-<header><div><h1>Note Map Guitar</h1><p>Version 4.2: chord shape controls stay with the fretboard.</p></div><b>4.2</b></header>
+<header><div><h1>Note Map Guitar</h1><p>Version 4.3: early learner choices stay clean and natural.</p></div><b>4.3</b></header>
 <section class="hint">Phone tip: rotate sideways. Pattern mode works best with Fret Window set to Auto.</section>
 
 <section class="coach">
@@ -176,7 +176,7 @@ button{font-weight:900;cursor:pointer}
 </section>
 
 <section class="card summary"><h2 id="title"></h2><p id="subtitle"></p><div id="progLine" class="prog-line hidden"></div></section>
-<section class="card audio-card"><span id="actionTitle" class="action-title"></span><span id="focusMeta" class="focus-meta"></span><button id="prevInlineShape" class="hidden">Previous shape / fret window</button><button id="nextInlineShape" class="hidden">Next shape / fret window</button><button id="prevInlineChord" class="hidden">Previous chord</button><button id="nextInlineChord" class="hidden">Next chord</button><button id="prevInlineProgShape" class="hidden">Previous shape</button><button id="nextInlineProgShape" class="hidden">Next shape</button><button id="prevCoachPattern" class="hidden">Previous pattern</button><button id="nextCoachPattern" class="hidden">Next pattern</button><button id="nextCoachRoot" class="hidden">Next root</button><button id="nextCoachChordType" class="hidden">Next chord</button><button id="playCurrent">Play</button><button id="playPhrase">Play phrase</button><button id="toggleDiagramView" class="hidden">Book chord view</button><span id="audioHint">Audio uses your browser speaker.</span></section>
+<section class="card audio-card"><span id="actionTitle" class="action-title"></span><span id="focusMeta" class="focus-meta"></span><button id="prevInlineShape" class="hidden">Previous shape / fret window</button><button id="nextInlineShape" class="hidden">Next shape / fret window</button><button id="prevInlineChord" class="hidden">Previous chord</button><button id="nextInlineChord" class="hidden">Next chord</button><button id="prevInlineProgShape" class="hidden">Previous shape</button><button id="nextInlineProgShape" class="hidden">Next shape</button><button id="prevCoachPattern" class="hidden">Previous pattern</button><button id="nextCoachPattern" class="hidden">Next pattern</button><button id="nextCoachRoot" class="hidden">Next root</button><button id="nextCoachChordType" class="hidden">Next chord</button><button id="playCurrent">Play</button><button id="playPhrase">Play phrase</button><button id="toggleDiagramView" class="hidden">Book chord view</button><span id="audioHint"></span></section>
 <section class="neck"><div id="board"></div></section>
 <section class="card"><button id="toggleDetails">Show coaching notes</button></section>
 <section class="practice-card lesson-extra hidden">
@@ -193,7 +193,7 @@ button{font-weight:900;cursor:pointer}
 </main>
 <script>
 const N=["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"], NF=["C","Db","D","Eb","E","F","Gb","G","Ab","A","Bb","B"];
-const KEYS=["C","C#","Db","D","D#","Eb","E","F","F#","Gb","G","G#","Ab","A","A#","Bb","B"], KEY_ORDER=["A","A#","Bb","B","C","C#","Db","D","D#","Eb","E","F","F#","Gb","G","G#","Ab"], BEGINNER_ROOTS=[["A","A"],["Bb","A#/Bb"],["B","B"],["C","C"],["Db","C#/Db"],["D","D"],["Eb","D#/Eb"],["E","E"],["F","F"],["Gb","F#/Gb"],["G","G"],["Ab","G#/Ab"]], TUNING=["E","B","G","D","A","E"];
+const KEYS=["C","C#","Db","D","D#","Eb","E","F","F#","Gb","G","G#","Ab","A","A#","Bb","B"], KEY_ORDER=["A","A#","Bb","B","C","C#","Db","D","D#","Eb","E","F","F#","Gb","G","G#","Ab"], BEGINNER_ROOTS=[["A","A"],["B","B"],["C","C"],["D","D"],["E","E"],["F","F"],["G","G"]], TUNING=["E","B","G","D","A","E"];
 const scales={
   major:["Major scale",[0,2,4,5,7,9,11],["1","2","3","4","5","6","7"],"The major scale is the full seven-note home map. Chords, pentatonics and modes are filters on this same map."],
   minor:["Natural minor",[0,2,3,5,7,8,10],["1","2","b3","4","5","b6","b7"],"Natural minor changes the 3rd, 6th and 7th compared with major."],
@@ -393,7 +393,7 @@ function planFor(goal){
       title:`${displayRoot}${chords[chordType][1]} chord shapes`,
       why:"Do this now: copy the grip on the diagram, then strum only the strings that are not marked X.",
       steps:[chordLabels==="notes"?"Read the note names as chord tones inside the grip.":"Use the finger numbers as the primary target.", "Use O for open strings and X for muted strings.", "Tap Book chord view if you want the familiar chord-book picture."],
-      apply(){setSelect(els.mode,"chord");setSelect(els.chordRoot,root);setSelect(els.chordType,chordType);setSelect(els.shapeStyle,"all");setSelect(els.chordLabels,chordLabels);setSelect(els.chordWindow,"auto");shapeIdx=0;render()}
+      apply(){setSelect(els.mode,"chord");setSelect(els.chordRoot,root);setSelect(els.chordType,chordType);setSelect(els.shapeStyle,"easy");setSelect(els.chordLabels,chordLabels);setSelect(els.chordWindow,"auto");shapeIdx=0;render()}
     },
     neckNotes:{
       badge:"Neck notes",
@@ -536,7 +536,7 @@ function animatePhrase(phrase){
 function updateAudioControls(){
   let solo=currentSound.kind==="phrase";
   let chordMode=currentSound.kind==="chord";
-  let chordShapeMode=chordMode&&els.mode.value==="chord";
+  let chordShapeMode=chordMode&&els.mode.value==="chord"&&els.skillLevel.value==="manual";
   let progressionMode=chordMode&&els.mode.value==="progression";
   els.playPhrase.classList.toggle("hidden",!solo);
   els.toggleDiagramView.classList.toggle("hidden",!chordMode);
@@ -549,7 +549,7 @@ function updateAudioControls(){
   els.toggleDiagramView.textContent=diagramView==="book"?"Fretboard neck view":"Book chord view";
   updateCoachActionButtons();
   els.actionTitle.textContent=currentSound.title||"";
-  if(currentSound.kind==="chord"){els.playCurrent.textContent="Play chord";els.audioHint.textContent="Audio uses your browser speaker."}
+  if(currentSound.kind==="chord"){els.playCurrent.textContent="Play chord";els.audioHint.textContent=""}
   else if(currentSound.kind==="note"){els.playCurrent.textContent="Play note";els.audioHint.textContent=`Hear ${currentSound.notes[0]}.`}
   else if(currentSound.kind==="phrase"){els.playCurrent.textContent="Play notes";els.audioHint.textContent="Use Play phrase to hear and watch the blueprint step through."}
   else if(currentSound.kind==="scalePath"){els.playCurrent.textContent="Practice scale";els.audioHint.textContent="Animate one playable path inside the selected pattern."}
