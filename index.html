@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#34251d" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-title" content="Note Map" />
-<title>Note Map Guitar 4.3</title>
+<title>Note Map Guitar 4.4</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#f6f3ee;color:#221f1c;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
@@ -53,6 +53,8 @@ button{font-weight:900;cursor:pointer}
 .audio-card span{font-size:13px;color:#5b5148;font-weight:800}
 .action-title{font-weight:900;color:#221f1c;font-size:18px;margin-right:4px}
 .focus-meta{background:#fff8ef;border:1px solid #eadfce;border-radius:999px;padding:7px 10px;color:#3d332b!important}
+.inline-select{flex-direction:row;align-items:center;background:#fff8ef;border:1px solid #eadfce;border-radius:999px;padding:5px 7px 5px 10px;gap:8px}
+.inline-select select{min-height:34px;padding:5px 8px}
 .details-toggle{margin-left:auto}
 .neck{overflow-x:auto;background:#34251d;padding:10px;border-radius:14px;box-shadow:inset 0 0 0 1px #ffffff14;margin-bottom:10px;-webkit-overflow-scrolling:touch}
 .book-wrap{min-width:360px;background:#fffdfa;border-radius:12px;padding:10px;display:flex;justify-content:center}
@@ -116,7 +118,7 @@ button{font-weight:900;cursor:pointer}
 </head>
 <body>
 <main class="app">
-<header><div><h1>Note Map Guitar</h1><p>Version 4.3: early learner choices stay clean and natural.</p></div><b>4.3</b></header>
+<header><div><h1>Note Map Guitar</h1><p>Version 4.4: chord display choices sit with the fretboard.</p></div><b>4.4</b></header>
 <section class="hint">Phone tip: rotate sideways. Pattern mode works best with Fret Window set to Auto.</section>
 
 <section class="coach">
@@ -129,7 +131,7 @@ button{font-weight:900;cursor:pointer}
 <label id="todayGoalWrap">What do you want today?<select id="todayGoal"></select></label>
 <label id="coachRootWrap">Chord starts on<select id="coachRoot"></select></label>
 <label id="coachChordTypeWrap">Chord sound<select id="coachChordType"><option value="major">Major</option><option value="minor">Minor</option><option value="minor7">Minor 7</option><option value="major7">Major 7</option><option value="dominant7">Dominant 7</option><option value="sus2">Sus2</option><option value="sus4">Sus4</option></select></label>
-<label id="coachChordLabelsWrap">Show<select id="coachChordLabels"><option value="fingers">Finger numbers</option><option value="notes">Note names</option></select></label>
+<label id="coachChordLabelsWrap" class="hidden">Show<select id="coachChordLabels"><option value="fingers">Finger numbers</option><option value="notes">Note names</option></select></label>
 <label id="coachNoteWrap">Show note<select id="coachNote"></select></label>
 <label id="coachPentTypeWrap">Pentatonic<select id="coachPentType"><option value="majorPent">Major pentatonic</option><option value="minorPent">Minor pentatonic</option></select></label>
 </div>
@@ -152,7 +154,7 @@ button{font-weight:900;cursor:pointer}
 <label>Root<select id="chordRoot"></select></label>
 <label>Type<select id="chordType"><option value="major">Major</option><option value="minor">Minor</option><option value="minor7">Minor 7</option><option value="major7">Major 7</option><option value="dominant7">Dominant 7</option><option value="sus2">Sus2</option><option value="sus4">Sus4</option></select></label>
 <label>Shape style<select id="shapeStyle"><option value="all">All practical</option><option value="easy">Cheats / triads</option><option value="open">Open</option><option value="movable">Movable / barre</option><option value="triad">Small triads only</option></select></label>
-<label>Show on chord<select id="chordLabels"><option value="fingers">Finger numbers</option><option value="notes">Note names</option></select></label>
+<label class="hidden">Show on chord<select id="chordLabels"><option value="fingers">Finger numbers</option><option value="notes">Note names</option></select></label>
 <label>Fret window<select id="chordWindow"><option value="auto">Auto</option><option value="0">Open-7</option><option value="3">3-9</option><option value="5">5-11</option><option value="7">7-13</option><option value="10">10-16</option><option value="12">12-18</option></select></label>
 <div class="buttons hidden"><button id="prevShape">◀ Previous shape / fret window</button><button id="nextShape">Next shape / fret window ▶</button></div>
 <div class="note-card"><strong id="shapeName"></strong><p id="shapeText"></p></div>
@@ -162,7 +164,7 @@ button{font-weight:900;cursor:pointer}
 <label>Key<select id="progKey"></select></label>
 <label>Music type<select id="progType"><option value="classic">Classic rock / folk</option><option value="pop">Pop / anthem</option><option value="dooWop">50s / doo-wop</option><option value="folk">Folk circle</option><option value="sad">Sad / emotional</option><option value="romantic">Romantic</option><option value="suspense">Suspense / resolve</option><option value="minorWalk">Minor walk-down</option><option value="andalusian">Andalusian cadence</option><option value="blues">Blues</option><option value="quickBlues">Quick-change blues</option><option value="jazzBlues">Jazz blues shell</option><option value="turnaround">Turnaround</option><option value="funk">Funk / Dorian-ish</option><option value="modalRock">Modal rock</option><option value="plagal">Plagal / amen</option></select></label>
 <label>Shape style<select id="progStyle"><option value="all">All practical</option><option value="easy">Cheats / triads</option><option value="open">Open</option><option value="movable">Movable / barre</option><option value="triad">Small triads only</option></select></label>
-<label>Show on chord<select id="progLabels"><option value="fingers">Finger numbers</option><option value="notes">Note names</option></select></label>
+<label class="hidden">Show on chord<select id="progLabels"><option value="fingers">Finger numbers</option><option value="notes">Note names</option></select></label>
 <label>Keep me near<select id="near"><option value="0">Open / low</option><option value="5">5th fret</option><option value="9">9th fret</option><option value="12">12th fret</option><option value="14">14th fret</option></select></label>
 <div class="buttons hidden"><button id="prevChord">◀ Chord</button><button id="nextChord">Chord ▶</button></div>
 <div class="buttons hidden"><button id="prevProgShape">◀ Shape</button><button id="nextProgShape">Shape ▶</button></div>
@@ -175,8 +177,8 @@ button{font-weight:900;cursor:pointer}
 <label>Fret area<select id="soloArea"><option value="auto">Auto</option><option value="0">Open-7</option><option value="3">3-9</option><option value="5">5-11</option><option value="7">7-13</option><option value="10">10-16</option></select></label>
 </section>
 
-<section class="card summary"><h2 id="title"></h2><p id="subtitle"></p><div id="progLine" class="prog-line hidden"></div></section>
-<section class="card audio-card"><span id="actionTitle" class="action-title"></span><span id="focusMeta" class="focus-meta"></span><button id="prevInlineShape" class="hidden">Previous shape / fret window</button><button id="nextInlineShape" class="hidden">Next shape / fret window</button><button id="prevInlineChord" class="hidden">Previous chord</button><button id="nextInlineChord" class="hidden">Next chord</button><button id="prevInlineProgShape" class="hidden">Previous shape</button><button id="nextInlineProgShape" class="hidden">Next shape</button><button id="prevCoachPattern" class="hidden">Previous pattern</button><button id="nextCoachPattern" class="hidden">Next pattern</button><button id="nextCoachRoot" class="hidden">Next root</button><button id="nextCoachChordType" class="hidden">Next chord</button><button id="playCurrent">Play</button><button id="playPhrase">Play phrase</button><button id="toggleDiagramView" class="hidden">Book chord view</button><span id="audioHint"></span></section>
+<section class="card summary lesson-extra hidden"><h2 id="title"></h2><p id="subtitle"></p><div id="progLine" class="prog-line hidden"></div></section>
+<section class="card audio-card"><span id="actionTitle" class="action-title"></span><span id="focusMeta" class="focus-meta"></span><label id="inlineChordLabelsWrap" class="inline-select hidden">Show<select id="inlineChordLabels"><option value="fingers">Finger numbers</option><option value="notes">Note names</option></select></label><button id="prevInlineShape" class="hidden">Previous shape / fret window</button><button id="nextInlineShape" class="hidden">Next shape / fret window</button><button id="prevInlineChord" class="hidden">Previous chord</button><button id="nextInlineChord" class="hidden">Next chord</button><button id="prevInlineProgShape" class="hidden">Previous shape</button><button id="nextInlineProgShape" class="hidden">Next shape</button><button id="prevCoachPattern" class="hidden">Previous pattern</button><button id="nextCoachPattern" class="hidden">Next pattern</button><button id="nextCoachRoot" class="hidden">Next root</button><button id="nextCoachChordType" class="hidden">Next chord</button><button id="playCurrent">Play</button><button id="playPhrase">Play phrase</button><button id="toggleDiagramView" class="hidden">Book chord view</button><span id="audioHint"></span></section>
 <section class="neck"><div id="board"></div></section>
 <section class="card"><button id="toggleDetails">Show coaching notes</button></section>
 <section class="practice-card lesson-extra hidden">
@@ -209,7 +211,7 @@ const chords={
   dominant7:["Dominant 7","7",[0,4,7,10],"1-3-5-b7"], dim:["Diminished","dim",[0,3,6],"1-b3-b5"], sus2:["Sus2","sus2",[0,2,7],"1-2-5"], sus4:["Sus4","sus4",[0,5,7],"1-4-5"]
 };
 const $=id=>document.getElementById(id), els={};
-["skillLevel","todayGoalWrap","todayGoal","coachRootWrap","coachRoot","coachChordTypeWrap","coachChordType","coachChordLabelsWrap","coachChordLabels","coachNoteWrap","coachNote","coachPentTypeWrap","coachPentType","practiceBadge","practiceTitle","practiceWhy","practiceSteps","manualModeCard","mode","mapControls","chordControls","progControls","soloControls","key","scale","overlay","display","pattern","mapWindow","scaleAction","chordRoot","chordType","shapeStyle","chordLabels","chordWindow","prevShape","nextShape","prevInlineShape","nextInlineShape","prevInlineChord","nextInlineChord","prevInlineProgShape","nextInlineProgShape","shapeName","shapeText","progKey","progType","progStyle","progLabels","near","prevChord","nextChord","prevProgShape","nextProgShape","soloKey","soloScale","soloBlueprint","soloArea","actionTitle","focusMeta","playCurrent","playPhrase","toggleDiagramView","toggleDetails","prevCoachPattern","nextCoachPattern","nextCoachChordType","nextCoachRoot","audioHint","progLine","title","subtitle","whyTitle","why","board","legend"].forEach(id=>els[id]=$(id));
+["skillLevel","todayGoalWrap","todayGoal","coachRootWrap","coachRoot","coachChordTypeWrap","coachChordType","coachChordLabelsWrap","coachChordLabels","coachNoteWrap","coachNote","coachPentTypeWrap","coachPentType","practiceBadge","practiceTitle","practiceWhy","practiceSteps","manualModeCard","mode","mapControls","chordControls","progControls","soloControls","key","scale","overlay","display","pattern","mapWindow","scaleAction","chordRoot","chordType","shapeStyle","chordLabels","chordWindow","prevShape","nextShape","prevInlineShape","nextInlineShape","prevInlineChord","nextInlineChord","prevInlineProgShape","nextInlineProgShape","inlineChordLabelsWrap","inlineChordLabels","shapeName","shapeText","progKey","progType","progStyle","progLabels","near","prevChord","nextChord","prevProgShape","nextProgShape","soloKey","soloScale","soloBlueprint","soloArea","actionTitle","focusMeta","playCurrent","playPhrase","toggleDiagramView","toggleDetails","prevCoachPattern","nextCoachPattern","nextCoachChordType","nextCoachRoot","audioHint","progLine","title","subtitle","whyTitle","why","board","legend"].forEach(id=>els[id]=$(id));
 let shapeIdx=0, progChordIdx=0, progShapeOffset=0, audioCtx=null, detailsOpen=false, diagramView="neck", currentSound={kind:"scale",root:"A",quality:"major",notes:["A"]};
 KEY_ORDER.forEach(k=>{["key","progKey","chordRoot","soloKey"].forEach(id=>{let o=document.createElement("option");o.value=k;o.textContent=k;els[id].appendChild(o)})});
 BEGINNER_ROOTS.forEach(([value,label])=>{let o=document.createElement("option");o.value=value;o.textContent=label;els.coachRoot.appendChild(o)});
@@ -371,7 +373,7 @@ function refreshGoalOptions(){
   let goal=els.todayGoal.value, manual=skill==="manual";
   els.coachRootWrap.classList.toggle("hidden",manual||goal==="neckNotes");
   els.coachChordTypeWrap.classList.toggle("hidden",manual||goal!=="chordShapes");
-  els.coachChordLabelsWrap.classList.toggle("hidden",manual||goal!=="chordShapes");
+  els.coachChordLabelsWrap.classList.add("hidden");
   els.coachNoteWrap.classList.toggle("hidden",manual||goal!=="neckNotes");
   els.coachPentTypeWrap.classList.toggle("hidden",manual||goal!=="pentatonicShapes");
   updateCoachActionButtons();
@@ -538,8 +540,11 @@ function updateAudioControls(){
   let chordMode=currentSound.kind==="chord";
   let chordShapeMode=chordMode&&els.mode.value==="chord"&&els.skillLevel.value==="manual";
   let progressionMode=chordMode&&els.mode.value==="progression";
+  let chordLabelMode=chordMode&&(els.mode.value==="chord"||els.mode.value==="progression");
   els.playPhrase.classList.toggle("hidden",!solo);
   els.toggleDiagramView.classList.toggle("hidden",!chordMode);
+  els.inlineChordLabelsWrap.classList.toggle("hidden",!chordLabelMode);
+  if(chordLabelMode)els.inlineChordLabels.value=els.mode.value==="progression"?els.progLabels.value:els.chordLabels.value;
   els.prevInlineShape.classList.toggle("hidden",!chordShapeMode);
   els.nextInlineShape.classList.toggle("hidden",!chordShapeMode);
   els.prevInlineChord.classList.toggle("hidden",!progressionMode);
@@ -722,7 +727,7 @@ function renderChord(){
   let r=els.chordRoot.value,q=els.chordType.value,st=els.shapeStyle.value,arr=shapes(r,q,st); if(shapeIdx>=arr.length)shapeIdx=0;
   let s=arr[shapeIdx]; els.shapeName.textContent=`${s.name} (${shapeIdx+1} of ${arr.length})`; els.shapeText.textContent=s.note; els.progLine.innerHTML="";
   currentSound={kind:"chord",title:`${r}${chords[q][1]||" major"}`,root:r,quality:q};
-  setFocusMeta(`${r}${chords[q][1]||" major"}: ${chordToneNotes(r,q).map(x=>x.split(" ")[0]).join(" ")}`);
+  setFocusMeta("");
   drawShape(s,`${r}${chords[q][1]} chord shape`,`${els.chordLabels.value==="notes"?"Note names":"Numbers indicate fingers"}; O = open; X = muted.`,`Shape Style lets you choose practical cheats, open grips, movable shapes, or compact triads.`,els.chordWindow.value,els.chordLabels.value,r);
   manualHelp("chord",{root:r,quality:q,shapeName:s.name});
 }
@@ -926,6 +931,14 @@ els.nextInlineProgShape.onclick=()=>stepProgressionShape(1);
 els.playCurrent.onclick=playCurrentSound;
 els.playPhrase.onclick=playCurrentPhrase;
 els.toggleDiagramView.onclick=()=>{diagramView=diagramView==="book"?"neck":"book";render()};
+els.inlineChordLabels.onchange=()=>{
+  if(els.mode.value==="progression")els.progLabels.value=els.inlineChordLabels.value;
+  else {
+    els.chordLabels.value=els.inlineChordLabels.value;
+    els.coachChordLabels.value=els.inlineChordLabels.value;
+  }
+  render()
+};
 els.prevCoachPattern.onclick=()=>stepCoachPattern(-1);
 els.nextCoachPattern.onclick=()=>stepCoachPattern(1);
 els.nextCoachChordType.onclick=stepCoachChordType;
