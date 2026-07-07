@@ -1,20 +1,25 @@
-NOTE MAP GUITAR - VERSION 4.0
+NOTE MAP GUITAR - VERSION 4.2
 
-Single-file release: upload index.html to GitHub Pages.
+Single-file release.
 
-4.0 changes:
-- Early Learner root choices now combine enharmonic notes:
-  - A#/Bb, C#/Db, D#/Eb, F#/Gb, G#/Ab
-- Early Learner labels are more beginner-friendly:
-  - Chord starts on
-  - Chord sound
-  - Show
-- Coaching text now starts with a more direct "do this now" action.
-- Book chord view toggle wording is clearer.
-- Manual chord shape buttons clarify that shape changes may also move the fret window.
-- Harmony / Tonnetz now labels connected chord triangles for the main diatonic major/minor chords.
+4.2 changes:
+- Manual View now calls the chord screen "Chord shape" instead of "Chord fingering".
+- The basic title/subtitle card now sits above the fretboard.
+- Manual Chord Shape controls now appear directly above the fretboard:
+  - Previous shape / fret window
+  - Next shape / fret window
+  - Play chord
+  - Book chord view
+- Manual Progression controls now appear directly above the fretboard:
+  - Previous chord
+  - Next chord
+  - Previous shape
+  - Next shape
+  - Play chord
+  - Book chord view
+- The Show coaching notes button moved below the fretboard to free up the playing/control area.
 
-Included from 3.9:
-- Book view / Neck view toggle for chord-shaped screens.
-- Pattern Auto window shows the exact selected pattern fret range.
-- Wider manual fret windows dim scale notes outside the selected pattern, including roots.
+Included from 4.1:
+- Early Learner Pentatonic Shapes can step through Pattern 1-5.
+- Beginner combined root choices like A#/Bb and C#/Db.
+- Labeled Tonnetz chord triangles.

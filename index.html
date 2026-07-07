@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#34251d" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-title" content="Note Map" />
-<title>Note Map Guitar 4.0</title>
+<title>Note Map Guitar 4.2</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#f6f3ee;color:#221f1c;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
@@ -116,7 +116,7 @@ button{font-weight:900;cursor:pointer}
 </head>
 <body>
 <main class="app">
-<header><div><h1>Note Map Guitar</h1><p>Version 4.0: clearer beginner choices, chord-book diagrams, and labeled harmony triangles.</p></div><b>4.0</b></header>
+<header><div><h1>Note Map Guitar</h1><p>Version 4.2: chord shape controls stay with the fretboard.</p></div><b>4.2</b></header>
 <section class="hint">Phone tip: rotate sideways. Pattern mode works best with Fret Window set to Auto.</section>
 
 <section class="coach">
@@ -136,7 +136,7 @@ button{font-weight:900;cursor:pointer}
 </div>
 </section>
 
-<section id="manualModeCard" class="card mode hidden"><label>Manual View<select id="mode"><option value="map">Scale map</option><option value="chord">Chord fingering</option><option value="progression">Progression</option><option value="solo">Solo trainer</option></select></label></section>
+<section id="manualModeCard" class="card mode hidden"><label>Manual View<select id="mode"><option value="map">Scale map</option><option value="chord">Chord shape</option><option value="progression">Progression</option><option value="solo">Solo trainer</option></select></label></section>
 
 <section id="mapControls" class="card controls">
 <label>Key<select id="key"></select></label>
@@ -154,7 +154,7 @@ button{font-weight:900;cursor:pointer}
 <label>Shape style<select id="shapeStyle"><option value="all">All practical</option><option value="easy">Cheats / triads</option><option value="open">Open</option><option value="movable">Movable / barre</option><option value="triad">Small triads only</option></select></label>
 <label>Show on chord<select id="chordLabels"><option value="fingers">Finger numbers</option><option value="notes">Note names</option></select></label>
 <label>Fret window<select id="chordWindow"><option value="auto">Auto</option><option value="0">Open-7</option><option value="3">3-9</option><option value="5">5-11</option><option value="7">7-13</option><option value="10">10-16</option><option value="12">12-18</option></select></label>
-<div class="buttons"><button id="prevShape">◀ Previous shape / fret window</button><button id="nextShape">Next shape / fret window ▶</button></div>
+<div class="buttons hidden"><button id="prevShape">◀ Previous shape / fret window</button><button id="nextShape">Next shape / fret window ▶</button></div>
 <div class="note-card"><strong id="shapeName"></strong><p id="shapeText"></p></div>
 </section>
 
@@ -164,8 +164,8 @@ button{font-weight:900;cursor:pointer}
 <label>Shape style<select id="progStyle"><option value="all">All practical</option><option value="easy">Cheats / triads</option><option value="open">Open</option><option value="movable">Movable / barre</option><option value="triad">Small triads only</option></select></label>
 <label>Show on chord<select id="progLabels"><option value="fingers">Finger numbers</option><option value="notes">Note names</option></select></label>
 <label>Keep me near<select id="near"><option value="0">Open / low</option><option value="5">5th fret</option><option value="9">9th fret</option><option value="12">12th fret</option><option value="14">14th fret</option></select></label>
-<div class="buttons"><button id="prevChord">◀ Chord</button><button id="nextChord">Chord ▶</button></div>
-<div class="buttons"><button id="prevProgShape">◀ Shape</button><button id="nextProgShape">Shape ▶</button></div>
+<div class="buttons hidden"><button id="prevChord">◀ Chord</button><button id="nextChord">Chord ▶</button></div>
+<div class="buttons hidden"><button id="prevProgShape">◀ Shape</button><button id="nextProgShape">Shape ▶</button></div>
 </section>
 
 <section id="soloControls" class="card controls hidden">
@@ -175,9 +175,10 @@ button{font-weight:900;cursor:pointer}
 <label>Fret area<select id="soloArea"><option value="auto">Auto</option><option value="0">Open-7</option><option value="3">3-9</option><option value="5">5-11</option><option value="7">7-13</option><option value="10">10-16</option></select></label>
 </section>
 
-<section class="card audio-card"><span id="actionTitle" class="action-title"></span><span id="focusMeta" class="focus-meta"></span><button id="nextCoachRoot" class="hidden">Next root</button><button id="nextCoachChordType" class="hidden">Next chord</button><button id="playCurrent">Play</button><button id="playPhrase">Play phrase</button><button id="toggleDiagramView" class="hidden">Book chord view</button><button id="toggleDetails" class="details-toggle">Show coaching notes</button><span id="audioHint">Audio uses your browser speaker.</span></section>
-<section class="neck"><div id="board"></div></section>
 <section class="card summary"><h2 id="title"></h2><p id="subtitle"></p><div id="progLine" class="prog-line hidden"></div></section>
+<section class="card audio-card"><span id="actionTitle" class="action-title"></span><span id="focusMeta" class="focus-meta"></span><button id="prevInlineShape" class="hidden">Previous shape / fret window</button><button id="nextInlineShape" class="hidden">Next shape / fret window</button><button id="prevInlineChord" class="hidden">Previous chord</button><button id="nextInlineChord" class="hidden">Next chord</button><button id="prevInlineProgShape" class="hidden">Previous shape</button><button id="nextInlineProgShape" class="hidden">Next shape</button><button id="prevCoachPattern" class="hidden">Previous pattern</button><button id="nextCoachPattern" class="hidden">Next pattern</button><button id="nextCoachRoot" class="hidden">Next root</button><button id="nextCoachChordType" class="hidden">Next chord</button><button id="playCurrent">Play</button><button id="playPhrase">Play phrase</button><button id="toggleDiagramView" class="hidden">Book chord view</button><span id="audioHint">Audio uses your browser speaker.</span></section>
+<section class="neck"><div id="board"></div></section>
+<section class="card"><button id="toggleDetails">Show coaching notes</button></section>
 <section class="practice-card lesson-extra hidden">
 <span class="pill" id="practiceBadge">Suggested path</span>
 <h3 id="practiceTitle"></h3>
@@ -208,7 +209,7 @@ const chords={
   dominant7:["Dominant 7","7",[0,4,7,10],"1-3-5-b7"], dim:["Diminished","dim",[0,3,6],"1-b3-b5"], sus2:["Sus2","sus2",[0,2,7],"1-2-5"], sus4:["Sus4","sus4",[0,5,7],"1-4-5"]
 };
 const $=id=>document.getElementById(id), els={};
-["skillLevel","todayGoalWrap","todayGoal","coachRootWrap","coachRoot","coachChordTypeWrap","coachChordType","coachChordLabelsWrap","coachChordLabels","coachNoteWrap","coachNote","coachPentTypeWrap","coachPentType","practiceBadge","practiceTitle","practiceWhy","practiceSteps","manualModeCard","mode","mapControls","chordControls","progControls","soloControls","key","scale","overlay","display","pattern","mapWindow","scaleAction","chordRoot","chordType","shapeStyle","chordLabels","chordWindow","prevShape","nextShape","shapeName","shapeText","progKey","progType","progStyle","progLabels","near","prevChord","nextChord","prevProgShape","nextProgShape","soloKey","soloScale","soloBlueprint","soloArea","actionTitle","focusMeta","playCurrent","playPhrase","toggleDiagramView","toggleDetails","nextCoachChordType","nextCoachRoot","audioHint","progLine","title","subtitle","whyTitle","why","board","legend"].forEach(id=>els[id]=$(id));
+["skillLevel","todayGoalWrap","todayGoal","coachRootWrap","coachRoot","coachChordTypeWrap","coachChordType","coachChordLabelsWrap","coachChordLabels","coachNoteWrap","coachNote","coachPentTypeWrap","coachPentType","practiceBadge","practiceTitle","practiceWhy","practiceSteps","manualModeCard","mode","mapControls","chordControls","progControls","soloControls","key","scale","overlay","display","pattern","mapWindow","scaleAction","chordRoot","chordType","shapeStyle","chordLabels","chordWindow","prevShape","nextShape","prevInlineShape","nextInlineShape","prevInlineChord","nextInlineChord","prevInlineProgShape","nextInlineProgShape","shapeName","shapeText","progKey","progType","progStyle","progLabels","near","prevChord","nextChord","prevProgShape","nextProgShape","soloKey","soloScale","soloBlueprint","soloArea","actionTitle","focusMeta","playCurrent","playPhrase","toggleDiagramView","toggleDetails","prevCoachPattern","nextCoachPattern","nextCoachChordType","nextCoachRoot","audioHint","progLine","title","subtitle","whyTitle","why","board","legend"].forEach(id=>els[id]=$(id));
 let shapeIdx=0, progChordIdx=0, progShapeOffset=0, audioCtx=null, detailsOpen=false, diagramView="neck", currentSound={kind:"scale",root:"A",quality:"major",notes:["A"]};
 KEY_ORDER.forEach(k=>{["key","progKey","chordRoot","soloKey"].forEach(id=>{let o=document.createElement("option");o.value=k;o.textContent=k;els[id].appendChild(o)})});
 BEGINNER_ROOTS.forEach(([value,label])=>{let o=document.createElement("option");o.value=value;o.textContent=label;els.coachRoot.appendChild(o)});
@@ -299,13 +300,19 @@ function renderLegend(m){
 function isCoachChordMode(){
   return els.skillLevel.value==="early"&&els.todayGoal.value==="chordShapes"
 }
+function isCoachPentatonicMode(){
+  return els.skillLevel.value==="early"&&els.todayGoal.value==="pentatonicShapes"
+}
 function isManualChordMode(){
   return els.skillLevel.value==="manual"&&els.mode.value==="chord"
 }
 function updateCoachActionButtons(){
   let show=isCoachChordMode()||isManualChordMode();
   els.nextCoachChordType.classList.toggle("hidden",!show);
-  els.nextCoachRoot.classList.toggle("hidden",!show)
+  els.nextCoachRoot.classList.toggle("hidden",!show);
+  let showPattern=isCoachPentatonicMode();
+  els.prevCoachPattern.classList.toggle("hidden",!showPattern);
+  els.nextCoachPattern.classList.toggle("hidden",!showPattern)
 }
 const goalMeta={
   chordShapes:"Chord shapes",
@@ -399,8 +406,8 @@ function planFor(goal){
       badge:"Pentatonic shapes",
       title:`${displayRoot} ${pent==="majorPent"?"major":"minor"} pentatonic shapes`,
       why:"Do this now: play only the bright pattern notes inside the box. Treat grey notes as background context.",
-      steps:["Start with the bright green notes only.","Find the yellow root notes inside the box before running it up and down.","Make a four-note phrase and land on the root."],
-      apply(){setSelect(els.mode,"map");setSelect(els.key,root);setSelect(els.scale,pent);setSelect(els.overlay,"none");setSelect(els.pattern,pent==="majorPent"?"p5":"p1");setSelect(els.mapWindow,"auto");render()}
+      steps:["Start with the bright green notes only.","Use Previous pattern and Next pattern to move the same scale idea up and down the neck.","Make a four-note phrase and land on the yellow root."],
+      apply(){setSelect(els.mode,"map");setSelect(els.key,root);setSelect(els.scale,pent);setSelect(els.overlay,"none");setSelect(els.pattern,pent==="majorPent"?"p5":"p1");setSelect(els.mapWindow,"auto");setSelect(els.scaleAction,"practiceScale");render()}
     },
     tonnetz:{
       badge:"Intermediate harmony",
@@ -529,8 +536,16 @@ function animatePhrase(phrase){
 function updateAudioControls(){
   let solo=currentSound.kind==="phrase";
   let chordMode=currentSound.kind==="chord";
+  let chordShapeMode=chordMode&&els.mode.value==="chord";
+  let progressionMode=chordMode&&els.mode.value==="progression";
   els.playPhrase.classList.toggle("hidden",!solo);
   els.toggleDiagramView.classList.toggle("hidden",!chordMode);
+  els.prevInlineShape.classList.toggle("hidden",!chordShapeMode);
+  els.nextInlineShape.classList.toggle("hidden",!chordShapeMode);
+  els.prevInlineChord.classList.toggle("hidden",!progressionMode);
+  els.nextInlineChord.classList.toggle("hidden",!progressionMode);
+  els.prevInlineProgShape.classList.toggle("hidden",!progressionMode);
+  els.nextInlineProgShape.classList.toggle("hidden",!progressionMode);
   els.toggleDiagramView.textContent=diagramView==="book"?"Fretboard neck view":"Book chord view";
   updateCoachActionButtons();
   els.actionTitle.textContent=currentSound.title||"";
@@ -579,6 +594,13 @@ function stepCoachRoot(){
   els.coachRoot.value=roots[(ci+1+roots.length)%roots.length];
   shapeIdx=0;
   startPractice()
+}
+function stepCoachPattern(dir){
+  let pats=["p1","p2","p3","p4","p5"], i=pats.indexOf(els.pattern.value);
+  if(i<0)i=0;
+  els.pattern.value=pats[(i+dir+pats.length)%pats.length];
+  setSelect(els.mapWindow,"auto");
+  render()
 }
 function shapeVisibleInWindow(shape,w){
   let played=shape.frets.filter(f=>typeof f==="number"&&f>0);
@@ -701,7 +723,7 @@ function renderChord(){
   let s=arr[shapeIdx]; els.shapeName.textContent=`${s.name} (${shapeIdx+1} of ${arr.length})`; els.shapeText.textContent=s.note; els.progLine.innerHTML="";
   currentSound={kind:"chord",title:`${r}${chords[q][1]||" major"}`,root:r,quality:q};
   setFocusMeta(`${r}${chords[q][1]||" major"}: ${chordToneNotes(r,q).map(x=>x.split(" ")[0]).join(" ")}`);
-  drawShape(s,`${r}${chords[q][1]} chord fingering`,`${els.chordLabels.value==="notes"?"Note names":"Numbers indicate fingers"}; O = open; X = muted.`,`Shape Style lets you choose practical cheats, open grips, movable shapes, or compact triads.`,els.chordWindow.value,els.chordLabels.value,r);
+  drawShape(s,`${r}${chords[q][1]} chord shape`,`${els.chordLabels.value==="notes"?"Note names":"Numbers indicate fingers"}; O = open; X = muted.`,`Shape Style lets you choose practical cheats, open grips, movable shapes, or compact triads.`,els.chordWindow.value,els.chordLabels.value,r);
   manualHelp("chord",{root:r,quality:q,shapeName:s.name});
 }
 function renderNoteMap(note){
@@ -868,21 +890,44 @@ function renderProg(){
   renderProgLine(cs);
   manualHelp("progression",{key,name:p[0],current:`${c.display}${chords[c.q][1]}`});
 }
+function stepChordShape(dir){
+  let a=shapes(els.chordRoot.value,els.chordType.value,els.shapeStyle.value);
+  shapeIdx=(shapeIdx+dir+a.length)%a.length;
+  render()
+}
+function stepProgressionChord(dir){
+  let a=progChords();
+  progChordIdx=(progChordIdx+dir+a.length)%a.length;
+  progShapeOffset=0;
+  render()
+}
+function stepProgressionShape(dir){
+  progShapeOffset+=dir;
+  render()
+}
 function render(){setVis(); if(els.mode.value==="map")renderMap(); else if(els.mode.value==="chord")renderChord(); else if(els.mode.value==="progression")renderProg(); else renderSolo(); updateAudioControls()}
 ["key","scale","overlay","display","pattern","mapWindow","scaleAction","mode","chordRoot","chordType","shapeStyle","chordLabels","chordWindow","progKey","progType","progStyle","progLabels","near","soloKey","soloScale","soloBlueprint","soloArea"].forEach(id=>els[id].addEventListener("change",()=>{
   if(["chordRoot","chordType","shapeStyle"].includes(id))shapeIdx=0;
   if(["progKey","progType","progStyle","near"].includes(id)){progChordIdx=0;progShapeOffset=0}
   render()
 }));
-els.prevShape.onclick=()=>{let a=shapes(els.chordRoot.value,els.chordType.value,els.shapeStyle.value);shapeIdx=(shapeIdx-1+a.length)%a.length;render()};
-els.nextShape.onclick=()=>{let a=shapes(els.chordRoot.value,els.chordType.value,els.shapeStyle.value);shapeIdx=(shapeIdx+1)%a.length;render()};
-els.prevChord.onclick=()=>{let a=progChords();progChordIdx=(progChordIdx-1+a.length)%a.length;progShapeOffset=0;render()};
-els.nextChord.onclick=()=>{let a=progChords();progChordIdx=(progChordIdx+1)%a.length;progShapeOffset=0;render()};
-els.prevProgShape.onclick=()=>{progShapeOffset--;render()};
-els.nextProgShape.onclick=()=>{progShapeOffset++;render()};
+els.prevShape.onclick=()=>stepChordShape(-1);
+els.nextShape.onclick=()=>stepChordShape(1);
+els.prevInlineShape.onclick=()=>stepChordShape(-1);
+els.nextInlineShape.onclick=()=>stepChordShape(1);
+els.prevChord.onclick=()=>stepProgressionChord(-1);
+els.nextChord.onclick=()=>stepProgressionChord(1);
+els.prevInlineChord.onclick=()=>stepProgressionChord(-1);
+els.nextInlineChord.onclick=()=>stepProgressionChord(1);
+els.prevProgShape.onclick=()=>stepProgressionShape(-1);
+els.nextProgShape.onclick=()=>stepProgressionShape(1);
+els.prevInlineProgShape.onclick=()=>stepProgressionShape(-1);
+els.nextInlineProgShape.onclick=()=>stepProgressionShape(1);
 els.playCurrent.onclick=playCurrentSound;
 els.playPhrase.onclick=playCurrentPhrase;
 els.toggleDiagramView.onclick=()=>{diagramView=diagramView==="book"?"neck":"book";render()};
+els.prevCoachPattern.onclick=()=>stepCoachPattern(-1);
+els.nextCoachPattern.onclick=()=>stepCoachPattern(1);
 els.nextCoachChordType.onclick=stepCoachChordType;
 els.nextCoachRoot.onclick=stepCoachRoot;
 els.toggleDetails.onclick=()=>{detailsOpen=!detailsOpen;updateDetails()};
