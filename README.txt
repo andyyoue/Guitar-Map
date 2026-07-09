@@ -1,20 +1,25 @@
-NOTE MAP GUITAR - VERSION 4.5
+NOTE MAP GUITAR - VERSION 4.7
 
-Manual Mode UX and Accuracy Revision.
+Build focus: diagnostic fixes from the 4.5 UX/accuracy review, carried forward on the current tuner-enabled code line.
 
-Highlights:
-- Manual Mode is redesigned around a clearer hierarchy: task, key/chord/scale, primary action, fretboard.
-- Scale Map is still the default Manual view, with visible controls reduced to Key, Scale, and Display.
-- Scale tasks are now explicit buttons near the fretboard: Explore Scale, Practice Scale, Hear the Key.
-- More advanced configuration (pattern, fret window, optional chord tones) is tucked into More options.
-- Chord Fingering is now Chord Shape in spirit and UI. Standard/open shapes are the default; E major opens as the complete 0-2-2-1-0-0 chord.
-- Progression mode keeps the full progression visible next to the fretboard and highlights the active chord.
-- Solo Trainer now starts inside a recognizable scale pattern and highlights exact string/fret phrase positions.
-- Tonnetz explanations use across/diagonal wording that matches the visible line directions.
+Fixes:
+- Early Learner Chord Shapes now prioritizes complete standard/open beginner chord shapes instead of defaulting to cheats/triads.
+- E major in Early Learner now opens as the complete standard open E chord: 0-2-2-1-0-0.
+- Added explicit complete open chord records for C, A, G, E, D, Em, Am, and Dm.
+- Manual Standard/Open shapes also include those complete open records where applicable.
+- Scale Map task buttons remain Explore Scale / Practice Scale / Hear the Key, but the playback button no longer duplicates "Hear the Key".
+- Explore Scale is now a visual exploration task with no playback button.
+- Practice Scale playback button now says Play route.
+- Hear the Key playback button now says Play.
 
-Acceptance checks included in the build script:
-- E major open shape is 0-2-2-1-0-0.
-- Tonnetz text uses across/diagonal language.
-- Hear the Key and Practice Scale are separate tasks.
-- Practice Scale and Solo Trainer use exact string/fret targeting.
-- Progression sequence is visible in the inline progression strip.
+Validation:
+- JavaScript syntax passes.
+- Early Learner E major resolves to E standard open with frets 0-2-2-1-0-0.
+- Manual E major Standard/Open resolves to the complete open E shape.
+- Scale Map Explore Scale shows no duplicate Hear the Key playback button.
+- Scale Map Hear the Key has one task selector plus a generic Play action.
+- Scale Map Practice Scale uses Play route.
+
+Packaged with nested folder structure:
+note-map-guitar-v4-7/index.html
+note-map-guitar-v4-7/README.txt
