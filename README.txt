@@ -1,25 +1,19 @@
-NOTE MAP GUITAR - VERSION 4.7
+NOTE MAP GUITAR - VERSION 4.8
 
-Build focus: diagnostic fixes from the 4.5 UX/accuracy review, carried forward on the current tuner-enabled code line.
+Built from 4.7.
 
-Fixes:
-- Early Learner Chord Shapes now prioritizes complete standard/open beginner chord shapes instead of defaulting to cheats/triads.
-- E major in Early Learner now opens as the complete standard open E chord: 0-2-2-1-0-0.
-- Added explicit complete open chord records for C, A, G, E, D, Em, Am, and Dm.
-- Manual Standard/Open shapes also include those complete open records where applicable.
-- Scale Map task buttons remain Explore Scale / Practice Scale / Hear the Key, but the playback button no longer duplicates "Hear the Key".
-- Explore Scale is now a visual exploration task with no playback button.
-- Practice Scale playback button now says Play route.
-- Hear the Key playback button now says Play.
+Changes:
+- Tuner header button now changes to "Return to App" while the tuner is open.
+- The tuner screen return link also says "Return to App".
+- Early Learner and chord-shaped screens now use a one-tap toggle for Finger numbers / Note names instead of a dropdown.
+- Progression mode is simplified for experienced users: chord movement and progression context are primary, and the extra chord-audio button is hidden in progression mode.
+- Progression position now better preserves a neck neighborhood. Position defaults to Auto, and Auto anchors to the selected shape position as you move through the progression.
+- Progression Position options are simplified to Auto, Open / low, Middle neck, and Upper neck.
 
 Validation:
-- JavaScript syntax passes.
-- Early Learner E major resolves to E standard open with frets 0-2-2-1-0-0.
-- Manual E major Standard/Open resolves to the complete open E shape.
-- Scale Map Explore Scale shows no duplicate Hear the Key playback button.
-- Scale Map Hear the Key has one task selector plus a generic Play action.
-- Scale Map Practice Scale uses Play route.
+- JavaScript syntax check passes.
+- Runtime smoke test passes for initial render, tuner button toggle, one-tap label toggle, and Manual Progression with Auto position.
 
-Packaged with nested folder structure:
-note-map-guitar-v4-7/index.html
-note-map-guitar-v4-7/README.txt
+Zip structure:
+note-map-guitar-v4-8/index.html
+note-map-guitar-v4-8/README.txt
