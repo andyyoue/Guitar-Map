@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#34251d" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-title" content="Note Map" />
-<title>Note Map Guitar 4.14</title>
+<title>Note Map Guitar V5.0</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#f6f3ee;color:#221f1c;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
@@ -128,7 +128,7 @@ button{font-weight:900;cursor:pointer}
 @media(max-width:620px){.controls,.coach-form{grid-template-columns:1fr}.mode{max-width:none}h1{font-size:24px}.app{padding-left:8px;padding-right:8px}.neck{padding:8px}.hint{display:block}.fretboard{min-width:500px}.row{grid-template-columns:36px 28px repeat(var(--frets),minmax(43px,1fr))}.row.no-nut{grid-template-columns:36px repeat(var(--frets),minmax(43px,1fr))}.cell,.string,.fret,.nuthead{min-height:37px}.dot{width:27px;height:25px;font-size:11px}.open-note,.openmark,.mutemark{width:22px;height:22px;font-size:10px}}
 @media(orientation:landscape) and (max-height:520px){header p{display:none}.app{padding-top:6px}.controls{grid-template-columns:repeat(6,minmax(112px,1fr))}.coach{grid-template-columns:1fr 1fr}.coach-panel,.practice-card,.card{margin-bottom:7px;padding:8px}.summary h2{font-size:16px}.cell,.string,.fret,.nuthead{min-height:33px}.dot{width:26px;height:24px;font-size:11px}.neck{padding:7px}.row{grid-template-columns:36px 26px repeat(var(--frets),minmax(42px,1fr))}.row.no-nut{grid-template-columns:36px repeat(var(--frets),minmax(42px,1fr))}}
 
-/* 4.14 compact action toolbar */
+/* 5.0 compact action toolbar */
 .audio-card.compact-toolbar,.audio-card{gap:6px;align-items:center}
 .audio-card button{min-height:36px;padding:6px 10px;border-radius:999px}
 .action-title{font-size:17px;max-width:42vw;overflow:hidden;text-overflow:ellipsis}
@@ -150,11 +150,44 @@ button{font-weight:900;cursor:pointer}
   .inline-prog{order:20;flex-basis:100%}
 }
 
+
+/* V5 guided path */
+.path-card{background:linear-gradient(180deg,#fffdfa,#fff7ed);border:1px solid #eadfce;border-radius:16px;padding:14px;margin-bottom:10px;box-shadow:0 12px 32px #34251d12}
+.path-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.soft-button{background:#fffdfa;border:1px solid #d8cabc;color:#34251d;border-radius:999px;min-height:34px;padding:6px 10px}
+.path-card h2{font-size:24px;margin:2px 0 5px}
+.path-card p{margin:0;color:#51463f}
+.path-next{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;background:#fff;border:1px solid #eadfce;border-radius:14px;padding:12px;margin-top:12px}
+.path-next h3{font-size:20px;margin:1px 0 4px}
+.path-kicker{font-size:12px;font-weight:950;color:#6d6258;text-transform:uppercase;letter-spacing:.06em}
+.path-next button{background:#34251d;color:#fff8ef;border:0;border-radius:999px;white-space:nowrap}
+.path-steps{display:grid;grid-template-columns:repeat(6,minmax(90px,1fr));gap:7px;margin-top:10px}
+.path-step{border:1px solid #e3d7cb;background:#fffdfa;border-radius:12px;padding:9px;min-height:78px}
+.path-step.done{background:#e9f7e8;border-color:#a8d7a5}
+.path-step.current{box-shadow:0 0 0 2px #34251d inset;background:#fff8ef}
+.path-step .num{font-size:12px;font-weight:950;color:#6d6258}
+.path-step .label{font-size:14px;font-weight:950;margin-top:3px}
+.path-step .status{font-size:12px;color:#5b5148;margin-top:4px}
+.path-details{margin-top:9px}
+.path-details summary{font-weight:950;cursor:pointer;color:#34251d}
+.explore-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
+.explore-row button{border-radius:999px;min-height:34px;padding:6px 10px}
+#markStepDone{background:#e9f7e8;border-color:#a8d7a5}
+.lesson-callout{background:#fff8ef;border:1px solid #eadfce;border-radius:12px;padding:10px;margin:8px 0 0;color:#3b322b;font-weight:850}
+@media(max-width:760px){
+  .path-next{grid-template-columns:1fr}
+  .path-next button{width:100%}
+  .path-steps{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:430px){
+  .path-steps{grid-template-columns:repeat(2,1fr)}
+}
+
 </style>
 </head>
 <body>
 <main class="app">
-<header><div><h1>Note Map Guitar</h1><p>Version 4.14: tuner sensitivity and chord diagram cleanup.</p></div><div class="header-actions"><button id="openTunerBtn" class="tuner-button">♫ Tuner</button><b>4.14</b></div></header>
+<header><div><h1>Note Map Guitar</h1><p>Version 5.0: tuner sensitivity and chord diagram cleanup.</p></div><div class="header-actions"><button id="openTunerBtn" class="tuner-button">♫ Tuner</button><b>5.0</b></div></header>
 <section class="hint">Phone tip: rotate sideways. Pattern mode works best with Fret Window set to Auto.</section>
 <section id="tunerScreen" class="tuner-screen hidden" aria-live="polite">
   <div class="tuner-panel">
@@ -191,11 +224,41 @@ recorded or uploaded.</p>
   </div>
 </section>
 
+
+<section class="path-card" id="pathCard">
+  <div class="path-head">
+    <span class="pill">Your Guitar Path</span>
+    <button id="resetPath" class="soft-button" type="button">Reset</button>
+  </div>
+  <h2>Continue your path</h2>
+  <p id="pathSummary">Start with one playable chord, then connect it to a chord change, a progression, a scale pattern, and a short phrase.</p>
+  <div class="path-next">
+    <div>
+      <div class="path-kicker">Next step</div>
+      <h3 id="nextStepTitle">Learn E major</h3>
+      <p id="nextStepWhy">A friendly first chord that appears in hundreds of songs.</p>
+    </div>
+    <button id="startNextStep" type="button">Start 3-minute practice</button>
+  </div>
+  <div id="pathSteps" class="path-steps"></div>
+  <details class="path-details">
+    <summary>Or explore freely</summary>
+    <div class="explore-row">
+      <button type="button" data-jump-level="early" data-jump-goal="chordShapes">Chords</button>
+      <button type="button" data-jump-level="practice" data-jump-goal="scalePractice">Scales</button>
+      <button type="button" data-jump-level="practice" data-jump-goal="progressions">Progressions</button>
+      <button type="button" data-jump-level="practice" data-jump-goal="soloTrainer">Soloing</button>
+      <button type="button" data-jump-level="harmony" data-jump-goal="tonnetz">Harmony</button>
+      <button type="button" data-jump-level="manual">Advanced</button>
+    </div>
+  </details>
+</section>
+
 <section class="coach">
 <div class="coach-panel">
-<span class="pill">Practice setup</span>
-<h2>Practice setup</h2>
-<p>Pick what you want to work on. Early Learner is simple, Intermediate practises skills, Harmony Explorer explains relationships, and Advanced gives full control.</p>
+<span class="pill">Explore</span>
+<h2>Choose a practice area</h2>
+<p>Use this when you want to jump around. The guided path above is the easiest place to start.</p>
 <div class="coach-form">
 <label>Level<select id="skillLevel"><option value="early">Early Learner</option><option value="practice">Intermediate Practice</option><option value="harmony">Harmony Explorer</option><option value="manual">Advanced</option></select></label>
 <label id="todayGoalWrap">Practice area<select id="todayGoal"></select></label>
@@ -252,7 +315,7 @@ recorded or uploaded.</p>
 </section>
 
 <section class="card summary lesson-extra hidden"><h2 id="title"></h2><p id="subtitle"></p><div id="progLine" class="prog-line hidden"></div></section>
-<section class="card audio-card compact-toolbar"><span id="actionTitle" class="action-title"></span><span id="focusMeta" class="focus-meta"></span><button id="exploreScaleBtn" class="task-btn hidden">Explore</button><button id="practiceScaleBtn" class="task-btn hidden">Practice</button><button id="hearKeyBtn" class="task-btn hidden">Hear</button><label id="inlineChordLabelsWrap" class="inline-select hidden">Show<select id="inlineChordLabels"><option value="fingers">Finger numbers</option><option value="notes">Note names</option></select></label><button id="toggleInlineLabels" class="hidden">Notes</button><button id="prevInlineShape" class="hidden">‹ Shape</button><button id="nextInlineShape" class="hidden">Shape ›</button><button id="prevInlineChord" class="hidden">‹ Chord</button><button id="nextInlineChord" class="hidden">Chord ›</button><button id="loopProgression" class="hidden">Loop</button><button id="prevInlineProgShape" class="hidden">‹ Shape</button><button id="nextInlineProgShape" class="hidden">Shape ›</button><button id="prevCoachPattern" class="hidden">‹ Pattern</button><button id="nextCoachPattern" class="hidden">Pattern ›</button><button id="prevCoachRoot" class="hidden">‹ Chord</button><button id="nextCoachRoot" class="hidden">Chord ›</button><button id="prevCoachChordType" class="hidden">‹ Type</button><button id="nextCoachChordType" class="hidden">Type ›</button><button id="playCurrent">Play</button><button id="playPhrase">Hear phrase</button><button id="newPhrase" class="hidden">New phrase</button><button id="toggleDiagramView" class="hidden">Diagram</button><span id="audioHint"></span><div id="inlineProgression" class="inline-prog hidden"></div></section>
+<section class="card audio-card compact-toolbar"><span id="actionTitle" class="action-title"></span><span id="focusMeta" class="focus-meta"></span><button id="exploreScaleBtn" class="task-btn hidden">Explore</button><button id="practiceScaleBtn" class="task-btn hidden">Practice</button><button id="hearKeyBtn" class="task-btn hidden">Hear</button><label id="inlineChordLabelsWrap" class="inline-select hidden">Show<select id="inlineChordLabels"><option value="fingers">Finger numbers</option><option value="notes">Note names</option></select></label><button id="toggleInlineLabels" class="hidden">Notes</button><button id="prevInlineShape" class="hidden">‹ Shape</button><button id="nextInlineShape" class="hidden">Shape ›</button><button id="prevInlineChord" class="hidden">‹ Chord</button><button id="nextInlineChord" class="hidden">Chord ›</button><button id="loopProgression" class="hidden">Loop</button><button id="prevInlineProgShape" class="hidden">‹ Shape</button><button id="nextInlineProgShape" class="hidden">Shape ›</button><button id="prevCoachPattern" class="hidden">‹ Pattern</button><button id="nextCoachPattern" class="hidden">Pattern ›</button><button id="prevCoachRoot" class="hidden">‹ Chord</button><button id="nextCoachRoot" class="hidden">Chord ›</button><button id="prevCoachChordType" class="hidden">‹ Type</button><button id="nextCoachChordType" class="hidden">Type ›</button><button id="playCurrent">Play</button><button id="playPhrase">Hear phrase</button><button id="newPhrase" class="hidden">New phrase</button><button id="toggleDiagramView" class="hidden">Diagram</button><button id="markStepDone" class="hidden">Mark done</button><span id="audioHint"></span><div id="inlineProgression" class="inline-prog hidden"></div></section>
 <section class="neck"><div id="board"></div></section>
 <section class="card"><button id="toggleDetails">Show coaching notes</button></section>
 <section class="practice-card lesson-extra hidden">
@@ -285,8 +348,67 @@ const chords={
   dominant7:["Dominant 7","7",[0,4,7,10],"1-3-5-b7"], dim:["Diminished","dim",[0,3,6],"1-b3-b5"], sus2:["Sus2","sus2",[0,2,7],"1-2-5"], sus4:["Sus4","sus4",[0,5,7],"1-4-5"]
 };
 const $=id=>document.getElementById(id), els={};
-["openTunerBtn","tunerScreen","returnFromTuner","startTuner","stopTuner","tunerPreset","tunerPresetTitle","tunerIntro","tunerLive","tunerStrings","tunerError","tunerNote","tunerOctave","tunerNeedle","tunerMessage","tunerHz","tunerStatus","tunerSignalBar","tunerSignalText","tunerDebug","tunerSr","skillLevel","todayGoalWrap","todayGoal","coachRootWrap","coachRootLabel","coachRoot","coachChordTypeWrap","coachChordType","coachChordLabelsWrap","coachChordLabels","coachNoteWrap","coachNote","coachPentTypeWrap","coachPentType","practiceBadge","practiceTitle","practiceWhy","practiceSteps","manualModeCard","mode","mapControls","chordControls","progControls","soloControls","key","scale","overlay","display","pattern","mapWindow","scaleAction","chordRoot","chordType","shapeStyle","chordLabels","chordWindow","prevShape","nextShape","prevInlineShape","nextInlineShape","prevInlineChord","nextInlineChord","loopProgression","prevInlineProgShape","nextInlineProgShape","inlineChordLabelsWrap","inlineChordLabels","toggleInlineLabels","shapeName","shapeText","progKey","progType","progStyle","progLabels","near","prevChord","nextChord","prevProgShape","nextProgShape","soloKey","soloScale","soloBlueprint","soloArea","actionTitle","focusMeta","exploreScaleBtn","practiceScaleBtn","hearKeyBtn","inlineProgression","playCurrent","playPhrase","newPhrase","toggleDiagramView","toggleDetails","prevCoachPattern","nextCoachPattern","prevCoachChordType","nextCoachChordType","prevCoachRoot","nextCoachRoot","audioHint","progLine","title","subtitle","whyTitle","why","board","legend"].forEach(id=>els[id]=$(id));
+["openTunerBtn","tunerScreen","returnFromTuner","startTuner","stopTuner","tunerPreset","tunerPresetTitle","tunerIntro","tunerLive","tunerStrings","tunerError","tunerNote","tunerOctave","tunerNeedle","tunerMessage","tunerHz","tunerStatus","tunerSignalBar","tunerSignalText","tunerDebug","tunerSr","skillLevel","todayGoalWrap","todayGoal","coachRootWrap","coachRootLabel","coachRoot","coachChordTypeWrap","coachChordType","coachChordLabelsWrap","coachChordLabels","coachNoteWrap","coachNote","coachPentTypeWrap","coachPentType","practiceBadge","practiceTitle","practiceWhy","practiceSteps","manualModeCard","mode","mapControls","chordControls","progControls","soloControls","key","scale","overlay","display","pattern","mapWindow","scaleAction","chordRoot","chordType","shapeStyle","chordLabels","chordWindow","prevShape","nextShape","prevInlineShape","nextInlineShape","prevInlineChord","nextInlineChord","loopProgression","prevInlineProgShape","nextInlineProgShape","inlineChordLabelsWrap","inlineChordLabels","toggleInlineLabels","shapeName","shapeText","progKey","progType","progStyle","progLabels","near","prevChord","nextChord","prevProgShape","nextProgShape","soloKey","soloScale","soloBlueprint","soloArea","actionTitle","focusMeta","exploreScaleBtn","practiceScaleBtn","hearKeyBtn","inlineProgression","playCurrent","playPhrase","newPhrase","toggleDiagramView","toggleDetails","prevCoachPattern","nextCoachPattern","prevCoachChordType","nextCoachChordType","prevCoachRoot","nextCoachRoot","audioHint","progLine","title","subtitle","whyTitle","why","board","legend","pathCard","pathSummary","nextStepTitle","nextStepWhy","startNextStep","pathSteps","resetPath","markStepDone"].forEach(id=>els[id]=$(id));
 let shapeIdx=0, progChordIdx=0, progShapeOffset=0, progAnchorFret=null, progressionLoopTimer=null, audioCtx=null, detailsOpen=false, diagramView="neck", currentSound={kind:"scale",root:"A",quality:"major",notes:["A"]};
+
+const PATH_STEPS=[
+  {id:"chordE",stage:"Chord",label:"Learn E major",why:"Copy one friendly open chord shape.",level:"early",goal:"chordShapes",root:"E",chordType:"major"},
+  {id:"changeEA",stage:"Change",label:"Change E ↔ A",why:"Move between two useful chords without theory.",level:"early",goal:"chordShapes",root:"A",chordType:"major"},
+  {id:"progADE",stage:"Progression",label:"Play A → D → E",why:"Hear how songs use a small group of chords.",level:"practice",goal:"progressions",root:"A"},
+  {id:"patternA",stage:"Pattern",label:"A minor pentatonic box",why:"Start with one small playable scale pattern.",level:"practice",goal:"scalePractice",root:"A",pent:"minorPent"},
+  {id:"phraseA",stage:"Phrase",label:"Play a 3-note phrase",why:"Turn the scale box into a musical idea.",level:"practice",goal:"soloTrainer",root:"A"},
+  {id:"harmonyEAB",stage:"Harmony",label:"Why E, A and B fit",why:"See related chords on the harmony map.",level:"harmony",goal:"tonnetz",root:"E"}
+];
+const COACH_CHORD_TYPES=[["major","Major"],["minor","Minor"],["dominant7","7"],["sus2","Sus2"],["sus4","Sus4"]];
+const PATH_KEY="noteMapGuitarV5Path";
+let activePathStep=null;
+function loadPath(){try{return JSON.parse(localStorage.getItem(PATH_KEY)||"{}")}catch(e){return {}}}
+function savePath(p){try{localStorage.setItem(PATH_KEY,JSON.stringify(p))}catch(e){}}
+function firstIncompleteStep(progress){return PATH_STEPS.find(s=>!progress[s.id])||PATH_STEPS[PATH_STEPS.length-1]}
+function renderPath(){
+  if(!els.pathSteps)return;
+  let progress=loadPath(), next=firstIncompleteStep(progress), doneCount=PATH_STEPS.filter(s=>progress[s.id]).length;
+  activePathStep=next.id;
+  els.pathSummary.textContent=doneCount?`${doneCount} of ${PATH_STEPS.length} path steps complete. Keep going one visual step at a time.`:"Start with one playable chord, then connect it to a chord change, a progression, a scale pattern, a short phrase, and harmony.";
+  els.nextStepTitle.textContent=next.label;
+  els.nextStepWhy.textContent=next.why;
+  els.pathSteps.innerHTML=PATH_STEPS.map((s,i)=>{
+    let done=!!progress[s.id], current=s.id===next.id&&!done;
+    return `<div class="path-step ${done?"done":""} ${current?"current":""}" data-path-step="${s.id}">
+      <div class="num">${i+1}. ${s.stage}</div>
+      <div class="label">${s.label}</div>
+      <div class="status">${done?"✓ Done":current?"Next":"Later"}</div>
+    </div>`
+  }).join("");
+}
+function launchPathStep(step){
+  if(!step)return;
+  activePathStep=step.id;
+  if(step.level)els.skillLevel.value=step.level;
+  refreshGoalOptions();
+  if(step.goal&&els.todayGoal)els.todayGoal.value=step.goal;
+  refreshGoalOptions();
+  if(step.root&&els.coachRoot)els.coachRoot.value=step.root;
+  if(step.chordType&&els.coachChordType)els.coachChordType.value=step.chordType;
+  if(step.pent&&els.coachPentType)els.coachPentType.value=step.pent;
+  if(step.level==="manual"){showManualIntro();render()}
+  else startPractice();
+  if(els.markStepDone){els.markStepDone.classList.remove("hidden");els.markStepDone.textContent="Mark done"}
+  let callout=document.createElement("div");
+  callout.className="lesson-callout";
+  callout.textContent=`Do this: ${step.label}. ${step.why}`;
+  let existing=document.querySelector(".lesson-callout"); if(existing)existing.remove();
+  let target=document.querySelector(".compact-toolbar"); if(target)target.insertAdjacentElement("afterend",callout);
+  setTimeout(()=>document.querySelector(".compact-toolbar")?.scrollIntoView({behavior:"smooth",block:"start"}),80);
+}
+function markActiveStepDone(){
+  if(!activePathStep)return;
+  let progress=loadPath(); progress[activePathStep]=true; savePath(progress);
+  renderPath();
+  if(els.markStepDone)els.markStepDone.classList.add("hidden");
+  document.querySelector(".lesson-callout")?.remove();
+}
+
 KEY_ORDER.forEach(k=>{["key","progKey","chordRoot","soloKey"].forEach(id=>{let o=document.createElement("option");o.value=k;o.textContent=k;els[id].appendChild(o)})});
 BEGINNER_ROOTS.forEach(([value,label])=>{let o=document.createElement("option");o.value=value;o.textContent=label;els.coachRoot.appendChild(o)});
 ["A","B","C","D","E","F","G"].forEach(n=>{let o=document.createElement("option");o.value=n;o.textContent=n;els.coachNote.appendChild(o)});
@@ -463,8 +585,19 @@ function refreshGoalOptions(){
   else if(goals.length) els.todayGoal.value=goals[0];
   els.todayGoalWrap.classList.toggle("hidden",skill==="manual");
   let goal=els.todayGoal.value, manual=skill==="manual";
+  // In chord learning, avoid barre-heavy B/F major shapes for first-time reviewers.
+  // In key/scale contexts, keep all natural keys available.
+  let rootChoices=goal==="chordShapes"?[["A","A"],["C","C"],["D","D"],["E","E"],["G","G"]]:BEGINNER_ROOTS;
+  let keep=els.coachRoot.value;
+  els.coachRoot.innerHTML=rootChoices.map(([v,l])=>`<option value="${v}">${l}</option>`).join("");
+  if(rootChoices.some(([v])=>v===keep))els.coachRoot.value=keep; else els.coachRoot.value=rootChoices[0][0];
   els.coachRootWrap.classList.toggle("hidden",manual||goal==="neckNotes");
   if(els.coachRootLabel)els.coachRootLabel.textContent=goal==="chordShapes"?"Chord":"Key";
+  let keepType=els.coachChordType.value;
+  if(goal==="chordShapes"){
+    els.coachChordType.innerHTML=COACH_CHORD_TYPES.map(([v,l])=>`<option value="${v}">${l}</option>`).join("");
+    els.coachChordType.value=COACH_CHORD_TYPES.some(([v])=>v===keepType)?keepType:"major";
+  }
   els.coachChordTypeWrap.classList.toggle("hidden",manual||goal!=="chordShapes");
   els.coachChordLabelsWrap.classList.add("hidden");
   els.coachNoteWrap.classList.toggle("hidden",manual||goal!=="neckNotes");
@@ -484,10 +617,10 @@ function planFor(goal){
   let displayRoot=beginnerRootLabel(root);
   let plans={
     chordShapes:{
-      badge:"Chord shape vision",
-      title:`${displayRoot}${chords[chordType][1]} chord shapes`,
+      badge:"Chord",
+      title:`Learn ${displayRoot}${chords[chordType][1]} chord`,
       why:"Do this now: copy the grip on the diagram, then strum only the strings that are not marked X.",
-      steps:[chordLabels==="notes"?"Read the note names as chord tones inside the grip.":"Use the finger numbers as the primary target.", "Use O for open strings and X for muted strings.", "Tap Classic chord diagram if you want the familiar chord-book picture."],
+      steps:[chordLabels==="notes"?"Read the note names as chord tones inside the grip.":"Use the finger numbers as the primary target.", "Use O for open strings and X for muted strings.", "Use the diagram and the neck view together; they show the same chord."],
       apply(){setSelect(els.mode,"chord");setSelect(els.chordRoot,root);setSelect(els.chordType,chordType);setSelect(els.shapeStyle,"open");setSelect(els.chordLabels,chordLabels);setSelect(els.chordWindow,"auto");shapeIdx=0;render()}
     },
     neckNotes:{
@@ -498,14 +631,14 @@ function planFor(goal){
       apply(){setSelect(els.mode,"map");setVis();renderNoteMap(note)}
     },
     pentatonicShapes:{
-      badge:"Pentatonic shapes",
-      title:`${displayRoot} ${pent==="majorPent"?"major":"minor"} pentatonic shapes`,
+      badge:"Pattern",
+      title:`One ${displayRoot} ${pent==="majorPent"?"major":"minor"} pentatonic pattern`,
       why:"Do this now: play only the bright pattern notes inside the box. Treat grey notes as background context.",
-      steps:["Start with the bright green notes only.","Use Previous pattern and Next pattern to move the same scale idea up and down the neck.","Make a four-note phrase and land on the yellow root."],
+      steps:["You do not need the whole neck. Start with the bright notes in one small pattern.","Use Previous pattern and Next pattern to move the same scale idea up and down the neck.","Make a four-note phrase and land on the yellow root."],
       apply(){setSelect(els.mode,"map");setSelect(els.key,root);setSelect(els.scale,pent);setSelect(els.overlay,"none");setSelect(els.pattern,pent==="majorPent"?"p5":"p1");setSelect(els.mapWindow,"auto");setSelect(els.scaleAction,"practiceScale");render()}
     },
     scalePractice:{
-      badge:"Intermediate Practice",
+      badge:"Build Skills",
       title:`${displayRoot} ${pent==="majorPent"?"major":"minor"} pentatonic scale practice`,
       why:"Do this now: play the highlighted route inside one pattern. This is a physical scale exercise, not a whole-neck map.",
       steps:["Follow one exact string/fret at a time.","Use Previous pattern and Next pattern to move the same idea up and down the neck.","Switch to Advanced when you want full scale and display controls."],
@@ -680,6 +813,7 @@ function updateAudioControls(){
   els.toggleDiagramView.textContent=diagramView==="book"?"Neck":"Diagram";
   updateCoachActionButtons();
   els.actionTitle.textContent=currentSound.title||"";
+  if(els.markStepDone&&!activePathStep)els.markStepDone.classList.add("hidden");
   els.playCurrent.classList.toggle("hidden",currentSound.kind==="scaleExplore"||progressionMode);
   if(currentSound.kind==="chord"){els.playCurrent.textContent="Play chord";els.audioHint.textContent=""}
   else if(currentSound.kind==="note"){els.playCurrent.textContent="Play note";els.audioHint.textContent=`Hear ${currentSound.notes[0]}.`}
@@ -1215,6 +1349,26 @@ function tunerLoop(){
 }
 function updateTunerDisplay(m,c){let note=m.name.replace(/\d/,'');let oct=m.name.match(/\d/)[0];els.tunerNote.textContent=note;els.tunerOctave.textContent=m.name;els.tunerHz.textContent=m.freq.toFixed(1)+' Hz';let msg=Math.abs(c)<=5?'In tune':c<-15?'Tune up':c< -5?'Tune up slightly':c>15?'Tune down':'Tune down slightly';if(Math.abs(c)<=5){if(!tunerStableSince)tunerStableSince=performance.now();if(performance.now()-tunerStableSince>550)c=0}else tunerStableSince=0;els.tunerNeedle.style.transform=`translateX(calc(-50% + ${c*2.8}px))`;els.tunerNeedle.classList.toggle('tuned',msg==='In tune');els.tunerMessage.textContent=msg;els.tunerStatus.textContent=c<0?Math.round(Math.abs(c))+' cents flat':c>0?Math.round(c)+' cents sharp':'Centered';renderTunerStrings();let ann=`${m.name}, ${msg==='In tune'?'in tune':Math.round(Math.abs(c))+' cents '+(c<0?'flat':'sharp')}`;if(ann!==tunerLastAnnouncement&&Math.abs(c)%1<.35){els.tunerSr.textContent=ann;tunerLastAnnouncement=ann}}
 function setTunerIdle(msg){els.tunerNote.textContent='—';els.tunerOctave.textContent=msg;els.tunerMessage.textContent=msg;els.tunerHz.textContent='— Hz';els.tunerStatus.textContent='';els.tunerNeedle.style.transform='translateX(-50%)';els.tunerNeedle.classList.remove('tuned')}
+
+if(els.startNextStep)els.startNextStep.onclick=()=>launchPathStep(firstIncompleteStep(loadPath()));
+if(els.resetPath)els.resetPath.onclick=()=>{if(confirm("Reset your local guitar path progress?")){savePath({});activePathStep=null;renderPath();if(els.markStepDone)els.markStepDone.classList.add("hidden")}};
+if(els.markStepDone)els.markStepDone.onclick=markActiveStepDone;
+document.querySelectorAll("[data-jump-level]").forEach(b=>b.onclick=()=>{
+  activePathStep=null;
+  document.querySelector(".lesson-callout")?.remove();
+  if(els.markStepDone)els.markStepDone.classList.add("hidden");
+  els.skillLevel.value=b.dataset.jumpLevel;
+  refreshGoalOptions();
+  if(b.dataset.jumpGoal){els.todayGoal.value=b.dataset.jumpGoal;refreshGoalOptions()}
+  startPractice();
+});
+if(els.pathSteps)els.pathSteps.onclick=e=>{
+  let card=e.target.closest("[data-path-step]"); if(!card)return;
+  let step=PATH_STEPS.find(s=>s.id===card.dataset.pathStep);
+  launchPathStep(step);
+};
+renderPath();
+
 els.openTunerBtn.onclick=()=>document.querySelector('main.app').classList.contains('tuner-active')?closeTuner():openTuner();els.returnFromTuner.onclick=closeTuner;els.startTuner.onclick=startTuner;els.stopTuner.onclick=stopTuner;els.tunerPreset.onchange=()=>{tunerMode='auto';tunerLastTarget=null;renderTunerStrings()};document.addEventListener('visibilitychange',()=>{if(document.hidden)stopTuner()});
 
 startPractice();

@@ -1,18 +1,23 @@
-NOTE MAP GUITAR - VERSION 4.14
+NOTE MAP GUITAR - V5.0 FRIENDLY REVIEW BUILD
 
-Focus: control real estate across Intermediate Practice, Harmony Explorer, and Advanced.
+Purpose:
+Help a guitarist move from first chords toward intermediate confidence without heavy theory explanations.
 
-Changes:
-- Compact action-toolbar labels across non-beginner modes.
-- Scale task buttons are shortened to Explore / Practice / Hear.
-- Progression controls use compact chord and voicing labels.
-- Diagram toggle is shortened to Diagram / Neck.
-- Progression chord chips now live on their own contained scroll line so they do not stretch the entire toolbar.
-- Mobile action toolbar can wrap cleanly instead of forcing a full-width horizontal scroll.
-- Practice setup text is shorter and clearer.
+V5 focus:
+- Adds a Guided Path above the existing tools.
+- Adds local progress memory in browser localStorage.
+- Adds a clear "Continue your path" card with Start 3-minute practice.
+- Organizes the learning journey as:
+  Chord -> Change -> Progression -> Pattern -> Phrase -> Harmony
+- Keeps the existing Explore area for people who want to jump around.
+- Adds a Mark done button for guided path steps.
+- Simplifies Early Learner chord choices to common beginner open chords.
+- Keeps tuner global and return-to-app behavior.
 
-The goal is the same pattern across the app:
-1. Current musical task
-2. Primary action controls
-3. Fretboard
-4. Coaching notes and advanced explanation below
+Friendly reviewer notes:
+Ask reviewers whether the first screen makes it obvious what to do next.
+The most important test is not whether every feature exists, but whether a new guitarist can start without explanation.
+
+Package:
+note-map-guitar-v5-0/index.html
+note-map-guitar-v5-0/README.txt
