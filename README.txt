@@ -1,22 +1,18 @@
-NOTE MAP GUITAR - VERSION 4.13
+NOTE MAP GUITAR - VERSION 4.14
 
-Structure and naming release.
+Focus: control real estate across Intermediate Practice, Harmony Explorer, and Advanced.
 
 Changes:
-- Renamed Manual Mode to Advanced.
-- Added Intermediate Practice as a guided level containing Scale practice, Solo trainer, and Progressions.
-- Renamed the old Intermediate harmony area to Harmony Explorer.
-- Updated the opening setup copy from Today Coach to Practice setup.
-- Early Learner labels now use Chord / Key and Sound language.
-- Advanced retains the full-control tools: Scale Map, Chord Shape, Progression, and Solo Trainer.
-- Intermediate Progressions keeps Position as the musical way to reach open, middle-neck, and upper-neck voicings without exposing fret-window language.
+- Compact action-toolbar labels across non-beginner modes.
+- Scale task buttons are shortened to Explore / Practice / Hear.
+- Progression controls use compact chord and voicing labels.
+- Diagram toggle is shortened to Diagram / Neck.
+- Progression chord chips now live on their own contained scroll line so they do not stretch the entire toolbar.
+- Mobile action toolbar can wrap cleanly instead of forcing a full-width horizontal scroll.
+- Practice setup text is shorter and clearer.
 
-Package structure:
-note-map-guitar-v4-12/index.html
-note-map-guitar-v4-12/README.txt
-
-
-4.13 updates:
-- Early Learner chord selector label now says Chord, with Key used only for key/scale practice areas.
-- Early Learner chord action row now has Previous/Next chord and Previous/Next chord type controls.
-- The note/finger display toggle now says Notes or Fingers instead of Show note names / Show finger numbers.
+The goal is the same pattern across the app:
+1. Current musical task
+2. Primary action controls
+3. Fretboard
+4. Coaching notes and advanced explanation below
