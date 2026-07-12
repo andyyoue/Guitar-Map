@@ -5,6 +5,5 @@
   "display": "standalone",
   "background_color": "#f6f3ee",
   "theme_color": "#34251d",
-  "orientation": "any",
-  "icons": []
+  "description": "Guided guitar fretboard practice from first chords to patterns, progressions, and simple phrases."
 }

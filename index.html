@@ -6,7 +6,8 @@
 <meta name="theme-color" content="#34251d" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-title" content="Note Map" />
-<title>Note Map Guitar V5.0</title>
+<link rel="manifest" href="manifest.webmanifest" />
+<title>Note Map Guitar V5.2 RC</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#f6f3ee;color:#221f1c;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
@@ -183,12 +184,35 @@ button{font-weight:900;cursor:pointer}
   .path-steps{grid-template-columns:repeat(2,1fr)}
 }
 
+
+/* V5.1 calmer guided path */
+.calm-path .path-card h2{}
+.calm-path{background:#fffdfa}
+.calm-path .path-next{grid-template-columns:1fr auto;background:#fff8ef}
+.calm-path .path-steps{grid-template-columns:repeat(3,minmax(110px,1fr))}
+.calm-path .path-step{min-height:64px}
+.calm-path .path-step .status{display:none}
+.calm-path .path-details{border-top:1px solid #eadfce;padding-top:8px}
+@media(max-width:760px){.calm-path .path-steps{grid-template-columns:1fr 1fr}.calm-path .path-next{grid-template-columns:1fr}}
+
+
+/* V5.2 release-candidate polish */
+header b#buildLabel{font-size:12px;background:#fff8ef;border:1px solid #eadfce;border-radius:999px;padding:6px 9px;color:#34251d}
+.link-button{border:0;background:transparent;color:#34251d;text-decoration:underline;min-height:auto;padding:0 4px;font-size:inherit;font-weight:900}
+.path-next button{font-size:17px}
+.coach-panel{opacity:.96}
+.tuner-meter.idle .meter-needle{opacity:0}
+.tuner-meter.listening .meter-track{background:#eee5dc}
+.tuner-meter.tuned .meter-track{background:linear-gradient(90deg,#d8eee0,#b9e8c8,#66bd7a,#b9e8c8,#d8eee0)}
+.tuner-message.tuned{color:#1d7b43}
+@media(max-width:760px){header{gap:8px}header b#buildLabel{display:block;margin-top:4px}.hint{font-size:13px}}
+
 </style>
 </head>
 <body>
 <main class="app">
-<header><div><h1>Note Map Guitar</h1><p>Version 5.0: tuner sensitivity and chord diagram cleanup.</p></div><div class="header-actions"><button id="openTunerBtn" class="tuner-button">♫ Tuner</button><b>5.0</b></div></header>
-<section class="hint">Phone tip: rotate sideways. Pattern mode works best with Fret Window set to Auto.</section>
+<header><div><h1>Note Map Guitar</h1><p>V5.2 RC: friendly tester build.</p></div><div class="header-actions"><button id="openTunerBtn" class="tuner-button">♫ Tuner</button><b id="buildLabel">V5.2 RC · Build 2026-07-11.2</b></div></header>
+<section class="hint">Friendly tester build: <strong>V5.2 RC · Build 2026-07-11.2</strong> · Portrait works; rotate only if you want more fretboard width. <button id="clearCachedVersion" class="link-button" type="button">Clear cached version / reload</button></section>
 <section id="tunerScreen" class="tuner-screen hidden" aria-live="polite">
   <div class="tuner-panel">
     <div class="tuner-top"><button id="returnFromTuner" class="return-link">‹ Return to App</button><label>Tuning: <select id="tunerPreset"><option value="standard">Standard</option><option value="dropD">Drop D</option></select></label></div>
@@ -211,7 +235,7 @@ recorded or uploaded.</p>
         <div class="tuner-debug" id="tunerDebug">Press Start tuner, then play one string clearly.</div>
       </div>
       <div class="tuner-note"><div class="big" id="tunerNote">—</div><div class="oct" id="tunerOctave">Play one string</div></div>
-      <div class="tuner-meter" role="img" aria-label="Tuning meter from flat to sharp">
+      <div class="tuner-meter idle" id="tunerMeter" role="img" aria-label="Tuning meter from flat to sharp">
         <div class="meter-labels"><span>FLAT</span><span>IN TUNE</span><span>SHARP</span></div>
         <div class="meter-track"><div class="meter-ticks"><span>-50</span><span>-25</span><span>0</span><span>+25</span><span>+50</span></div><div id="tunerNeedle" class="meter-needle"></div></div>
       </div>
@@ -225,42 +249,45 @@ recorded or uploaded.</p>
 </section>
 
 
-<section class="path-card" id="pathCard">
+
+<section class="path-card calm-path" id="pathCard">
   <div class="path-head">
-    <span class="pill">Your Guitar Path</span>
-    <button id="resetPath" class="soft-button" type="button">Reset</button>
+    <span class="pill">Learn</span>
+    <button id="resetPath" class="soft-button" type="button">Reset progress</button>
   </div>
-  <h2>Continue your path</h2>
-  <p id="pathSummary">Start with one playable chord, then connect it to a chord change, a progression, a scale pattern, and a short phrase.</p>
+  <h2>One small thing to try</h2>
+  <p id="pathSummary">No need to understand the whole app. Start with the next playable step.</p>
   <div class="path-next">
     <div>
-      <div class="path-kicker">Next step</div>
+      <div class="path-kicker">Suggested next step</div>
       <h3 id="nextStepTitle">Learn E major</h3>
       <p id="nextStepWhy">A friendly first chord that appears in hundreds of songs.</p>
     </div>
-    <button id="startNextStep" type="button">Start 3-minute practice</button>
+    <button id="startNextStep" type="button">Start practice</button>
   </div>
-  <div id="pathSteps" class="path-steps"></div>
   <details class="path-details">
-    <summary>Or explore freely</summary>
+    <summary>Show the full learning path</summary>
+    <div id="pathSteps" class="path-steps"></div>
+  </details>
+  <details class="path-details">
+    <summary>Explore freely</summary>
     <div class="explore-row">
       <button type="button" data-jump-level="early" data-jump-goal="chordShapes">Chords</button>
       <button type="button" data-jump-level="practice" data-jump-goal="scalePractice">Scales</button>
       <button type="button" data-jump-level="practice" data-jump-goal="progressions">Progressions</button>
       <button type="button" data-jump-level="practice" data-jump-goal="soloTrainer">Soloing</button>
       <button type="button" data-jump-level="harmony" data-jump-goal="tonnetz">Harmony</button>
-      <button type="button" data-jump-level="manual">Advanced</button>
+      <button type="button" data-jump-level="manual">Explore freely</button>
     </div>
   </details>
 </section>
-
 <section class="coach">
 <div class="coach-panel">
-<span class="pill">Explore</span>
+<span class="pill">Explore freely</span>
 <h2>Choose a practice area</h2>
-<p>Use this when you want to jump around. The guided path above is the easiest place to start.</p>
+<p>Use this when you want to choose the chord, scale, progression, or map yourself.</p>
 <div class="coach-form">
-<label>Level<select id="skillLevel"><option value="early">Early Learner</option><option value="practice">Intermediate Practice</option><option value="harmony">Harmony Explorer</option><option value="manual">Advanced</option></select></label>
+<label>Level<select id="skillLevel"><option value="early">Early Learner</option><option value="practice">Intermediate Practice</option><option value="harmony">Harmony Explorer</option><option value="manual">Explore freely</option></select></label>
 <label id="todayGoalWrap">Practice area<select id="todayGoal"></select></label>
 <label id="coachRootWrap"><span id="coachRootLabel">Chord</span><select id="coachRoot"></select></label>
 <label id="coachChordTypeWrap">Sound<select id="coachChordType"><option value="major">Major</option><option value="minor">Minor</option><option value="minor7">Minor 7</option><option value="major7">Major 7</option><option value="dominant7">Dominant 7</option><option value="sus2">Sus2</option><option value="sus4">Sus4</option></select></label>
@@ -271,7 +298,7 @@ recorded or uploaded.</p>
 </div>
 </section>
 
-<section id="manualModeCard" class="card mode hidden"><label>Advanced View<select id="mode"><option value="map">Scale map</option><option value="chord">Chord shape</option><option value="progression">Progression</option><option value="solo">Solo trainer</option></select></label></section>
+<section id="manualModeCard" class="card mode hidden"><label>Explore Freely View<select id="mode"><option value="map">Scale map</option><option value="chord">Chord shape</option><option value="progression">Progression</option><option value="solo">Solo trainer</option></select></label></section>
 
 <section id="mapControls" class="card controls">
 <label>Key<select id="key"></select></label>
@@ -279,8 +306,8 @@ recorded or uploaded.</p>
 <label>Display<select id="display"><option value="notes">Note names</option><option value="degrees">Scale degrees</option></select></label>
 <details class="more-options"><summary>More options</summary><div class="controls">
 <label>Pattern<select id="pattern"><option value="none">Auto pattern</option><option value="p1">Pattern 1</option><option value="p2">Pattern 2</option><option value="p3">Pattern 3</option><option value="p4">Pattern 4</option><option value="p5">Pattern 5</option></select></label>
-<label>Fret window<select id="mapWindow"><option value="auto">Auto</option><option value="0">Open-7</option><option value="3">3-9</option><option value="5">5-11</option><option value="7">7-13</option><option value="10">10-16</option><option value="all">All 0-15</option></select></label>
-<label>Optional chord tones<select id="overlay"><option value="none">None</option><option value="major">Major chord</option><option value="minor">Minor chord</option><option value="minor7">Minor 7 chord</option><option value="major7">Major 7 chord</option><option value="dominant7">Dominant 7 chord</option><option value="sus2">Sus2 chord</option><option value="sus4">Sus4 chord</option></select></label>
+<label>Neck area<select id="mapWindow"><option value="auto">Auto</option><option value="0">Open-7</option><option value="3">3-9</option><option value="5">5-11</option><option value="7">7-13</option><option value="10">10-16</option><option value="all">All 0-15</option></select></label>
+<label>Add a chord highlight<select id="overlay"><option value="none">None</option><option value="major">Major chord</option><option value="minor">Minor chord</option><option value="minor7">Minor 7 chord</option><option value="major7">Major 7 chord</option><option value="dominant7">Dominant 7 chord</option><option value="sus2">Sus2 chord</option><option value="sus4">Sus4 chord</option></select></label>
 <label class="hidden">Scale action<select id="scaleAction"><option value="exploreScale">Explore</option><option value="practiceScale">Practice</option><option value="hearKey">Hear</option></select></label>
 </div></details>
 </section>
@@ -288,10 +315,10 @@ recorded or uploaded.</p>
 <section id="chordControls" class="card controls hidden">
 <label>Root<select id="chordRoot"></select></label>
 <label>Chord type<select id="chordType"><option value="major">Major</option><option value="minor">Minor</option><option value="minor7">Minor 7</option><option value="major7">Major 7</option><option value="dominant7">Dominant 7</option><option value="sus2">Sus2</option><option value="sus4">Sus4</option></select></label>
-<label>Shape family<select id="shapeStyle"><option value="open">Standard / open shapes</option><option value="all">Alternate voicings</option><option value="easy">Cheats / triads</option><option value="movable">Movable / barre</option><option value="triad">Small triads only</option></select></label>
+<label>Chord shape<select id="shapeStyle"><option value="open">Standard / open shapes</option><option value="all">Alternate voicings</option><option value="easy">Small three-string shapes</option><option value="movable">Barre and movable shapes</option><option value="triad">Small triads only</option></select></label>
 <label class="hidden">Show on chord<select id="chordLabels"><option value="fingers">Finger numbers</option><option value="notes">Note names</option></select></label>
 <details class="more-options"><summary>More options</summary><div class="controls">
-<label>Fret window<select id="chordWindow"><option value="auto">Auto</option><option value="0">Open-7</option><option value="3">3-9</option><option value="5">5-11</option><option value="7">7-13</option><option value="10">10-16</option><option value="12">12-18</option></select></label>
+<label>Neck area<select id="chordWindow"><option value="auto">Auto</option><option value="0">Open-7</option><option value="3">3-9</option><option value="5">5-11</option><option value="7">7-13</option><option value="10">10-16</option><option value="12">12-18</option></select></label>
 </div></details>
 <div class="buttons hidden"><button id="prevShape">◀ Previous shape</button><button id="nextShape">Next shape ▶</button></div>
 <div class="note-card lesson-extra hidden"><strong id="shapeName"></strong><p id="shapeText"></p></div>
@@ -299,9 +326,9 @@ recorded or uploaded.</p>
 
 <section id="progControls" class="card controls hidden">
 <label>Key<select id="progKey"></select></label>
-<label>Music style<select id="progType"><option value="classic">Classic rock / folk</option><option value="pop">Pop / anthem</option><option value="dooWop">50s / doo-wop</option><option value="folk">Folk circle</option><option value="sad">Sad / emotional</option><option value="romantic">Romantic</option><option value="suspense">Suspense / resolve</option><option value="minorWalk">Minor walk-down</option><option value="andalusian">Andalusian cadence</option><option value="blues">Blues</option><option value="quickBlues">Quick-change blues</option><option value="jazzBlues">Jazz blues shell</option><option value="turnaround">Turnaround</option><option value="funk">Funk / Dorian-ish</option><option value="modalRock">Modal rock</option><option value="plagal">Plagal / amen</option></select></label>
-<label>Position<select id="near"><option value="auto">Auto</option><option value="0">Open / low</option><option value="5">Middle neck</option><option value="9">Upper neck</option></select></label>
-<label class="hidden">Shape style<select id="progStyle"><option value="all">Automatic practical shapes</option><option value="easy">Cheats / triads</option><option value="open">Open</option><option value="movable">Movable / barre</option><option value="triad">Small triads only</option></select></label>
+<label>Music style<select id="progType"><option value="classic">Three-chord song</option><option value="pop">Four-chord pop</option><option value="dooWop">Oldies loop</option><option value="folk">Gentle folk loop</option><option value="sad">Sad progression</option><option value="romantic">Romantic</option><option value="suspense">Dark return</option><option value="minorWalk">Minor walk-down</option><option value="andalusian">Andalusian cadence</option><option value="blues">Blues</option><option value="quickBlues">Quick-change blues</option><option value="jazzBlues">Jazz blues</option><option value="turnaround">Turnaround</option><option value="funk">Funk groove</option><option value="modalRock">Rock progression</option><option value="plagal">Amen sound</option></select></label>
+<label>Neck area<select id="near"><option value="auto">Auto</option><option value="0">Open / low</option><option value="5">Middle neck</option><option value="9">Upper neck</option></select></label>
+<label class="hidden">Shape style<select id="progStyle"><option value="all">Automatic practical shapes</option><option value="easy">Small three-string shapes</option><option value="open">Open</option><option value="movable">Barre and movable shapes</option><option value="triad">Small triads only</option></select></label>
 <label class="hidden">Show on chord<select id="progLabels"><option value="fingers">Finger numbers</option><option value="notes">Note names</option></select></label>
 <div class="buttons hidden"><button id="prevChord">◀ Chord</button><button id="nextChord">Chord ▶</button></div>
 <div class="buttons hidden"><button id="prevProgShape">◀ Shape</button><button id="nextProgShape">Shape ▶</button></div>
@@ -310,7 +337,7 @@ recorded or uploaded.</p>
 <section id="soloControls" class="card controls hidden">
 <label>Key<select id="soloKey"></select></label>
 <label>Scale<select id="soloScale"><option value="majorPent">Major pentatonic</option><option value="minorPent">Minor pentatonic</option><option value="blues">Minor blues</option></select></label>
-<label class="hidden">Phrase type<select id="soloBlueprint"><option value="threeNote">3-note answer</option><option value="question">Question / answer</option><option value="resolve">Resolve to home</option><option value="tension">Tension then release</option><option value="oneString">One-string phrase</option></select></label>
+<label class="hidden">Phrase type<select id="soloBlueprint"><option value="threeNote">3-note answer</option><option value="question">Question / answer</option><option value="resolve">Come home</option><option value="tension">Move away and return</option><option value="oneString">One-string phrase</option></select></label>
 <label>Pattern / position<select id="soloArea"><option value="auto">Auto</option><option value="0">Open-7</option><option value="3">3-9</option><option value="5">5-11</option><option value="7">7-13</option><option value="10">10-16</option></select></label>
 </section>
 
@@ -348,16 +375,16 @@ const chords={
   dominant7:["Dominant 7","7",[0,4,7,10],"1-3-5-b7"], dim:["Diminished","dim",[0,3,6],"1-b3-b5"], sus2:["Sus2","sus2",[0,2,7],"1-2-5"], sus4:["Sus4","sus4",[0,5,7],"1-4-5"]
 };
 const $=id=>document.getElementById(id), els={};
-["openTunerBtn","tunerScreen","returnFromTuner","startTuner","stopTuner","tunerPreset","tunerPresetTitle","tunerIntro","tunerLive","tunerStrings","tunerError","tunerNote","tunerOctave","tunerNeedle","tunerMessage","tunerHz","tunerStatus","tunerSignalBar","tunerSignalText","tunerDebug","tunerSr","skillLevel","todayGoalWrap","todayGoal","coachRootWrap","coachRootLabel","coachRoot","coachChordTypeWrap","coachChordType","coachChordLabelsWrap","coachChordLabels","coachNoteWrap","coachNote","coachPentTypeWrap","coachPentType","practiceBadge","practiceTitle","practiceWhy","practiceSteps","manualModeCard","mode","mapControls","chordControls","progControls","soloControls","key","scale","overlay","display","pattern","mapWindow","scaleAction","chordRoot","chordType","shapeStyle","chordLabels","chordWindow","prevShape","nextShape","prevInlineShape","nextInlineShape","prevInlineChord","nextInlineChord","loopProgression","prevInlineProgShape","nextInlineProgShape","inlineChordLabelsWrap","inlineChordLabels","toggleInlineLabels","shapeName","shapeText","progKey","progType","progStyle","progLabels","near","prevChord","nextChord","prevProgShape","nextProgShape","soloKey","soloScale","soloBlueprint","soloArea","actionTitle","focusMeta","exploreScaleBtn","practiceScaleBtn","hearKeyBtn","inlineProgression","playCurrent","playPhrase","newPhrase","toggleDiagramView","toggleDetails","prevCoachPattern","nextCoachPattern","prevCoachChordType","nextCoachChordType","prevCoachRoot","nextCoachRoot","audioHint","progLine","title","subtitle","whyTitle","why","board","legend","pathCard","pathSummary","nextStepTitle","nextStepWhy","startNextStep","pathSteps","resetPath","markStepDone"].forEach(id=>els[id]=$(id));
+["openTunerBtn","tunerScreen","returnFromTuner","startTuner","stopTuner","tunerPreset","tunerPresetTitle","tunerIntro","tunerLive","tunerStrings","tunerError","tunerNote","tunerOctave","tunerMeter","tunerNeedle","tunerMessage","tunerHz","tunerStatus","tunerSignalBar","tunerSignalText","tunerDebug","tunerSr","skillLevel","todayGoalWrap","todayGoal","coachRootWrap","coachRootLabel","coachRoot","coachChordTypeWrap","coachChordType","coachChordLabelsWrap","coachChordLabels","coachNoteWrap","coachNote","coachPentTypeWrap","coachPentType","practiceBadge","practiceTitle","practiceWhy","practiceSteps","manualModeCard","mode","mapControls","chordControls","progControls","soloControls","key","scale","overlay","display","pattern","mapWindow","scaleAction","chordRoot","chordType","shapeStyle","chordLabels","chordWindow","prevShape","nextShape","prevInlineShape","nextInlineShape","prevInlineChord","nextInlineChord","loopProgression","prevInlineProgShape","nextInlineProgShape","inlineChordLabelsWrap","inlineChordLabels","toggleInlineLabels","shapeName","shapeText","progKey","progType","progStyle","progLabels","near","prevChord","nextChord","prevProgShape","nextProgShape","soloKey","soloScale","soloBlueprint","soloArea","actionTitle","focusMeta","exploreScaleBtn","practiceScaleBtn","hearKeyBtn","inlineProgression","playCurrent","playPhrase","newPhrase","toggleDiagramView","toggleDetails","prevCoachPattern","nextCoachPattern","prevCoachChordType","nextCoachChordType","prevCoachRoot","nextCoachRoot","audioHint","progLine","title","subtitle","whyTitle","why","board","legend","pathCard","pathSummary","nextStepTitle","nextStepWhy","startNextStep","pathSteps","resetPath","markStepDone","clearCachedVersion"].forEach(id=>els[id]=$(id));
 let shapeIdx=0, progChordIdx=0, progShapeOffset=0, progAnchorFret=null, progressionLoopTimer=null, audioCtx=null, detailsOpen=false, diagramView="neck", currentSound={kind:"scale",root:"A",quality:"major",notes:["A"]};
 
 const PATH_STEPS=[
   {id:"chordE",stage:"Chord",label:"Learn E major",why:"Copy one friendly open chord shape.",level:"early",goal:"chordShapes",root:"E",chordType:"major"},
-  {id:"changeEA",stage:"Change",label:"Change E ↔ A",why:"Move between two useful chords without theory.",level:"early",goal:"chordShapes",root:"A",chordType:"major"},
-  {id:"progADE",stage:"Progression",label:"Play A → D → E",why:"Hear how songs use a small group of chords.",level:"practice",goal:"progressions",root:"A"},
-  {id:"patternA",stage:"Pattern",label:"A minor pentatonic box",why:"Start with one small playable scale pattern.",level:"practice",goal:"scalePractice",root:"A",pent:"minorPent"},
+  {id:"changeEA",stage:"Change",label:"Change between E and A",why:"Move between two useful chords without theory.",level:"early",goal:"chordShapes",root:"A",chordType:"major"},
+  {id:"progADE",stage:"Progression",label:"Play three chords",why:"Hear how songs use a small group of chords.",level:"practice",goal:"progressions",root:"A"},
+  {id:"patternA",stage:"Pattern",label:"One small scale box",why:"Start with one small playable scale pattern.",level:"practice",goal:"scalePractice",root:"A",pent:"minorPent"},
   {id:"phraseA",stage:"Phrase",label:"Play a 3-note phrase",why:"Turn the scale box into a musical idea.",level:"practice",goal:"soloTrainer",root:"A"},
-  {id:"harmonyEAB",stage:"Harmony",label:"Why E, A and B fit",why:"See related chords on the harmony map.",level:"harmony",goal:"tonnetz",root:"E"}
+  {id:"harmonyEAB",stage:"Harmony",label:"Why chords fit",why:"See related chords on the harmony map.",level:"harmony",goal:"tonnetz",root:"E"}
 ];
 const COACH_CHORD_TYPES=[["major","Major"],["minor","Minor"],["dominant7","7"],["sus2","Sus2"],["sus4","Sus4"]];
 const PATH_KEY="noteMapGuitarV5Path";
@@ -369,7 +396,7 @@ function renderPath(){
   if(!els.pathSteps)return;
   let progress=loadPath(), next=firstIncompleteStep(progress), doneCount=PATH_STEPS.filter(s=>progress[s.id]).length;
   activePathStep=next.id;
-  els.pathSummary.textContent=doneCount?`${doneCount} of ${PATH_STEPS.length} path steps complete. Keep going one visual step at a time.`:"Start with one playable chord, then connect it to a chord change, a progression, a scale pattern, a short phrase, and harmony.";
+  els.pathSummary.textContent=doneCount?`${doneCount} small step${doneCount===1?"":"s"} done. The next one is ready when you are.`:"No need to understand the whole app. Start with the next playable step.";
   els.nextStepTitle.textContent=next.label;
   els.nextStepWhy.textContent=next.why;
   els.pathSteps.innerHTML=PATH_STEPS.map((s,i)=>{
@@ -384,6 +411,7 @@ function renderPath(){
 function launchPathStep(step){
   if(!step)return;
   activePathStep=step.id;
+  try{let p=loadPath();p.currentStep=step.id;p.lastActivity=new Date().toISOString();savePath(p)}catch(e){}
   if(step.level)els.skillLevel.value=step.level;
   refreshGoalOptions();
   if(step.goal&&els.todayGoal)els.todayGoal.value=step.goal;
@@ -403,7 +431,7 @@ function launchPathStep(step){
 }
 function markActiveStepDone(){
   if(!activePathStep)return;
-  let progress=loadPath(); progress[activePathStep]=true; savePath(progress);
+  let progress=loadPath(); progress[activePathStep]=true; progress.lastActivity=new Date().toISOString(); progress.currentStep=firstIncompleteStep(progress)?.id||activePathStep; savePath(progress);
   renderPath();
   if(els.markStepDone)els.markStepDone.classList.add("hidden");
   document.querySelector(".lesson-callout")?.remove();
@@ -450,6 +478,7 @@ const manual=[
   {root:"E",q:"minor",style:"open",name:"Em standard open",frets:[0,2,2,0,0,0],fingers:["0","2","3","0","0","0"],note:"Complete beginner open E minor shape."},
   {root:"A",q:"minor",style:"open",name:"Am standard open",frets:["x",0,2,2,1,0],fingers:["0","0","2","3","1","0"],note:"Complete beginner open A minor shape."},
   {root:"D",q:"minor",style:"open",name:"Dm standard open",frets:["x","x",0,2,3,1],fingers:["0","0","0","2","3","1"],note:"Complete beginner open D minor shape."},
+  {root:"B",q:"dominant7",style:"open",name:"B7 standard open",frets:["x",2,1,2,0,2],fingers:["0","2","1","3","0","4"],note:"Complete beginner B7 shape. Often easier and more useful than B major for early songs."},
   {root:"G",q:"major",style:"easy",name:"G open three-finger",frets:[3,2,0,0,0,3],fingers:["2","1","","","","3"],note:"Standard open G. Clear major sound with the B string open providing the major third."},
   {root:"G",q:"major",style:"easy",name:"G open four-finger",frets:[3,2,0,0,3,3],fingers:["2","1","","","3","4"],note:"Common fuller G grip. Useful when moving to or from Cadd9, Dsus4, and other folk/rock shapes."},
   {root:"A",q:"major",style:"easy",name:"A one-finger mini barre",frets:["x",0,2,2,2,0],fingers:["","","1","1","1",""],note:"Easy A using one finger across D/G/B strings if comfortable."},
@@ -655,8 +684,8 @@ function planFor(goal){
       badge:"Intermediate Practice",
       title:`${displayRoot} progression practice`,
       why:"Do this now: move through the chord sequence while staying in one neck neighborhood.",
-      steps:["Use Previous chord and Next chord first.","Use Position to choose Open / low, Middle neck, Upper neck, or Auto.","Use Shape only when you want another voicing of the current chord."],
-      apply(){setSelect(els.mode,"progression");setSelect(els.progKey,root);setSelect(els.near,"auto");progChordIdx=0;progShapeOffset=0;progAnchorFret=null;render()}
+      steps:["Use Previous chord and Next chord first.","Use Neck area to choose Open / low, Middle neck, Upper neck, or Auto.","Use Shape only when you want another voicing of the current chord."],
+      apply(){setSelect(els.mode,"progression");setSelect(els.progKey,root);setSelect(els.progType,"classic");setSelect(els.progStyle,"open");setSelect(els.near,"0");progChordIdx=0;progShapeOffset=0;progAnchorFret=null;render()}
     },
     tonnetz:{
       badge:"Harmony Explorer",
@@ -817,10 +846,10 @@ function updateAudioControls(){
   els.playCurrent.classList.toggle("hidden",currentSound.kind==="scaleExplore"||progressionMode);
   if(currentSound.kind==="chord"){els.playCurrent.textContent="Play chord";els.audioHint.textContent=""}
   else if(currentSound.kind==="note"){els.playCurrent.textContent="Play note";els.audioHint.textContent=`Hear ${currentSound.notes[0]}.`}
-  else if(currentSound.kind==="phrase"){els.playCurrent.textContent="Hear phrase";els.audioHint.textContent=""}
+  else if(currentSound.kind==="phrase"){els.playCurrent.textContent="Play slowly";els.audioHint.textContent=""}
   else if(currentSound.kind==="scalePath"){els.playCurrent.textContent="Play route";els.audioHint.textContent=""}
   else if(currentSound.kind==="scaleExplore"){els.playCurrent.textContent="";els.audioHint.textContent=""}
-  else {els.playCurrent.textContent="Play";els.audioHint.textContent="Hear each note in the key while seeing where it appears across the fretboard."}
+  else {els.playCurrent.textContent="Play";els.audioHint.textContent="Hear the notes that create the key. This is listening practice, not a fingering path."}
 }function playCurrentSound(){
   if(currentSound.kind==="chord")playChord(currentSound.root,currentSound.quality);
   else {
@@ -835,14 +864,17 @@ function playCurrentPhrase(){
   animatePhrase(phrase)
 }
 function stepCoachChordType(dir=1){
-  let opts=["major","minor","minor7","major7","dominant7","sus2","sus4"], i=opts.indexOf(els.coachChordType.value);
+  let full=["major","minor","minor7","major7","dominant7","sus2","sus4"], i=full.indexOf(els.coachChordType.value);
   if(isManualChordMode()){
-    i=opts.indexOf(els.chordType.value);
-    els.chordType.value=opts[(i+dir+opts.length)%opts.length];
+    i=full.indexOf(els.chordType.value);
+    els.chordType.value=full[(i+dir+full.length)%full.length];
     shapeIdx=0;
     render();
     return
   }
+  let opts=[...els.coachChordType.options].map(o=>o.value);
+  i=opts.indexOf(els.coachChordType.value);
+  if(i<0)i=0;
   els.coachChordType.value=opts[(i+dir+opts.length)%opts.length];
   shapeIdx=0;
   startPractice()
@@ -856,7 +888,11 @@ function stepCoachRoot(dir=1){
     render();
     return
   }
-  let roots=BEGINNER_ROOTS.map(([v])=>v), ci=roots.indexOf(els.coachRoot.value);
+  // Use the actual visible root/key choices. Early Learner chord mode is A/C/D/E/G;
+  // key and scale practice still use all natural roots.
+  let roots=[...els.coachRoot.options].map(o=>o.value);
+  let ci=roots.indexOf(els.coachRoot.value);
+  if(ci<0)ci=0;
   els.coachRoot.value=roots[(ci+dir+roots.length)%roots.length];
   shapeIdx=0;
   startPractice()
@@ -964,9 +1000,9 @@ function renderMap(){
   let w=(els.mapWindow.value==="auto"&&pr)?mapPatternWindow(pr):win(els.mapWindow.value==="auto"?"0":els.mapWindow.value),fs=frets(w);
   let scaleNotes=sc[1].map(i=>nm(ri+i,key)),chNotes=ch[2].map(i=>nm(ri+i,key));
   els.title.textContent=`${key} ${sc[0]} · ${scaleTaskLabel()}`;
-  els.subtitle.textContent=hear?`Hear each note in the key while seeing where it appears across the fretboard.`:practice?`Practise one playable physical route inside the selected pattern.`:`Explore the notes in the selected key and scale.`;
+  els.subtitle.textContent=hear?`Hear the notes that create the key. This is listening practice, not a fingering path.`:practice?`Start with this small area. Play one route through the scale.`:`See where the notes live. You do not need to memorize the whole neck.`;
   let why=sc[3];
-  if(ch[2].length)why+=` Optional chord tones are an overlay on top of the selected scale, not a scale change. ${key} ${ch[0]} highlights ${ch[3]}: ${chNotes.join(", ")}.`;
+  if(ch[2].length)why+=` Chord highlights are overlays on top of the selected scale, not a scale change. ${key} ${ch[0]} highlights ${ch[3]}: ${chNotes.join(", ")}.`;
   if(pr)why+=` ${pr.name} is transposed for ${key}; Auto keeps the fretboard compact around this pattern.`;
   els.whyTitle.textContent=practice?"Practice Scale":"Scale Map"; els.why.textContent=why; els.progLine.innerHTML="";
   let practicePath=visibleScalePath(key,els.scale.value,w,pr);
@@ -1121,9 +1157,9 @@ function soloPatternPhrase(key,scaleKey){
 function renderSolo(){
   let d=soloData(), sp=soloPatternPhrase(d.key,d.scaleKey), w=sp.w, fs=frets(w), ri=idx(d.key), html=boardStart(w,false), phrase=sp.phrase;
   els.title.textContent=`${d.key} ${d.scaleName}: 3-note phrase`;
-  els.subtitle.textContent=`Copy the numbered phrase inside Pattern 1. The rest of the pattern is shown softly as context.`;
+  els.subtitle.textContent=`Copy the numbered phrase inside one small pattern. The rest of the pattern is shown softly as context.`;
   els.whyTitle.textContent="Solo Trainer";
-  els.why.textContent=`The goal is not random scale notes. This bridges: I know a scale pattern → I can play a short musical idea. Phrase: ${phrase.map(p=>p.note).join(" → ")}.`;
+  els.why.textContent=`The goal is not random scale notes. Follow the exact string and fret positions, then try changing the last note. Phrase: ${phrase.map(p=>p.note).join(" → ")}.`;
   currentSound={kind:"phrase",title:`${d.key} ${d.scaleName} phrase`,notes:phrase.map(p=>p.note),phrase:phrase,playback:phrase};
   setFocusMeta(`3-note phrase in Pattern 1: ${phrase.map(p=>p.note).join(" → ")}`);
   renderPhrase(phrase);
@@ -1144,22 +1180,22 @@ function renderSolo(){
   manualHelp("solo",{title:`${d.key} ${d.scaleName}: 3-note phrase`,notes:phrase.map(p=>p.note)});
 }
 const progs={
-  classic:["Classic rock / folk",["I","IV","V","I"],"Simple, strong and familiar."],
-  pop:["Pop / anthem",["I","V","vi","IV"],"The big modern pop progression."],
-  dooWop:["50s / doo-wop",["I","vi","IV","V"],"A familiar loop: home, relative minor, lift, then dominant return."],
-  folk:["Folk circle",["I","vi","ii","V"],"A gentle circle movement that gives open songs a sense of travel and return."],
-  sad:["Sad / emotional",["vi","IV","I","V"],"Starts on the relative minor for emotional pull."],
+  classic:["Three-chord song",["I","IV","V","I"],"Simple, strong and familiar."],
+  pop:["Four-chord pop",["I","V","vi","IV"],"The big modern pop progression."],
+  dooWop:["Oldies loop",["I","vi","IV","V"],"A familiar loop: home, relative minor, lift, then dominant return."],
+  folk:["Gentle folk loop",["I","vi","ii","V"],"A gentle circle movement that gives open songs a sense of travel and return."],
+  sad:["Sad progression",["vi","IV","I","V"],"Starts on the relative minor for emotional pull."],
   romantic:["Romantic",["I","vi","ii","V7"],"A classic warm movement: home, relative minor, gentle pull, then a stronger return."],
-  suspense:["Suspense / resolve",["i","bVI","bVII","V7"],"Dark lift, rising tension, then a dominant chord that wants to resolve back home."],
+  suspense:["Dark return",["i","bVI","bVII","V7"],"Dark lift, rising tension, then a dominant chord that wants to resolve back home."],
   minorWalk:["Minor walk-down",["i","bVII","bVI","V7"],"A descending minor-key line with a strong dominant at the end."],
   andalusian:["Andalusian cadence",["i","bVII","bVI","V"],"The classic minor descent used in flamenco, rock, and dramatic pop contexts."],
   blues:["Blues",["I7","IV7","I7","V7"],"Dominant 7 chords give the blues flavor."],
   quickBlues:["Quick-change blues",["I7","IV7","I7","I7","IV7","IV7","I7","I7","V7","IV7","I7","V7"],"A compact 12-bar map with the IV chord appearing early."],
-  jazzBlues:["Jazz blues shell",["I7","IV7","I7","I7","IV7","#IVdim","I7","vi7","ii7","V7","I7","V7"],"A jazzier blues skeleton with a diminished passing chord and ii-V motion."],
+  jazzBlues:["Jazz blues",["I7","IV7","I7","I7","IV7","#IVdim","I7","vi7","ii7","V7","I7","V7"],"A jazzier blues skeleton with a diminished passing chord and ii-V motion."],
   turnaround:["Turnaround",["I","vi","ii","V7"],"A short return-to-home pattern that can end a section or loop back to the top."],
-  funk:["Funk / Dorian-ish",["i7","IV7","i7","bVII"],"Minor 7 center with a brighter, funkier movement."]
-  ,modalRock:["Modal rock",["I","bVII","IV","I"],"A rock-centered loop that borrows the flat VII for a strong modal color."]
-  ,plagal:["Plagal / amen",["I","IV","I","V"],"A hymn-like IV-to-I color with a simple dominant reset."]
+  funk:["Funk groove",["i7","IV7","i7","bVII"],"Minor 7 center with a brighter, funkier movement."]
+  ,modalRock:["Rock progression",["I","bVII","IV","I"],"A rock-centered loop that borrows the flat VII for a strong modal color."]
+  ,plagal:["Amen sound",["I","IV","I","V"],"A hymn-like IV-to-I color with a simple dominant reset."]
 };
 const roman={I:[0,"major"],i:[0,"minor"],"i7":[0,"minor7"],"I7":[0,"dominant7"],ii:[2,"minor"],"ii7":[2,"minor7"],iii:[4,"minor"],IV:[5,"major"],"IV7":[5,"dominant7"],"#IVdim":[6,"dim"],V:[7,"major"],"V7":[7,"dominant7"],vi:[9,"minor"],"vi7":[9,"minor7"],bVI:[8,"major"],bVII:[10,"major"]};
 function progChords(){let key=els.progKey.value,p=progs[els.progType.value],ri=idx(key);return p[1].map(n=>{let [it,q]=roman[n],root=nm(ri+it,key);return{n,root,display:root,q}})}
@@ -1183,8 +1219,8 @@ function renderProg(){
   let s=arr[si],seq=cs.map(x=>`${x.display}${chords[x.q][1]}`).join(" → ");
   if(els.near.value==="auto"||progAnchorFret==null)progAnchorFret=s.position;
   currentSound={kind:"chord",title:`${c.display}${chords[c.q][1]||" major"}`,root:c.root,quality:c.q};
-  setFocusMeta(`${p[0]} · Key of ${key} · Chord ${progChordIdx+1} of ${cs.length}`);
-  drawShape(s,`${p[0]} · Key of ${key}`,`${seq} · Chord ${progChordIdx+1} of ${cs.length}: ${c.display}${chords[c.q][1]||" major"}`,`${p[2]} Progression movement is primary; shape changes are secondary.`,(els.near.value==="auto"?"auto":String(Math.max(0,target-1))),els.progLabels.value,c.root);
+  setFocusMeta(`${seq} · Chord ${progChordIdx+1} of ${cs.length}`);
+  drawShape(s,`${p[0]} · Key of ${key}`,`${seq} · Chord ${progChordIdx+1} of ${cs.length}: ${c.display}${chords[c.q][1]||" major"}`,`Play the current chord, then move to the next one. ${p[2]}`,(els.near.value==="auto"?"auto":String(Math.max(0,target-1))),els.progLabels.value,c.root);
   renderProgLine(cs);
   manualHelp("progression",{key,name:p[0],current:`${c.display}${chords[c.q][1]}`,sequence:seq});
 }
@@ -1287,6 +1323,7 @@ async function startTuner(){
     els.tunerIntro.classList.add('hidden');
     els.tunerLive.classList.remove('hidden');
     els.tunerStatus.textContent='Listening — play one string';
+    if(els.tunerMeter){els.tunerMeter.classList.remove('idle','tuned');els.tunerMeter.classList.add('listening')}
     setSignalLevel(0);
     setTunerDebug('Microphone active. Play one string clearly.');
     tunerFrames=0;tunerLastRms=0;tunerLoop();
@@ -1347,9 +1384,52 @@ function tunerLoop(){
   updateTunerDisplay(m,tunerSmooth);
   tunerRaf=requestAnimationFrame(tunerLoop)
 }
-function updateTunerDisplay(m,c){let note=m.name.replace(/\d/,'');let oct=m.name.match(/\d/)[0];els.tunerNote.textContent=note;els.tunerOctave.textContent=m.name;els.tunerHz.textContent=m.freq.toFixed(1)+' Hz';let msg=Math.abs(c)<=5?'In tune':c<-15?'Tune up':c< -5?'Tune up slightly':c>15?'Tune down':'Tune down slightly';if(Math.abs(c)<=5){if(!tunerStableSince)tunerStableSince=performance.now();if(performance.now()-tunerStableSince>550)c=0}else tunerStableSince=0;els.tunerNeedle.style.transform=`translateX(calc(-50% + ${c*2.8}px))`;els.tunerNeedle.classList.toggle('tuned',msg==='In tune');els.tunerMessage.textContent=msg;els.tunerStatus.textContent=c<0?Math.round(Math.abs(c))+' cents flat':c>0?Math.round(c)+' cents sharp':'Centered';renderTunerStrings();let ann=`${m.name}, ${msg==='In tune'?'in tune':Math.round(Math.abs(c))+' cents '+(c<0?'flat':'sharp')}`;if(ann!==tunerLastAnnouncement&&Math.abs(c)%1<.35){els.tunerSr.textContent=ann;tunerLastAnnouncement=ann}}
-function setTunerIdle(msg){els.tunerNote.textContent='—';els.tunerOctave.textContent=msg;els.tunerMessage.textContent=msg;els.tunerHz.textContent='— Hz';els.tunerStatus.textContent='';els.tunerNeedle.style.transform='translateX(-50%)';els.tunerNeedle.classList.remove('tuned')}
+function updateTunerDisplay(m,c){
+  let note=m.name.replace(/\d/,'');
+  els.tunerNote.textContent=note;
+  els.tunerOctave.textContent=m.name;
+  els.tunerHz.textContent=m.freq.toFixed(1)+' Hz';
+  let stable=Math.abs(c)<=5;
+  let msg=stable?'In tune':c<-15?'Tune up':c< -5?'Tune up slightly':c>15?'Tune down':'Tune down slightly';
+  if(stable){
+    if(!tunerStableSince)tunerStableSince=performance.now();
+    if(performance.now()-tunerStableSince>550)c=0
+  }else tunerStableSince=0;
+  if(els.tunerMeter){els.tunerMeter.classList.remove('idle');els.tunerMeter.classList.toggle('tuned',stable);els.tunerMeter.classList.toggle('listening',!stable)}
+  els.tunerNeedle.style.transform=`translateX(calc(-50% + ${c*2.8}px))`;
+  els.tunerNeedle.classList.toggle('tuned',stable);
+  els.tunerMessage.classList.toggle('tuned',stable);
+  els.tunerMessage.textContent=msg;
+  els.tunerStatus.textContent=c<0?Math.round(Math.abs(c))+' cents flat':c>0?Math.round(c)+' cents sharp':'Centered';
+  renderTunerStrings();
+  let ann=`${m.name}, ${stable?'in tune':Math.round(Math.abs(c))+' cents '+(c<0?'flat':'sharp')}`;
+  if(ann!==tunerLastAnnouncement&&Math.abs(c)%1<.35){els.tunerSr.textContent=ann;tunerLastAnnouncement=ann}
+}
+function setTunerIdle(msg){
+  els.tunerNote.textContent='—';
+  els.tunerOctave.textContent=msg;
+  els.tunerMessage.textContent=msg;
+  els.tunerMessage.classList.remove('tuned');
+  els.tunerHz.textContent='— Hz';
+  els.tunerStatus.textContent='';
+  if(els.tunerMeter){els.tunerMeter.classList.add('idle');els.tunerMeter.classList.remove('tuned','listening')}
+  els.tunerNeedle.style.transform='translateX(-50%)';
+  els.tunerNeedle.classList.remove('tuned')
+}
 
+if(els.clearCachedVersion)els.clearCachedVersion.onclick=async()=>{
+  try{
+    if('serviceWorker' in navigator){
+      let regs=await navigator.serviceWorker.getRegistrations();
+      await Promise.all(regs.map(r=>r.unregister()));
+    }
+    if(window.caches){
+      let keys=await caches.keys();
+      await Promise.all(keys.map(k=>caches.delete(k)));
+    }
+  }catch(e){}
+  location.reload();
+};
 if(els.startNextStep)els.startNextStep.onclick=()=>launchPathStep(firstIncompleteStep(loadPath()));
 if(els.resetPath)els.resetPath.onclick=()=>{if(confirm("Reset your local guitar path progress?")){savePath({});activePathStep=null;renderPath();if(els.markStepDone)els.markStepDone.classList.add("hidden")}};
 if(els.markStepDone)els.markStepDone.onclick=markActiveStepDone;
@@ -1370,6 +1450,10 @@ if(els.pathSteps)els.pathSteps.onclick=e=>{
 renderPath();
 
 els.openTunerBtn.onclick=()=>document.querySelector('main.app').classList.contains('tuner-active')?closeTuner():openTuner();els.returnFromTuner.onclick=closeTuner;els.startTuner.onclick=startTuner;els.stopTuner.onclick=stopTuner;els.tunerPreset.onchange=()=>{tunerMode='auto';tunerLastTarget=null;renderTunerStrings()};document.addEventListener('visibilitychange',()=>{if(document.hidden)stopTuner()});
+
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+}
 
 startPractice();
 </script>
