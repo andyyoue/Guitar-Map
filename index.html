@@ -131,7 +131,7 @@ button{font-weight:900;cursor:pointer}
 </head>
 <body>
 <main class="app">
-<header><div><h1>Note Map Guitar</h1><p>Version 4.10: tuner, early chord, and progression loop refinements.</p></div><div class="header-actions"><button id="openTunerBtn" class="tuner-button">♫ Tuner</button><b>4.10</b></div></header>
+<header><div><h1>Note Map Guitar</h1><p>Version 4.12: tuner sensitivity and chord diagram cleanup.</p></div><div class="header-actions"><button id="openTunerBtn" class="tuner-button">♫ Tuner</button><b>4.12</b></div></header>
 <section class="hint">Phone tip: rotate sideways. Pattern mode works best with Fret Window set to Auto.</section>
 <section id="tunerScreen" class="tuner-screen hidden" aria-live="polite">
   <div class="tuner-panel">
@@ -170,14 +170,14 @@ recorded or uploaded.</p>
 
 <section class="coach">
 <div class="coach-panel">
-<span class="pill">Today coach</span>
-<h2>Pick today's guitar task.</h2>
-<p>Controls stay close to the fretboard. Coaching notes are tucked away until you ask for them.</p>
+<span class="pill">Practice setup</span>
+<h2>What do you want to work on?</h2>
+<p>Choose a level and a practice area. Early Learner keeps things simple; Intermediate Practice builds skills; Harmony Explorer explains relationships; Advanced gives full control.</p>
 <div class="coach-form">
-<label>Skill level<select id="skillLevel"><option value="early">Early learner</option><option value="intermediate">Intermediate</option><option value="manual">Manual mode</option></select></label>
-<label id="todayGoalWrap">What do you want today?<select id="todayGoal"></select></label>
-<label id="coachRootWrap">Chord starts on<select id="coachRoot"></select></label>
-<label id="coachChordTypeWrap">Chord sound<select id="coachChordType"><option value="major">Major</option><option value="minor">Minor</option><option value="minor7">Minor 7</option><option value="major7">Major 7</option><option value="dominant7">Dominant 7</option><option value="sus2">Sus2</option><option value="sus4">Sus4</option></select></label>
+<label>Level<select id="skillLevel"><option value="early">Early Learner</option><option value="practice">Intermediate Practice</option><option value="harmony">Harmony Explorer</option><option value="manual">Advanced</option></select></label>
+<label id="todayGoalWrap">Practice area<select id="todayGoal"></select></label>
+<label id="coachRootWrap">Chord / Key<select id="coachRoot"></select></label>
+<label id="coachChordTypeWrap">Sound<select id="coachChordType"><option value="major">Major</option><option value="minor">Minor</option><option value="minor7">Minor 7</option><option value="major7">Major 7</option><option value="dominant7">Dominant 7</option><option value="sus2">Sus2</option><option value="sus4">Sus4</option></select></label>
 <label id="coachChordLabelsWrap" class="hidden">Show<select id="coachChordLabels"><option value="fingers">Finger numbers</option><option value="notes">Note names</option></select></label>
 <label id="coachNoteWrap">Show note<select id="coachNote"></select></label>
 <label id="coachPentTypeWrap">Pentatonic<select id="coachPentType"><option value="majorPent">Major pentatonic</option><option value="minorPent">Minor pentatonic</option></select></label>
@@ -185,7 +185,7 @@ recorded or uploaded.</p>
 </div>
 </section>
 
-<section id="manualModeCard" class="card mode hidden"><label>Manual View<select id="mode"><option value="map">Scale map</option><option value="chord">Chord shape</option><option value="progression">Progression</option><option value="solo">Solo trainer</option></select></label></section>
+<section id="manualModeCard" class="card mode hidden"><label>Advanced View<select id="mode"><option value="map">Scale map</option><option value="chord">Chord shape</option><option value="progression">Progression</option><option value="solo">Solo trainer</option></select></label></section>
 
 <section id="mapControls" class="card controls">
 <label>Key<select id="key"></select></label>
@@ -367,7 +367,7 @@ function isChordShapedScreen(){
   return currentSound.kind==="chord"
 }
 function isCoachPentatonicMode(){
-  return els.skillLevel.value==="early"&&els.todayGoal.value==="pentatonicShapes"
+  return (els.skillLevel.value==="early"&&els.todayGoal.value==="pentatonicShapes")||(els.skillLevel.value==="practice"&&els.todayGoal.value==="scalePractice")
 }
 function isManualChordMode(){
   return els.skillLevel.value==="manual"&&els.mode.value==="chord"
@@ -384,9 +384,12 @@ const goalMeta={
   chordShapes:"Chord shapes",
   neckNotes:"Neck notes",
   pentatonicShapes:"Pentatonic shapes",
+  scalePractice:"Scale practice",
+  soloTrainer:"Solo trainer",
+  progressions:"Progressions",
   tonnetz:"Harmony / Tonnetz"
 };
-const goalsBySkill={early:["chordShapes","neckNotes","pentatonicShapes"],intermediate:["tonnetz"],manual:[]};
+const goalsBySkill={early:["chordShapes","neckNotes","pentatonicShapes"],practice:["scalePractice","soloTrainer","progressions"],harmony:["tonnetz"],manual:[]};
 function setSelect(el,value){el.value=value}
 function setPracticeCard(plan){
   els.practiceBadge.textContent=plan.badge;
@@ -415,7 +418,7 @@ function manualHelp(kind,data={}){
   if(kind==="chord"){
     let ints=chords[data.quality]?.[2]||[0,4,7], suffix=chords[data.quality]?.[1]||" major";
     setPracticeCard({
-      badge:"Manual chord view",
+      badge:"Advanced chord view",
       title:`${data.root}${suffix} chord`,
       why:`Chord tones: ${chordToneNotes(data.root,data.quality).join(", ")}. Semitone gaps around the chord are ${semitoneGapText(ints)}.`,
       steps:[`Current shape: ${data.shapeName}.`,`Find the root first, then the third; the third tells your ear major, minor, sus, or diminished.`,`Use Note names to inspect chord tones; use Finger numbers to practice the grip.`]
@@ -423,7 +426,7 @@ function manualHelp(kind,data={}){
   } else if(kind==="map"){
     setPracticeCard({badge:data.practice?"Practice Scale":"Hear the Key",title:`${data.key} ${data.scaleName}`,why:data.practice?`This is a guitarist exercise: one playable fingering path inside the selected pattern.`:`This is an ear-training and fretboard-location exercise: every ${data.key} key tone is visible across the neck.`,steps:data.practice?["Press Practice scale and follow one highlighted fret at a time.","Use the same pattern path until it feels automatic.","Then change pattern and repeat."]:["Press Hear the Key to hear the scale tones root-to-root.","Watch every matching note name light up across the neck.","Use this to learn where the notes in the key live, not as a fingering drill."]})
   } else if(kind==="progression"){
-    setPracticeCard({badge:"Manual progression",title:`${data.key} ${data.name}`,why:`Current chord: ${data.current}. Progression work is about moving between shapes without losing your place on the neck.`,steps:["Tap a chord chip to jump to that chord.","Use Near fret to keep the progression in one neighborhood.","Use Shape to compare nearby voicings."]})
+    setPracticeCard({badge:"Advanced progression",title:`${data.key} ${data.name}`,why:`Current chord: ${data.current}. Progression work is about moving between shapes without losing your place on the neck.`,steps:["Tap a chord chip to jump to that chord.","Use Near fret to keep the progression in one neighborhood.","Use Shape to compare nearby voicings."]})
   } else if(kind==="solo"){
     setPracticeCard({badge:"Solo Trainer",title:data.title,why:`Use only the trainer notes first: ${data.notes.join(", ")}. The point is phrasing, timing, and imitation, not note quantity.`,steps:["Press Play phrase and copy the rhythm.","Pause where the phrase says pause.","Change one note at a time, then return to the root."]})
   }
@@ -439,14 +442,14 @@ function refreshGoalOptions(){
   els.coachChordTypeWrap.classList.toggle("hidden",manual||goal!=="chordShapes");
   els.coachChordLabelsWrap.classList.add("hidden");
   els.coachNoteWrap.classList.toggle("hidden",manual||goal!=="neckNotes");
-  els.coachPentTypeWrap.classList.toggle("hidden",manual||goal!=="pentatonicShapes");
+  els.coachPentTypeWrap.classList.toggle("hidden",manual||!["pentatonicShapes","scalePractice"].includes(goal));
   updateCoachActionButtons();
 }
 function showManualIntro(){
   setPracticeCard({
-    badge:"Manual mode",
-    title:"Manual Mode",
-    why:"Pick what you want to practise, then keep the playing controls close to the fretboard.",
+    badge:"Advanced",
+    title:"Advanced controls",
+    why:"Advanced gives you full control over keys, scales, patterns, voicings, progressions, and practice views.",
     steps:["Scale Map is the neutral starting point.","Use Chord Shape for grips, Progression for movement, and Solo Trainer for short phrases.","Open More options only when you need extra configuration."]
   });
 }
@@ -475,8 +478,29 @@ function planFor(goal){
       steps:["Start with the bright green notes only.","Use Previous pattern and Next pattern to move the same scale idea up and down the neck.","Make a four-note phrase and land on the yellow root."],
       apply(){setSelect(els.mode,"map");setSelect(els.key,root);setSelect(els.scale,pent);setSelect(els.overlay,"none");setSelect(els.pattern,pent==="majorPent"?"p5":"p1");setSelect(els.mapWindow,"auto");setSelect(els.scaleAction,"practiceScale");render()}
     },
+    scalePractice:{
+      badge:"Intermediate Practice",
+      title:`${displayRoot} ${pent==="majorPent"?"major":"minor"} pentatonic scale practice`,
+      why:"Do this now: play the highlighted route inside one pattern. This is a physical scale exercise, not a whole-neck map.",
+      steps:["Follow one exact string/fret at a time.","Use Previous pattern and Next pattern to move the same idea up and down the neck.","Switch to Advanced when you want full scale and display controls."],
+      apply(){setSelect(els.mode,"map");setSelect(els.key,root);setSelect(els.scale,pent);setSelect(els.overlay,"none");setSelect(els.pattern,pent==="majorPent"?"p5":"p1");setSelect(els.mapWindow,"auto");setSelect(els.scaleAction,"practiceScale");render()}
+    },
+    soloTrainer:{
+      badge:"Intermediate Practice",
+      title:`${displayRoot} solo trainer`,
+      why:"Do this now: copy a short phrase inside a familiar scale pattern. The goal is to turn a scale box into a musical idea.",
+      steps:["Press Hear phrase or Play slowly.","Follow the numbered notes in order.","Use New phrase when the route feels comfortable."],
+      apply(){setSelect(els.mode,"solo");setSelect(els.soloKey,root);setSelect(els.soloScale,"majorPent");setSelect(els.soloArea,"auto");render()}
+    },
+    progressions:{
+      badge:"Intermediate Practice",
+      title:`${displayRoot} progression practice`,
+      why:"Do this now: move through the chord sequence while staying in one neck neighborhood.",
+      steps:["Use Previous chord and Next chord first.","Use Position to choose Open / low, Middle neck, Upper neck, or Auto.","Use Shape only when you want another voicing of the current chord."],
+      apply(){setSelect(els.mode,"progression");setSelect(els.progKey,root);setSelect(els.near,"auto");progChordIdx=0;progShapeOffset=0;progAnchorFret=null;render()}
+    },
     tonnetz:{
-      badge:"Intermediate harmony",
+      badge:"Harmony Explorer",
       title:`${displayRoot} major harmony map`,
       why:"This diagram is not a fretboard. It shows harmonic distance: nearby notes and chords share more tones, so they tend to feel more related.",
       steps:["Start at the yellow root, then look at the labeled triangles.","Major and minor chords appear as neighboring triangles.","Use this beside Progressions to see why I, IV, V, and vi feel close rather than random."],
@@ -695,7 +719,7 @@ function bookNoteAt(stringIndex,fret,key){
 }
 function bookShapeMarkup(s,title,labelMode="fingers",noteKey=s.root||"A"){
   let played=s.frets.filter(f=>typeof f==="number"&&f>0), minF=played.length?Math.min(...played):1, maxF=played.length?Math.max(...played):4;
-  let start=minF<=1?1:minF, rows=Math.max(4,maxF-start+1), top=72, rowH=68, left=56, colW=60, right=left+colW*5, bottom=top+rowH*rows;
+  let hasOpen=s.frets.some(f=>f===0), start=(hasOpen||minF<=1)?1:minF, rows=Math.max(4,maxF-start+1), top=72, rowH=68, left=56, colW=60, right=left+colW*5, bottom=top+rowH*rows;
   let suggested=fingerLabels(s.frets,s.fingers), xs=[0,1,2,3,4,5].map(i=>left+i*colW);
   let lines="";
   xs.forEach(x=>lines+=`<line class="book-grid" x1="${x}" y1="${top}" x2="${x}" y2="${bottom}"></line>`);
@@ -811,7 +835,7 @@ function renderMap(){
   let s=arr[shapeIdx]; els.shapeName.textContent=`${s.name} (${shapeIdx+1} of ${arr.length})`; els.shapeText.textContent=s.note; els.progLine.innerHTML="";
   let chordName=`${r}${chords[q][1]||" major"}`;
   currentSound={kind:"chord",title:chordName,root:r,quality:q};
-  setFocusMeta(isCoachChordMode()?`${s.name}`:`${s.name} · Shape ${shapeIdx+1} of ${arr.length}`);
+  setFocusMeta(isCoachChordMode()?"":`${s.name} · Shape ${shapeIdx+1} of ${arr.length}`);
   let title=`${r}${chords[q][1]} chord shape`, sub=`${s.name} · Shape ${shapeIdx+1} of ${arr.length}`;
   let why=`The fret window follows the selected shape automatically. Use Note names if you want to inspect the chord tones.`;
   if(isCoachChordMode()){
@@ -1114,15 +1138,17 @@ function stopTuner(){if(tunerRaf)cancelAnimationFrame(tunerRaf);tunerRaf=null;if
 function setTunerDebug(msg){if(els.tunerDebug)els.tunerDebug.textContent=msg}
 function setSignalLevel(level){
   tunerLastRms=level||0;
-  let pct=Math.max(0,Math.min(100,Math.round(level*1200)));
+  // Compressed dB-style meter: a quiet plucked guitar should be visible, while breath/wind still caps at 100%.
+  let db=level>0?20*Math.log10(level):-100;
+  let pct=Math.max(0,Math.min(100,Math.round((db+62)*2.35)));
   if(els.tunerSignalBar)els.tunerSignalBar.style.width=pct+'%';
-  let label=pct<3?'No signal':pct<12?'Low':pct<55?'Good':'Strong';
+  let label=pct<5?'No signal':pct<22?'Low':pct<70?'Good':'Strong';
   if(els.tunerSignalText)els.tunerSignalText.textContent=label+' ('+pct+'%)';
 }
 function rms(buf){let s=0;for(let v of buf)s+=v*v;return Math.sqrt(s/buf.length)}
 function autoCorrelate(buf,rate){
   let r=rms(buf);setSignalLevel(r);
-  if(r<.0015)return null;
+  if(r<.00025)return null;
   let mean=0;for(let v of buf)mean+=v;mean/=buf.length;
   let minLag=Math.floor(rate/1200),maxLag=Math.floor(rate/65),bestLag=0,best=0;
   for(let lag=minLag;lag<maxLag;lag++){
@@ -1131,7 +1157,7 @@ function autoCorrelate(buf,rate){
     let corr=c/Math.sqrt((a*b)||1);
     if(corr>best){best=corr;bestLag=lag}
   }
-  if(!bestLag||best<.18)return null;
+  if(!bestLag||best<.12)return null;
   let freq=rate/bestLag;
   return {freq,confidence:best,rms:r}
 }
@@ -1145,17 +1171,17 @@ function tunerLoop(){
   let p=autoCorrelate(buf,tunerCtx.sampleRate);
   if(!p){
     let r=tunerLastRms||rms(buf);setSignalLevel(r);
-    if(r<.0015){setTunerIdle('Play one string');setTunerDebug('No microphone signal detected yet. Check browser mic permission and move the guitar closer.')}
-    else if(r<.008){setTunerIdle('Move closer');setTunerDebug('Signal is present but low. Move closer and pluck one string firmly.')}
+    if(r<.00025){setTunerIdle('Play one string');setTunerDebug('No microphone signal detected yet. Check browser mic permission and move the guitar closer.')}
+    else if(r<.002){setTunerIdle('Move closer');setTunerDebug('Signal is present but low. Move closer and pluck one string firmly.')}
     else {setTunerIdle('Finding pitch');setTunerDebug('Signal detected; trying to lock onto a single string. Mute the other strings.')}
     tunerRaf=requestAnimationFrame(tunerLoop);return
   }
-  if(p.confidence<.18){setTunerIdle('Pitch unstable');setTunerDebug('Audio is coming in, but the pitch is unstable. Play one string and let it ring.');tunerRaf=requestAnimationFrame(tunerLoop);return}
+  if(p.confidence<.12){setTunerIdle('Pitch unstable');setTunerDebug('Audio is coming in, but the pitch is unstable. Play one string and let it ring.');tunerRaf=requestAnimationFrame(tunerLoop);return}
   let m=closestTarget(p.freq);
   if(!m||Math.abs(m.cents)>80){setTunerIdle('Mute other strings');setTunerDebug('Pitch found, but it is not close to a selected guitar string.');tunerRaf=requestAnimationFrame(tunerLoop);return}
   tunerLastTarget=m.name;
   tunerSmooth=tunerSmooth*.68+Math.max(-50,Math.min(50,m.cents))*.32;
-  setTunerDebug('Pitch locked: '+m.name+' · input '+Math.round((p.rms||0)*1200)+'% · confidence '+p.confidence.toFixed(2));
+  setTunerDebug('Pitch locked: '+m.name+' · input '+Math.round((p.rms||0)*1200)+'% · confidence '+p.confidence.toFixed(2)+' · meter uses compressed dB scale');
   updateTunerDisplay(m,tunerSmooth);
   tunerRaf=requestAnimationFrame(tunerLoop)
 }

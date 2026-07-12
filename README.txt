@@ -1,17 +1,16 @@
-NOTE MAP GUITAR - VERSION 4.10
+NOTE MAP GUITAR - VERSION 4.12
 
-Tuner diagnostic/reliability release.
+Structure and naming release.
 
 Changes:
-- Added a visible Mic signal meter in Tuner mode.
-- Added tuner diagnostic status text so you can tell whether microphone audio is arriving before pitch detection locks.
-- Simplified the tuner audio graph: microphone -> analyser -> silent gain -> destination. This is more reliable on Safari/iOS than an analyser-only graph.
-- Removed the tuner filter chain for this diagnostic build so low E/A/D strings are not accidentally suppressed.
-- Lowered the first-pass signal threshold and added clearer states: no signal, low signal, finding pitch, pitch unstable, pitch locked.
-- Explicitly resumes AudioContext after Start tuner.
+- Renamed Manual Mode to Advanced.
+- Added Intermediate Practice as a guided level containing Scale practice, Solo trainer, and Progressions.
+- Renamed the old Intermediate harmony area to Harmony Explorer.
+- Updated the opening setup copy from Today Coach to Practice setup.
+- Early Learner labels now use Chord / Key and Sound language.
+- Advanced retains the full-control tools: Scale Map, Chord Shape, Progression, and Solo Trainer.
+- Intermediate Progressions keeps Position as the musical way to reach open, middle-neck, and upper-neck voicings without exposing fret-window language.
 
-Acceptance checks:
-- Tuner still requests microphone permission only after Start tuner.
-- Tuner screen shows Mic signal meter while listening.
-- JavaScript syntax check passes.
-- Nested folder zip format retained.
+Package structure:
+note-map-guitar-v4-12/index.html
+note-map-guitar-v4-12/README.txt
