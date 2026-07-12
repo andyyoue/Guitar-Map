@@ -131,7 +131,7 @@ button{font-weight:900;cursor:pointer}
 </head>
 <body>
 <main class="app">
-<header><div><h1>Note Map Guitar</h1><p>Version 4.12: tuner sensitivity and chord diagram cleanup.</p></div><div class="header-actions"><button id="openTunerBtn" class="tuner-button">♫ Tuner</button><b>4.12</b></div></header>
+<header><div><h1>Note Map Guitar</h1><p>Version 4.13: tuner sensitivity and chord diagram cleanup.</p></div><div class="header-actions"><button id="openTunerBtn" class="tuner-button">♫ Tuner</button><b>4.13</b></div></header>
 <section class="hint">Phone tip: rotate sideways. Pattern mode works best with Fret Window set to Auto.</section>
 <section id="tunerScreen" class="tuner-screen hidden" aria-live="polite">
   <div class="tuner-panel">
@@ -176,7 +176,7 @@ recorded or uploaded.</p>
 <div class="coach-form">
 <label>Level<select id="skillLevel"><option value="early">Early Learner</option><option value="practice">Intermediate Practice</option><option value="harmony">Harmony Explorer</option><option value="manual">Advanced</option></select></label>
 <label id="todayGoalWrap">Practice area<select id="todayGoal"></select></label>
-<label id="coachRootWrap">Chord / Key<select id="coachRoot"></select></label>
+<label id="coachRootWrap"><span id="coachRootLabel">Chord</span><select id="coachRoot"></select></label>
 <label id="coachChordTypeWrap">Sound<select id="coachChordType"><option value="major">Major</option><option value="minor">Minor</option><option value="minor7">Minor 7</option><option value="major7">Major 7</option><option value="dominant7">Dominant 7</option><option value="sus2">Sus2</option><option value="sus4">Sus4</option></select></label>
 <label id="coachChordLabelsWrap" class="hidden">Show<select id="coachChordLabels"><option value="fingers">Finger numbers</option><option value="notes">Note names</option></select></label>
 <label id="coachNoteWrap">Show note<select id="coachNote"></select></label>
@@ -229,7 +229,7 @@ recorded or uploaded.</p>
 </section>
 
 <section class="card summary lesson-extra hidden"><h2 id="title"></h2><p id="subtitle"></p><div id="progLine" class="prog-line hidden"></div></section>
-<section class="card audio-card"><span id="actionTitle" class="action-title"></span><span id="focusMeta" class="focus-meta"></span><button id="exploreScaleBtn" class="task-btn hidden">Explore Scale</button><button id="practiceScaleBtn" class="task-btn hidden">Practice Scale</button><button id="hearKeyBtn" class="task-btn hidden">Hear the Key</button><label id="inlineChordLabelsWrap" class="inline-select hidden">Show<select id="inlineChordLabels"><option value="fingers">Finger numbers</option><option value="notes">Note names</option></select></label><button id="toggleInlineLabels" class="hidden">Show note names</button><button id="prevInlineShape" class="hidden">Previous shape</button><button id="nextInlineShape" class="hidden">Next shape</button><button id="prevInlineChord" class="hidden">Previous chord</button><button id="nextInlineChord" class="hidden">Next chord</button><button id="loopProgression" class="hidden">Loop progression</button><button id="prevInlineProgShape" class="hidden">‹ Shape</button><button id="nextInlineProgShape" class="hidden">Shape ›</button><button id="prevCoachPattern" class="hidden">Previous pattern</button><button id="nextCoachPattern" class="hidden">Next pattern</button><button id="nextCoachRoot" class="hidden">Next root</button><button id="nextCoachChordType" class="hidden">Next chord</button><button id="playCurrent">Play</button><button id="playPhrase">Play phrase</button><button id="newPhrase" class="hidden">New phrase</button><button id="toggleDiagramView" class="hidden">Classic chord diagram</button><span id="audioHint"></span><div id="inlineProgression" class="inline-prog hidden"></div></section>
+<section class="card audio-card"><span id="actionTitle" class="action-title"></span><span id="focusMeta" class="focus-meta"></span><button id="exploreScaleBtn" class="task-btn hidden">Explore Scale</button><button id="practiceScaleBtn" class="task-btn hidden">Practice Scale</button><button id="hearKeyBtn" class="task-btn hidden">Hear the Key</button><label id="inlineChordLabelsWrap" class="inline-select hidden">Show<select id="inlineChordLabels"><option value="fingers">Finger numbers</option><option value="notes">Note names</option></select></label><button id="toggleInlineLabels" class="hidden">Notes</button><button id="prevInlineShape" class="hidden">Previous shape</button><button id="nextInlineShape" class="hidden">Next shape</button><button id="prevInlineChord" class="hidden">Previous chord</button><button id="nextInlineChord" class="hidden">Next chord</button><button id="loopProgression" class="hidden">Loop progression</button><button id="prevInlineProgShape" class="hidden">‹ Shape</button><button id="nextInlineProgShape" class="hidden">Shape ›</button><button id="prevCoachPattern" class="hidden">Previous pattern</button><button id="nextCoachPattern" class="hidden">Next pattern</button><button id="prevCoachRoot" class="hidden">Previous chord</button><button id="nextCoachRoot" class="hidden">Next chord</button><button id="prevCoachChordType" class="hidden">Previous chord type</button><button id="nextCoachChordType" class="hidden">Next chord type</button><button id="playCurrent">Play</button><button id="playPhrase">Play phrase</button><button id="newPhrase" class="hidden">New phrase</button><button id="toggleDiagramView" class="hidden">Classic chord diagram</button><span id="audioHint"></span><div id="inlineProgression" class="inline-prog hidden"></div></section>
 <section class="neck"><div id="board"></div></section>
 <section class="card"><button id="toggleDetails">Show coaching notes</button></section>
 <section class="practice-card lesson-extra hidden">
@@ -262,7 +262,7 @@ const chords={
   dominant7:["Dominant 7","7",[0,4,7,10],"1-3-5-b7"], dim:["Diminished","dim",[0,3,6],"1-b3-b5"], sus2:["Sus2","sus2",[0,2,7],"1-2-5"], sus4:["Sus4","sus4",[0,5,7],"1-4-5"]
 };
 const $=id=>document.getElementById(id), els={};
-["openTunerBtn","tunerScreen","returnFromTuner","startTuner","stopTuner","tunerPreset","tunerPresetTitle","tunerIntro","tunerLive","tunerStrings","tunerError","tunerNote","tunerOctave","tunerNeedle","tunerMessage","tunerHz","tunerStatus","tunerSignalBar","tunerSignalText","tunerDebug","tunerSr","skillLevel","todayGoalWrap","todayGoal","coachRootWrap","coachRoot","coachChordTypeWrap","coachChordType","coachChordLabelsWrap","coachChordLabels","coachNoteWrap","coachNote","coachPentTypeWrap","coachPentType","practiceBadge","practiceTitle","practiceWhy","practiceSteps","manualModeCard","mode","mapControls","chordControls","progControls","soloControls","key","scale","overlay","display","pattern","mapWindow","scaleAction","chordRoot","chordType","shapeStyle","chordLabels","chordWindow","prevShape","nextShape","prevInlineShape","nextInlineShape","prevInlineChord","nextInlineChord","loopProgression","prevInlineProgShape","nextInlineProgShape","inlineChordLabelsWrap","inlineChordLabels","toggleInlineLabels","shapeName","shapeText","progKey","progType","progStyle","progLabels","near","prevChord","nextChord","prevProgShape","nextProgShape","soloKey","soloScale","soloBlueprint","soloArea","actionTitle","focusMeta","exploreScaleBtn","practiceScaleBtn","hearKeyBtn","inlineProgression","playCurrent","playPhrase","newPhrase","toggleDiagramView","toggleDetails","prevCoachPattern","nextCoachPattern","nextCoachChordType","nextCoachRoot","audioHint","progLine","title","subtitle","whyTitle","why","board","legend"].forEach(id=>els[id]=$(id));
+["openTunerBtn","tunerScreen","returnFromTuner","startTuner","stopTuner","tunerPreset","tunerPresetTitle","tunerIntro","tunerLive","tunerStrings","tunerError","tunerNote","tunerOctave","tunerNeedle","tunerMessage","tunerHz","tunerStatus","tunerSignalBar","tunerSignalText","tunerDebug","tunerSr","skillLevel","todayGoalWrap","todayGoal","coachRootWrap","coachRootLabel","coachRoot","coachChordTypeWrap","coachChordType","coachChordLabelsWrap","coachChordLabels","coachNoteWrap","coachNote","coachPentTypeWrap","coachPentType","practiceBadge","practiceTitle","practiceWhy","practiceSteps","manualModeCard","mode","mapControls","chordControls","progControls","soloControls","key","scale","overlay","display","pattern","mapWindow","scaleAction","chordRoot","chordType","shapeStyle","chordLabels","chordWindow","prevShape","nextShape","prevInlineShape","nextInlineShape","prevInlineChord","nextInlineChord","loopProgression","prevInlineProgShape","nextInlineProgShape","inlineChordLabelsWrap","inlineChordLabels","toggleInlineLabels","shapeName","shapeText","progKey","progType","progStyle","progLabels","near","prevChord","nextChord","prevProgShape","nextProgShape","soloKey","soloScale","soloBlueprint","soloArea","actionTitle","focusMeta","exploreScaleBtn","practiceScaleBtn","hearKeyBtn","inlineProgression","playCurrent","playPhrase","newPhrase","toggleDiagramView","toggleDetails","prevCoachPattern","nextCoachPattern","prevCoachChordType","nextCoachChordType","prevCoachRoot","nextCoachRoot","audioHint","progLine","title","subtitle","whyTitle","why","board","legend"].forEach(id=>els[id]=$(id));
 let shapeIdx=0, progChordIdx=0, progShapeOffset=0, progAnchorFret=null, progressionLoopTimer=null, audioCtx=null, detailsOpen=false, diagramView="neck", currentSound={kind:"scale",root:"A",quality:"major",notes:["A"]};
 KEY_ORDER.forEach(k=>{["key","progKey","chordRoot","soloKey"].forEach(id=>{let o=document.createElement("option");o.value=k;o.textContent=k;els[id].appendChild(o)})});
 BEGINNER_ROOTS.forEach(([value,label])=>{let o=document.createElement("option");o.value=value;o.textContent=label;els.coachRoot.appendChild(o)});
@@ -374,8 +374,10 @@ function isManualChordMode(){
 }
 function updateCoachActionButtons(){
   let show=isCoachChordMode();
-  els.nextCoachChordType.classList.toggle("hidden",!show);
+  els.prevCoachRoot.classList.toggle("hidden",!show);
   els.nextCoachRoot.classList.toggle("hidden",!show);
+  els.prevCoachChordType.classList.toggle("hidden",!show);
+  els.nextCoachChordType.classList.toggle("hidden",!show);
   let showPattern=isCoachPentatonicMode();
   els.prevCoachPattern.classList.toggle("hidden",!showPattern);
   els.nextCoachPattern.classList.toggle("hidden",!showPattern)
@@ -439,6 +441,7 @@ function refreshGoalOptions(){
   els.todayGoalWrap.classList.toggle("hidden",skill==="manual");
   let goal=els.todayGoal.value, manual=skill==="manual";
   els.coachRootWrap.classList.toggle("hidden",manual||goal==="neckNotes");
+  if(els.coachRootLabel)els.coachRootLabel.textContent=goal==="chordShapes"?"Chord":"Key";
   els.coachChordTypeWrap.classList.toggle("hidden",manual||goal!=="chordShapes");
   els.coachChordLabelsWrap.classList.add("hidden");
   els.coachNoteWrap.classList.toggle("hidden",manual||goal!=="neckNotes");
@@ -638,7 +641,7 @@ function updateAudioControls(){
   els.toggleDiagramView.classList.toggle("hidden",!chordMode||isCoachChordMode());
   els.inlineChordLabelsWrap.classList.add("hidden");
   els.toggleInlineLabels.classList.toggle("hidden",!chordLabelMode);
-  if(chordLabelMode){els.inlineChordLabels.value=els.mode.value==="progression"?els.progLabels.value:els.chordLabels.value;els.toggleInlineLabels.textContent=els.inlineChordLabels.value==="fingers"?"Show note names":"Show finger numbers"}
+  if(chordLabelMode){els.inlineChordLabels.value=els.mode.value==="progression"?els.progLabels.value:els.chordLabels.value;els.toggleInlineLabels.textContent=els.inlineChordLabels.value==="fingers"?"Notes":"Fingers"}
   els.prevInlineShape.classList.toggle("hidden",!chordShapeMode);
   els.nextInlineShape.classList.toggle("hidden",!chordShapeMode);
   els.prevInlineChord.classList.toggle("hidden",!progressionMode);
@@ -674,30 +677,30 @@ function playCurrentPhrase(){
   playMelody(phrase);
   animatePhrase(phrase)
 }
-function stepCoachChordType(){
+function stepCoachChordType(dir=1){
   let opts=["major","minor","minor7","major7","dominant7","sus2","sus4"], i=opts.indexOf(els.coachChordType.value);
   if(isManualChordMode()){
     i=opts.indexOf(els.chordType.value);
-    els.chordType.value=opts[(i+1+opts.length)%opts.length];
+    els.chordType.value=opts[(i+dir+opts.length)%opts.length];
     shapeIdx=0;
     render();
     return
   }
-  els.coachChordType.value=opts[(i+1+opts.length)%opts.length];
+  els.coachChordType.value=opts[(i+dir+opts.length)%opts.length];
   shapeIdx=0;
   startPractice()
 }
-function stepCoachRoot(){
+function stepCoachRoot(dir=1){
   let i=KEY_ORDER.indexOf(els.coachRoot.value);
   if(isManualChordMode()){
     i=KEY_ORDER.indexOf(els.chordRoot.value);
-    els.chordRoot.value=KEY_ORDER[(i+1+KEY_ORDER.length)%KEY_ORDER.length];
+    els.chordRoot.value=KEY_ORDER[(i+dir+KEY_ORDER.length)%KEY_ORDER.length];
     shapeIdx=0;
     render();
     return
   }
   let roots=BEGINNER_ROOTS.map(([v])=>v), ci=roots.indexOf(els.coachRoot.value);
-  els.coachRoot.value=roots[(ci+1+roots.length)%roots.length];
+  els.coachRoot.value=roots[(ci+dir+roots.length)%roots.length];
   shapeIdx=0;
   startPractice()
 }
@@ -1094,8 +1097,10 @@ els.inlineChordLabels.onchange=toggleChordLabelMode;
 els.toggleInlineLabels.onclick=toggleChordLabelMode;
 els.prevCoachPattern.onclick=()=>stepCoachPattern(-1);
 els.nextCoachPattern.onclick=()=>stepCoachPattern(1);
-els.nextCoachChordType.onclick=stepCoachChordType;
-els.nextCoachRoot.onclick=stepCoachRoot;
+els.prevCoachChordType.onclick=()=>stepCoachChordType(-1);
+els.nextCoachChordType.onclick=()=>stepCoachChordType(1);
+els.prevCoachRoot.onclick=()=>stepCoachRoot(-1);
+els.nextCoachRoot.onclick=()=>stepCoachRoot(1);
 els.toggleDetails.onclick=()=>{detailsOpen=!detailsOpen;updateDetails()};
 ["skillLevel","todayGoal","coachRoot","coachChordType","coachChordLabels","coachNote","coachPentType"].forEach(id=>els[id].addEventListener("change",startPractice));
 updateDetails(); 
