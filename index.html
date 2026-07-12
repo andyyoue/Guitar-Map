@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#34251d" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-title" content="Note Map" />
-<title>Note Map Guitar 4.7</title>
+<title>Note Map Guitar 4.9</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#f6f3ee;color:#221f1c;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
@@ -48,10 +48,10 @@ button{font-weight:900;cursor:pointer}
 .phrase span{border:1px solid #d7ccc0;background:#fffdfa;border-radius:999px;padding:6px 10px;font-weight:900;transition:transform .18s ease,background .18s ease,color .18s ease}
 .phrase .pause{background:#efe6dc;color:#65594f}
 .phrase span.active{background:#34251d;color:#fff8ef;transform:translateY(-2px)}
-.audio-card{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.audio-card button{min-height:38px;padding:7px 12px}
+.audio-card{display:flex;align-items:center;gap:8px;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.audio-card button{min-height:38px;padding:7px 12px;white-space:nowrap}
 .audio-card span{font-size:13px;color:#5b5148;font-weight:800}
-.action-title{font-weight:900;color:#221f1c;font-size:18px;margin-right:4px}
+.action-title{font-weight:900;color:#221f1c;font-size:18px;margin-right:4px;white-space:nowrap}
 .focus-meta{background:#fff8ef;border:1px solid #eadfce;border-radius:999px;padding:7px 10px;color:#3d332b!important}
 .inline-select{flex-direction:row;align-items:center;background:#fff8ef;border:1px solid #eadfce;border-radius:999px;padding:5px 7px 5px 10px;gap:8px}
 .inline-select select{min-height:34px;padding:5px 8px}
@@ -59,6 +59,8 @@ button{font-weight:900;cursor:pointer}
 .neck{overflow-x:auto;background:#34251d;padding:10px;border-radius:14px;box-shadow:inset 0 0 0 1px #ffffff14;margin-bottom:10px;-webkit-overflow-scrolling:touch}
 .book-wrap{min-width:360px;background:#fffdfa;border-radius:12px;padding:10px;display:flex;justify-content:center}
 .book-chart{width:min(420px,92vw);height:auto;display:block}
+.early-chord-stack{display:grid;grid-template-columns:minmax(520px,1.5fr) minmax(280px,.75fr);gap:10px;align-items:start}.early-chord-stack .neck{margin-bottom:0}.early-chord-stack .book-wrap{min-width:280px;height:100%}@media(max-width:760px){.early-chord-stack{grid-template-columns:1fr}.early-chord-stack .book-wrap{min-width:260px}.audio-card{gap:6px}.focus-meta{display:none!important}}
+
 .book-grid{stroke:#2d2925;stroke-width:4;stroke-linecap:round}
 .book-nut{stroke:#2d2925;stroke-width:9;stroke-linecap:round}
 .book-barre{fill:#5a99e6;opacity:.85}
@@ -129,7 +131,7 @@ button{font-weight:900;cursor:pointer}
 </head>
 <body>
 <main class="app">
-<header><div><h1>Note Map Guitar</h1><p>Version 4.8: tuner and progression UX refinements.</p></div><div class="header-actions"><button id="openTunerBtn" class="tuner-button">♫ Tuner</button><b>4.8</b></div></header>
+<header><div><h1>Note Map Guitar</h1><p>Version 4.9: tuner, early chord, and progression loop refinements.</p></div><div class="header-actions"><button id="openTunerBtn" class="tuner-button">♫ Tuner</button><b>4.9</b></div></header>
 <section class="hint">Phone tip: rotate sideways. Pattern mode works best with Fret Window set to Auto.</section>
 <section id="tunerScreen" class="tuner-screen hidden" aria-live="polite">
   <div class="tuner-panel">
@@ -222,7 +224,7 @@ recorded or uploaded.</p>
 </section>
 
 <section class="card summary lesson-extra hidden"><h2 id="title"></h2><p id="subtitle"></p><div id="progLine" class="prog-line hidden"></div></section>
-<section class="card audio-card"><span id="actionTitle" class="action-title"></span><span id="focusMeta" class="focus-meta"></span><button id="exploreScaleBtn" class="task-btn hidden">Explore Scale</button><button id="practiceScaleBtn" class="task-btn hidden">Practice Scale</button><button id="hearKeyBtn" class="task-btn hidden">Hear the Key</button><label id="inlineChordLabelsWrap" class="inline-select hidden">Show<select id="inlineChordLabels"><option value="fingers">Finger numbers</option><option value="notes">Note names</option></select></label><button id="toggleInlineLabels" class="hidden">Show note names</button><button id="prevInlineShape" class="hidden">Previous shape</button><button id="nextInlineShape" class="hidden">Next shape</button><button id="prevInlineChord" class="hidden">Previous chord</button><button id="nextInlineChord" class="hidden">Next chord</button><button id="prevInlineProgShape" class="hidden">‹ Shape</button><button id="nextInlineProgShape" class="hidden">Shape ›</button><button id="prevCoachPattern" class="hidden">Previous pattern</button><button id="nextCoachPattern" class="hidden">Next pattern</button><button id="nextCoachRoot" class="hidden">Next root</button><button id="nextCoachChordType" class="hidden">Next chord</button><button id="playCurrent">Play</button><button id="playPhrase">Play phrase</button><button id="newPhrase" class="hidden">New phrase</button><button id="toggleDiagramView" class="hidden">Classic chord diagram</button><span id="audioHint"></span><div id="inlineProgression" class="inline-prog hidden"></div></section>
+<section class="card audio-card"><span id="actionTitle" class="action-title"></span><span id="focusMeta" class="focus-meta"></span><button id="exploreScaleBtn" class="task-btn hidden">Explore Scale</button><button id="practiceScaleBtn" class="task-btn hidden">Practice Scale</button><button id="hearKeyBtn" class="task-btn hidden">Hear the Key</button><label id="inlineChordLabelsWrap" class="inline-select hidden">Show<select id="inlineChordLabels"><option value="fingers">Finger numbers</option><option value="notes">Note names</option></select></label><button id="toggleInlineLabels" class="hidden">Show note names</button><button id="prevInlineShape" class="hidden">Previous shape</button><button id="nextInlineShape" class="hidden">Next shape</button><button id="prevInlineChord" class="hidden">Previous chord</button><button id="nextInlineChord" class="hidden">Next chord</button><button id="loopProgression" class="hidden">Loop progression</button><button id="prevInlineProgShape" class="hidden">‹ Shape</button><button id="nextInlineProgShape" class="hidden">Shape ›</button><button id="prevCoachPattern" class="hidden">Previous pattern</button><button id="nextCoachPattern" class="hidden">Next pattern</button><button id="nextCoachRoot" class="hidden">Next root</button><button id="nextCoachChordType" class="hidden">Next chord</button><button id="playCurrent">Play</button><button id="playPhrase">Play phrase</button><button id="newPhrase" class="hidden">New phrase</button><button id="toggleDiagramView" class="hidden">Classic chord diagram</button><span id="audioHint"></span><div id="inlineProgression" class="inline-prog hidden"></div></section>
 <section class="neck"><div id="board"></div></section>
 <section class="card"><button id="toggleDetails">Show coaching notes</button></section>
 <section class="practice-card lesson-extra hidden">
@@ -255,14 +257,14 @@ const chords={
   dominant7:["Dominant 7","7",[0,4,7,10],"1-3-5-b7"], dim:["Diminished","dim",[0,3,6],"1-b3-b5"], sus2:["Sus2","sus2",[0,2,7],"1-2-5"], sus4:["Sus4","sus4",[0,5,7],"1-4-5"]
 };
 const $=id=>document.getElementById(id), els={};
-["openTunerBtn","tunerScreen","returnFromTuner","startTuner","stopTuner","tunerPreset","tunerPresetTitle","tunerIntro","tunerLive","tunerStrings","tunerError","tunerNote","tunerOctave","tunerNeedle","tunerMessage","tunerHz","tunerStatus","tunerSr","skillLevel","todayGoalWrap","todayGoal","coachRootWrap","coachRoot","coachChordTypeWrap","coachChordType","coachChordLabelsWrap","coachChordLabels","coachNoteWrap","coachNote","coachPentTypeWrap","coachPentType","practiceBadge","practiceTitle","practiceWhy","practiceSteps","manualModeCard","mode","mapControls","chordControls","progControls","soloControls","key","scale","overlay","display","pattern","mapWindow","scaleAction","chordRoot","chordType","shapeStyle","chordLabels","chordWindow","prevShape","nextShape","prevInlineShape","nextInlineShape","prevInlineChord","nextInlineChord","prevInlineProgShape","nextInlineProgShape","inlineChordLabelsWrap","inlineChordLabels","toggleInlineLabels","shapeName","shapeText","progKey","progType","progStyle","progLabels","near","prevChord","nextChord","prevProgShape","nextProgShape","soloKey","soloScale","soloBlueprint","soloArea","actionTitle","focusMeta","exploreScaleBtn","practiceScaleBtn","hearKeyBtn","inlineProgression","playCurrent","playPhrase","newPhrase","toggleDiagramView","toggleDetails","prevCoachPattern","nextCoachPattern","nextCoachChordType","nextCoachRoot","audioHint","progLine","title","subtitle","whyTitle","why","board","legend"].forEach(id=>els[id]=$(id));
-let shapeIdx=0, progChordIdx=0, progShapeOffset=0, progAnchorFret=null, audioCtx=null, detailsOpen=false, diagramView="neck", currentSound={kind:"scale",root:"A",quality:"major",notes:["A"]};
+["openTunerBtn","tunerScreen","returnFromTuner","startTuner","stopTuner","tunerPreset","tunerPresetTitle","tunerIntro","tunerLive","tunerStrings","tunerError","tunerNote","tunerOctave","tunerNeedle","tunerMessage","tunerHz","tunerStatus","tunerSr","skillLevel","todayGoalWrap","todayGoal","coachRootWrap","coachRoot","coachChordTypeWrap","coachChordType","coachChordLabelsWrap","coachChordLabels","coachNoteWrap","coachNote","coachPentTypeWrap","coachPentType","practiceBadge","practiceTitle","practiceWhy","practiceSteps","manualModeCard","mode","mapControls","chordControls","progControls","soloControls","key","scale","overlay","display","pattern","mapWindow","scaleAction","chordRoot","chordType","shapeStyle","chordLabels","chordWindow","prevShape","nextShape","prevInlineShape","nextInlineShape","prevInlineChord","nextInlineChord","loopProgression","prevInlineProgShape","nextInlineProgShape","inlineChordLabelsWrap","inlineChordLabels","toggleInlineLabels","shapeName","shapeText","progKey","progType","progStyle","progLabels","near","prevChord","nextChord","prevProgShape","nextProgShape","soloKey","soloScale","soloBlueprint","soloArea","actionTitle","focusMeta","exploreScaleBtn","practiceScaleBtn","hearKeyBtn","inlineProgression","playCurrent","playPhrase","newPhrase","toggleDiagramView","toggleDetails","prevCoachPattern","nextCoachPattern","nextCoachChordType","nextCoachRoot","audioHint","progLine","title","subtitle","whyTitle","why","board","legend"].forEach(id=>els[id]=$(id));
+let shapeIdx=0, progChordIdx=0, progShapeOffset=0, progAnchorFret=null, progressionLoopTimer=null, audioCtx=null, detailsOpen=false, diagramView="neck", currentSound={kind:"scale",root:"A",quality:"major",notes:["A"]};
 KEY_ORDER.forEach(k=>{["key","progKey","chordRoot","soloKey"].forEach(id=>{let o=document.createElement("option");o.value=k;o.textContent=k;els[id].appendChild(o)})});
 BEGINNER_ROOTS.forEach(([value,label])=>{let o=document.createElement("option");o.value=value;o.textContent=label;els.coachRoot.appendChild(o)});
 ["A","B","C","D","E","F","G"].forEach(n=>{let o=document.createElement("option");o.value=n;o.textContent=n;els.coachNote.appendChild(o)});
 els.key.value=els.progKey.value=els.chordRoot.value=els.coachRoot.value=els.coachNote.value=els.soloKey.value="A";
 els.scale.value="minorPent"; els.shapeStyle.value="open"; els.progStyle.value="all"; els.overlay.value="none";
-try{let saved=JSON.parse(localStorage.getItem("noteMapGuitar47")||"{}"); if(saved.key)els.key.value=saved.key; if(saved.scale)els.scale.value=saved.scale;}catch(e){}
+try{let saved=JSON.parse(localStorage.getItem("noteMapGuitar49")||"{}"); if(saved.key)els.key.value=saved.key; if(saved.scale)els.scale.value=saved.scale;}catch(e){}
 function flats(k){return k.includes("b")||["F","Bb","Eb","Ab","Db","Gb"].includes(k)}
 function idx(n){let i=N.indexOf(n);return i>=0?i:NF.indexOf(n)}
 function nm(i,k="C"){let a=flats(k)?NF:N;return a[((i%12)+12)%12]}
@@ -355,6 +357,9 @@ function renderLegend(m){
 }
 function isCoachChordMode(){
   return els.skillLevel.value==="early"&&els.todayGoal.value==="chordShapes"
+}
+function isChordShapedScreen(){
+  return currentSound.kind==="chord"
 }
 function isCoachPentatonicMode(){
   return els.skillLevel.value==="early"&&els.todayGoal.value==="pentatonicShapes"
@@ -483,6 +488,7 @@ function startPractice(){
   plan.apply();
 }
 function win(v,shape=null){
+  if(v==="first5")return{start:0,end:5};
   if(v==="all")return{start:0,end:15,all:true};
   if(v==="auto"&&shape){let p=pos(shape.frets);let s=Math.max(0,Math.min(12,p-1));return{start:s,end:s+6}};
   let s=Number(v||0); return{start:s,end:s+(s===0?7:6)}
@@ -600,7 +606,7 @@ function updateAudioControls(){
   let scaleMode=els.skillLevel.value==="manual"&&els.mode.value==="map";
   els.playPhrase.classList.toggle("hidden",!solo);
   els.newPhrase.classList.toggle("hidden",!solo);
-  els.toggleDiagramView.classList.toggle("hidden",!chordMode);
+  els.toggleDiagramView.classList.toggle("hidden",!chordMode||isCoachChordMode());
   els.inlineChordLabelsWrap.classList.add("hidden");
   els.toggleInlineLabels.classList.toggle("hidden",!chordLabelMode);
   if(chordLabelMode){els.inlineChordLabels.value=els.mode.value==="progression"?els.progLabels.value:els.chordLabels.value;els.toggleInlineLabels.textContent=els.inlineChordLabels.value==="fingers"?"Show note names":"Show finger numbers"}
@@ -608,6 +614,7 @@ function updateAudioControls(){
   els.nextInlineShape.classList.toggle("hidden",!chordShapeMode);
   els.prevInlineChord.classList.toggle("hidden",!progressionMode);
   els.nextInlineChord.classList.toggle("hidden",!progressionMode);
+  els.loopProgression.classList.toggle("hidden",!progressionMode);
   els.prevInlineProgShape.classList.toggle("hidden",!progressionMode);
   els.nextInlineProgShape.classList.toggle("hidden",!progressionMode);
   els.exploreScaleBtn.classList.toggle("hidden",!scaleMode);
@@ -681,7 +688,7 @@ function bookNoteAt(stringIndex,fret,key){
   let open=["E","A","D","G","B","E"][stringIndex];
   return nm(idx(open)+fret,key)
 }
-function drawBookShape(s,title,sub,why,labelMode="fingers",noteKey=s.root||"A"){
+function bookShapeMarkup(s,title,labelMode="fingers",noteKey=s.root||"A"){
   let played=s.frets.filter(f=>typeof f==="number"&&f>0), minF=played.length?Math.min(...played):1, maxF=played.length?Math.max(...played):4;
   let start=minF<=1?1:minF, rows=Math.max(4,maxF-start+1), top=72, rowH=68, left=56, colW=60, right=left+colW*5, bottom=top+rowH*rows;
   let suggested=fingerLabels(s.frets,s.fingers), xs=[0,1,2,3,4,5].map(i=>left+i*colW);
@@ -707,7 +714,10 @@ function drawBookShape(s,title,sub,why,labelMode="fingers",noteKey=s.root||"A"){
     return `<circle class="book-dot" cx="${xs[i]}" cy="${y}" r="22"></circle><text class="book-label" x="${xs[i]}" y="${y+1}">${lab}</text>`
   }).join("");
   let posLabel=start>1?`<text class="book-fret-label" x="${left-18}" y="${top+26}">${start}fr</text>`:"";
-  els.board.innerHTML=`<div class="book-wrap"><svg class="book-chart" viewBox="0 0 420 ${bottom+28}" role="img" aria-label="${title} book chord diagram">${tops}${posLabel}${lines}${bars}${dots}</svg></div>`;
+  return `<div class="book-wrap"><svg class="book-chart" viewBox="0 0 420 ${bottom+28}" role="img" aria-label="${title} book chord diagram">${tops}${posLabel}${lines}${bars}${dots}</svg></div>`;
+}
+function drawBookShape(s,title,sub,why,labelMode="fingers",noteKey=s.root||"A"){
+  els.board.innerHTML=bookShapeMarkup(s,title,labelMode,noteKey);
   els.title.textContent=title; els.subtitle.textContent=sub; els.whyTitle.textContent="Why this works"; els.why.textContent=why;
 }
 function drawShape(s,title,sub,why,wv="auto",labelMode="fingers",noteKey=s.root||"A"){
@@ -794,9 +804,21 @@ function renderMap(){
 }function renderChord(){
   let r=els.chordRoot.value,q=els.chordType.value,st=els.shapeStyle.value||"open",arr=shapes(r,q,st); if(shapeIdx>=arr.length)shapeIdx=0;
   let s=arr[shapeIdx]; els.shapeName.textContent=`${s.name} (${shapeIdx+1} of ${arr.length})`; els.shapeText.textContent=s.note; els.progLine.innerHTML="";
-  currentSound={kind:"chord",title:`${r}${chords[q][1]||" major"}`,root:r,quality:q};
-  setFocusMeta(`${r}${chords[q][1]||" major"} · ${s.name} · Shape ${shapeIdx+1} of ${arr.length}`);
-  drawShape(s,`${r}${chords[q][1]} chord shape`,`${s.name} · Shape ${shapeIdx+1} of ${arr.length}`,`The fret window follows the selected shape automatically. Use Note names if you want to inspect the chord tones.`,els.chordWindow.value,els.chordLabels.value,r);
+  let chordName=`${r}${chords[q][1]||" major"}`;
+  currentSound={kind:"chord",title:chordName,root:r,quality:q};
+  setFocusMeta(isCoachChordMode()?`${s.name}`:`${s.name} · Shape ${shapeIdx+1} of ${arr.length}`);
+  let title=`${r}${chords[q][1]} chord shape`, sub=`${s.name} · Shape ${shapeIdx+1} of ${arr.length}`;
+  let why=`The fret window follows the selected shape automatically. Use Note names if you want to inspect the chord tones.`;
+  if(isCoachChordMode()){
+    let oldDiagram=diagramView; diagramView="neck";
+    drawShape(s,title,sub,why,"first5",els.chordLabels.value,r);
+    let neckHtml=els.board.innerHTML;
+    let bookHtml=bookShapeMarkup(s,title,els.chordLabels.value,r);
+    els.board.innerHTML=`<div class="early-chord-stack"><div>${neckHtml}</div>${bookHtml}</div>`;
+    diagramView=oldDiagram;
+  } else {
+    drawShape(s,title,sub,why,els.chordWindow.value,els.chordLabels.value,r);
+  }
   manualHelp("chord",{root:r,quality:q,shapeName:s.name});
 }
 function renderNoteMap(note){
@@ -972,7 +994,7 @@ function renderProg(){
   let s=arr[si],seq=cs.map(x=>`${x.display}${chords[x.q][1]}`).join(" → ");
   if(els.near.value==="auto"||progAnchorFret==null)progAnchorFret=s.position;
   currentSound={kind:"chord",title:`${c.display}${chords[c.q][1]||" major"}`,root:c.root,quality:c.q};
-  setFocusMeta(`${p[0]} · Key of ${key} · Chord ${progChordIdx+1} of ${cs.length}: ${c.display}${chords[c.q][1]||" major"}`);
+  setFocusMeta(`${p[0]} · Key of ${key} · Chord ${progChordIdx+1} of ${cs.length}`);
   drawShape(s,`${p[0]} · Key of ${key}`,`${seq} · Chord ${progChordIdx+1} of ${cs.length}: ${c.display}${chords[c.q][1]||" major"}`,`${p[2]} Progression movement is primary; shape changes are secondary.`,(els.near.value==="auto"?"auto":String(Math.max(0,target-1))),els.progLabels.value,c.root);
   renderProgLine(cs);
   manualHelp("progression",{key,name:p[0],current:`${c.display}${chords[c.q][1]}`,sequence:seq});
@@ -992,11 +1014,20 @@ function stepProgressionShape(dir){
   progShapeOffset+=dir;
   render()
 }
-function render(){setVis(); if(els.mode.value==="map")renderMap(); else if(els.mode.value==="chord")renderChord(); else if(els.mode.value==="progression")renderProg(); else renderSolo(); updateAudioControls()}
+function stopProgressionLoop(){
+  if(progressionLoopTimer){clearInterval(progressionLoopTimer);progressionLoopTimer=null}
+  if(els.loopProgression)els.loopProgression.textContent="Loop progression";
+}
+function toggleProgressionLoop(){
+  if(progressionLoopTimer){stopProgressionLoop();return}
+  els.loopProgression.textContent="Stop loop";
+  progressionLoopTimer=setInterval(()=>stepProgressionChord(1),2000);
+}
+function render(){setVis(); if(!(els.skillLevel.value==="manual"&&els.mode.value==="progression"))stopProgressionLoop(); if(els.mode.value==="map")renderMap(); else if(els.mode.value==="chord")renderChord(); else if(els.mode.value==="progression")renderProg(); else renderSolo(); updateAudioControls()}
 ["key","scale","overlay","display","pattern","mapWindow","scaleAction","mode","chordRoot","chordType","shapeStyle","chordLabels","chordWindow","progKey","progType","progStyle","progLabels","near","soloKey","soloScale","soloBlueprint","soloArea"].forEach(id=>els[id].addEventListener("change",()=>{
   if(["chordRoot","chordType","shapeStyle"].includes(id))shapeIdx=0;
   if(["progKey","progType","progStyle","near"].includes(id)){progChordIdx=0;progShapeOffset=0;progAnchorFret=null}
-  try{localStorage.setItem("noteMapGuitar47",JSON.stringify({key:els.key.value,scale:els.scale.value}))}catch(e){}
+  try{localStorage.setItem("noteMapGuitar49",JSON.stringify({key:els.key.value,scale:els.scale.value}))}catch(e){}
   render()
 }));
 els.prevShape.onclick=()=>stepChordShape(-1);
@@ -1007,6 +1038,7 @@ els.prevChord.onclick=()=>stepProgressionChord(-1);
 els.nextChord.onclick=()=>stepProgressionChord(1);
 els.prevInlineChord.onclick=()=>stepProgressionChord(-1);
 els.nextInlineChord.onclick=()=>stepProgressionChord(1);
+els.loopProgression.onclick=toggleProgressionLoop;
 els.prevProgShape.onclick=()=>stepProgressionShape(-1);
 els.nextProgShape.onclick=()=>stepProgressionShape(1);
 els.prevInlineProgShape.onclick=()=>stepProgressionShape(-1);
@@ -1045,14 +1077,14 @@ function tunerTargets(){return TUNINGS[els.tunerPreset.value]||TUNINGS.standard}
 function renderTunerStrings(){let targets=tunerTargets();els.tunerPresetTitle.textContent=(els.tunerPreset.value==='dropD'?'DROP D':'STANDARD')+' TUNING';els.tunerStrings.innerHTML='';[['Auto',0],...targets].forEach((item,i)=>{let label=i===0?'Auto':item[0],b=document.createElement('button');b.type='button';b.textContent=label;b.className=(tunerMode===label||(!i&&tunerMode==='auto'))?'active':'';b.onclick=()=>{tunerMode=i===0?'auto':label;tunerLastTarget=null;renderTunerStrings()};els.tunerStrings.appendChild(b)})}
 function openTuner(){preTunerScroll=window.scrollY||0;document.querySelector('main.app').classList.add('tuner-active');els.openTunerBtn.textContent='Return to App';els.tunerScreen.classList.remove('hidden');renderTunerStrings();setTunerIdle('Play one string');window.scrollTo(0,0)}
 function closeTuner(){stopTuner();els.tunerScreen.classList.add('hidden');document.querySelector('main.app').classList.remove('tuner-active');els.openTunerBtn.textContent='♫ Tuner';setTimeout(()=>window.scrollTo(0,preTunerScroll),0)}
-async function startTuner(){els.tunerError.classList.add('hidden');if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){showTunerError('Microphone access is not available in this browser.');return}try{tunerStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});tunerCtx=new (window.AudioContext||window.webkitAudioContext)();let source=tunerCtx.createMediaStreamSource(tunerStream);let filter=tunerCtx.createBiquadFilter();filter.type='bandpass';filter.frequency.value=260;filter.Q.value=.75;tunerAnalyser=tunerCtx.createAnalyser();tunerAnalyser.fftSize=4096;source.connect(filter).connect(tunerAnalyser);els.tunerIntro.classList.add('hidden');els.tunerLive.classList.remove('hidden');tunerLoop()}catch(e){showTunerError('Microphone access is needed for the tuner. Enable microphone permission for Note Map Guitar in your browser settings, then try again.')}}
+async function startTuner(){els.tunerError.classList.add('hidden');if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){showTunerError('Microphone access is not available in this browser.');return}try{tunerStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});tunerCtx=new (window.AudioContext||window.webkitAudioContext)();await tunerCtx.resume();let source=tunerCtx.createMediaStreamSource(tunerStream);let hp=tunerCtx.createBiquadFilter();hp.type='highpass';hp.frequency.value=55;hp.Q.value=.7;let lp=tunerCtx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=1200;lp.Q.value=.7;tunerAnalyser=tunerCtx.createAnalyser();tunerAnalyser.fftSize=4096;source.connect(hp).connect(lp).connect(tunerAnalyser);els.tunerIntro.classList.add('hidden');els.tunerLive.classList.remove('hidden');els.tunerStatus.textContent='Listening — play one string';tunerLoop()}catch(e){showTunerError('Microphone access is needed for the tuner. Enable microphone permission for Note Map Guitar in your browser settings, then try again.')}}
 function showTunerError(msg){els.tunerError.textContent=msg;els.tunerError.classList.remove('hidden')}
 function stopTuner(){if(tunerRaf)cancelAnimationFrame(tunerRaf);tunerRaf=null;if(tunerStream){tunerStream.getTracks().forEach(t=>t.stop());tunerStream=null}if(tunerCtx){tunerCtx.close().catch(()=>{});tunerCtx=null}els.tunerLive.classList.add('hidden');els.tunerIntro.classList.remove('hidden');setTunerIdle('Play one string')}
 function rms(buf){let s=0;for(let v of buf)s+=v*v;return Math.sqrt(s/buf.length)}
-function autoCorrelate(buf,rate){let r=rms(buf);if(r<.012)return null;let minLag=Math.floor(rate/1200),maxLag=Math.floor(rate/70),bestLag=0,best=0;for(let lag=minLag;lag<maxLag;lag++){let c=0;for(let i=0;i<buf.length-lag;i++)c+=buf[i]*buf[i+lag];c/=buf.length-lag;if(c>best){best=c;bestLag=lag}}if(!bestLag||best<.008)return null;let freq=rate/bestLag;return {freq,confidence:best/r}}
+function autoCorrelate(buf,rate){let r=rms(buf);if(r<.004)return null;let minLag=Math.floor(rate/1200),maxLag=Math.floor(rate/70),bestLag=0,best=0;for(let lag=minLag;lag<maxLag;lag++){let c=0;for(let i=0;i<buf.length-lag;i++)c+=buf[i]*buf[i+lag];c/=buf.length-lag;if(c>best){best=c;bestLag=lag}}if(!bestLag||best<.003)return null;let freq=rate/bestLag;return {freq,confidence:best/r}}
 function cents(freq,target){return 1200*Math.log2(freq/target)}
 function closestTarget(freq){let candidates=[freq,freq/2,freq/3,freq*2];let targets=tunerTargets();if(tunerMode!=='auto'){let forced=targets.find(t=>t[0]===tunerMode);if(forced)targets=[forced]}let best=null;for(let f of candidates){if(f<55||f>400)continue;for(let t of targets){let c=cents(f,t[1]);let score=Math.abs(c)+(tunerLastTarget===t[0]?6:18);if(!best||score<best.score)best={name:t[0],target:t[1],freq:f,cents:c,score}}}return best}
-function tunerLoop(){if(!tunerAnalyser)return;let buf=new Float32Array(tunerAnalyser.fftSize);tunerAnalyser.getFloatTimeDomainData(buf);let p=autoCorrelate(buf,tunerCtx.sampleRate);if(!p||p.confidence<.08){setTunerIdle(rms(buf)>.035?'Move closer and play one string clearly':'Play one string');tunerRaf=requestAnimationFrame(tunerLoop);return}let m=closestTarget(p.freq);if(!m||Math.abs(m.cents)>70){setTunerIdle('Mute the other strings');tunerRaf=requestAnimationFrame(tunerLoop);return}tunerLastTarget=m.name;tunerSmooth=tunerSmooth*.72+Math.max(-50,Math.min(50,m.cents))*.28;updateTunerDisplay(m,tunerSmooth);tunerRaf=requestAnimationFrame(tunerLoop)}
+function tunerLoop(){if(!tunerAnalyser)return;let buf=new Float32Array(tunerAnalyser.fftSize);tunerAnalyser.getFloatTimeDomainData(buf);let p=autoCorrelate(buf,tunerCtx.sampleRate);if(!p||p.confidence<.025){setTunerIdle(rms(buf)>.015?'Move closer and play one string clearly':'Play one string');tunerRaf=requestAnimationFrame(tunerLoop);return}let m=closestTarget(p.freq);if(!m||Math.abs(m.cents)>70){setTunerIdle('Mute the other strings');tunerRaf=requestAnimationFrame(tunerLoop);return}tunerLastTarget=m.name;tunerSmooth=tunerSmooth*.72+Math.max(-50,Math.min(50,m.cents))*.28;updateTunerDisplay(m,tunerSmooth);tunerRaf=requestAnimationFrame(tunerLoop)}
 function updateTunerDisplay(m,c){let note=m.name.replace(/\d/,'');let oct=m.name.match(/\d/)[0];els.tunerNote.textContent=note;els.tunerOctave.textContent=m.name;els.tunerHz.textContent=m.freq.toFixed(1)+' Hz';let msg=Math.abs(c)<=5?'In tune':c<-15?'Tune up':c< -5?'Tune up slightly':c>15?'Tune down':'Tune down slightly';if(Math.abs(c)<=5){if(!tunerStableSince)tunerStableSince=performance.now();if(performance.now()-tunerStableSince>550)c=0}else tunerStableSince=0;els.tunerNeedle.style.transform=`translateX(calc(-50% + ${c*2.8}px))`;els.tunerNeedle.classList.toggle('tuned',msg==='In tune');els.tunerMessage.textContent=msg;els.tunerStatus.textContent=c<0?Math.round(Math.abs(c))+' cents flat':c>0?Math.round(c)+' cents sharp':'Centered';renderTunerStrings();let ann=`${m.name}, ${msg==='In tune'?'in tune':Math.round(Math.abs(c))+' cents '+(c<0?'flat':'sharp')}`;if(ann!==tunerLastAnnouncement&&Math.abs(c)%1<.35){els.tunerSr.textContent=ann;tunerLastAnnouncement=ann}}
 function setTunerIdle(msg){els.tunerNote.textContent='—';els.tunerOctave.textContent=msg;els.tunerMessage.textContent=msg;els.tunerHz.textContent='— Hz';els.tunerStatus.textContent='';els.tunerNeedle.style.transform='translateX(-50%)';els.tunerNeedle.classList.remove('tuned')}
 els.openTunerBtn.onclick=()=>document.querySelector('main.app').classList.contains('tuner-active')?closeTuner():openTuner();els.returnFromTuner.onclick=closeTuner;els.startTuner.onclick=startTuner;els.stopTuner.onclick=stopTuner;els.tunerPreset.onchange=()=>{tunerMode='auto';tunerLastTarget=null;renderTunerStrings()};document.addEventListener('visibilitychange',()=>{if(document.hidden)stopTuner()});
