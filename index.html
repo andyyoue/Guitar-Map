@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-title" content="Note Map" />
 <link rel="manifest" href="manifest.webmanifest" />
-<title>Note Map Guitar V5.2 RC</title>
+<title>Note Map Guitar V5.3</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#f6f3ee;color:#221f1c;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
@@ -207,12 +207,26 @@ header b#buildLabel{font-size:12px;background:#fff8ef;border:1px solid #eadfce;b
 .tuner-message.tuned{color:#1d7b43}
 @media(max-width:760px){header{gap:8px}header b#buildLabel{display:block;margin-top:4px}.hint{font-size:13px}}
 
+
+/* V5.3 connected lesson view */
+.guided-lesson{background:#fff8ef;border:1px solid #dfcfbd;border-radius:15px;padding:12px;margin:8px 0;display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
+.guided-lesson.hidden{display:none}.guided-lesson h2{margin:3px 0;font-size:22px}.guided-lesson p{margin:0;color:#554a42}
+.lesson-sequence{grid-column:1/-1;display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+.lesson-chip{border:1px solid #d7c7b6;background:#fff;border-radius:999px;padding:8px 13px;font-weight:950}
+.lesson-chip.active{background:#34251d;color:#fff8ef}
+body.lesson-active .coach{display:none}
+@media(max-width:760px){.guided-lesson{grid-template-columns:1fr}.guided-lesson #exitLesson{justify-self:start}}
+@media(orientation:landscape) and (max-height:600px){
+ body.lesson-active .path-card,body.lesson-active .coach{display:none}
+ .guided-lesson{padding:7px 10px;margin:4px 0}.guided-lesson h2{font-size:18px}.guided-lesson p{font-size:13px}
+ .card.audio-card{margin:4px 0;padding:6px}.lesson-sequence{gap:4px}.lesson-chip{padding:5px 10px}
+}
 </style>
 </head>
 <body>
 <main class="app">
-<header><div><h1>Note Map Guitar</h1><p>V5.2 RC: friendly tester build.</p></div><div class="header-actions"><button id="openTunerBtn" class="tuner-button">♫ Tuner</button><b id="buildLabel">V5.2 RC · Build 2026-07-11.2</b></div></header>
-<section class="hint">Friendly tester build: <strong>V5.2 RC · Build 2026-07-11.2</strong> · Portrait works; rotate only if you want more fretboard width. <button id="clearCachedVersion" class="link-button" type="button">Clear cached version / reload</button></section>
+<header><div><h1>Note Map Guitar</h1><p>V5.3: connected guided lessons and Byzantine scale.</p></div><div class="header-actions"><button id="openTunerBtn" class="tuner-button">♫ Tuner</button><b id="buildLabel">V5.3 · Build 2026-07-14</b></div></header>
+<section class="hint">Friendly tester build: <strong>V5.3 · Build 2026-07-14</strong> · Portrait works; rotate only if you want more fretboard width. <button id="clearCachedVersion" class="link-button" type="button">Clear cached version / reload</button></section>
 <section id="tunerScreen" class="tuner-screen hidden" aria-live="polite">
   <div class="tuner-panel">
     <div class="tuner-top"><button id="returnFromTuner" class="return-link">‹ Return to App</button><label>Tuning: <select id="tunerPreset"><option value="standard">Standard</option><option value="dropD">Drop D</option></select></label></div>
@@ -302,7 +316,7 @@ recorded or uploaded.</p>
 
 <section id="mapControls" class="card controls">
 <label>Key<select id="key"></select></label>
-<label>Scale<select id="scale"><option value="major">Major</option><option value="minor">Natural minor</option><option value="majorPent">Major pentatonic</option><option value="minorPent">Minor pentatonic</option><option value="blues">Minor blues</option><option value="mixolydian">Mixolydian</option><option value="dorian">Dorian</option></select></label>
+<label>Scale<select id="scale"><option value="major">Major</option><option value="minor">Natural minor</option><option value="majorPent">Major pentatonic</option><option value="minorPent">Minor pentatonic</option><option value="blues">Minor blues</option><option value="mixolydian">Mixolydian</option><option value="dorian">Dorian</option><option value="byzantine">Byzantine · Double Harmonic Major</option></select></label>
 <label>Display<select id="display"><option value="notes">Note names</option><option value="degrees">Scale degrees</option></select></label>
 <details class="more-options"><summary>More options</summary><div class="controls">
 <label>Pattern<select id="pattern"><option value="none">Auto pattern</option><option value="p1">Pattern 1</option><option value="p2">Pattern 2</option><option value="p3">Pattern 3</option><option value="p4">Pattern 4</option><option value="p5">Pattern 5</option></select></label>
@@ -342,6 +356,11 @@ recorded or uploaded.</p>
 </section>
 
 <section class="card summary lesson-extra hidden"><h2 id="title"></h2><p id="subtitle"></p><div id="progLine" class="prog-line hidden"></div></section>
+<section id="guidedLesson" class="guided-lesson hidden">
+<div><span id="lessonStep" class="pill">Guided lesson</span><h2 id="lessonTitle">Learn E major</h2><p id="lessonInstruction"></p></div>
+<div id="lessonSequence" class="lesson-sequence"></div>
+<button id="exitLesson" class="soft-button">Explore freely</button>
+</section>
 <section class="card audio-card compact-toolbar"><span id="actionTitle" class="action-title"></span><span id="focusMeta" class="focus-meta"></span><button id="exploreScaleBtn" class="task-btn hidden">Explore</button><button id="practiceScaleBtn" class="task-btn hidden">Practice</button><button id="hearKeyBtn" class="task-btn hidden">Hear</button><label id="inlineChordLabelsWrap" class="inline-select hidden">Show<select id="inlineChordLabels"><option value="fingers">Finger numbers</option><option value="notes">Note names</option></select></label><button id="toggleInlineLabels" class="hidden">Notes</button><button id="prevInlineShape" class="hidden">‹ Shape</button><button id="nextInlineShape" class="hidden">Shape ›</button><button id="prevInlineChord" class="hidden">‹ Chord</button><button id="nextInlineChord" class="hidden">Chord ›</button><button id="loopProgression" class="hidden">Loop</button><button id="prevInlineProgShape" class="hidden">‹ Shape</button><button id="nextInlineProgShape" class="hidden">Shape ›</button><button id="prevCoachPattern" class="hidden">‹ Pattern</button><button id="nextCoachPattern" class="hidden">Pattern ›</button><button id="prevCoachRoot" class="hidden">‹ Chord</button><button id="nextCoachRoot" class="hidden">Chord ›</button><button id="prevCoachChordType" class="hidden">‹ Type</button><button id="nextCoachChordType" class="hidden">Type ›</button><button id="playCurrent">Play</button><button id="playPhrase">Hear phrase</button><button id="newPhrase" class="hidden">New phrase</button><button id="toggleDiagramView" class="hidden">Diagram</button><button id="markStepDone" class="hidden">Mark done</button><span id="audioHint"></span><div id="inlineProgression" class="inline-prog hidden"></div></section>
 <section class="neck"><div id="board"></div></section>
 <section class="card"><button id="toggleDetails">Show coaching notes</button></section>
@@ -367,7 +386,8 @@ const scales={
   minorPent:["Minor pentatonic",[0,3,5,7,10],["1","b3","4","5","b7"],"Minor pentatonic gives the essential rock/blues minor sound."],
   blues:["Minor blues",[0,3,5,6,7,10],["1","b3","4","b5","5","b7"],"The blues scale is minor pentatonic plus the flat 5, a classic tension note."],
   mixolydian:["Mixolydian",[0,2,4,5,7,9,10],["1","2","3","4","5","6","b7"],"Mixolydian is major with a flat 7."],
-  dorian:["Dorian",[0,2,3,5,7,9,10],["1","2","b3","4","5","6","b7"],"Dorian is minor with a natural 6."]
+  dorian:["Dorian",[0,2,3,5,7,9,10],["1","2","b3","4","5","6","b7"],"Dorian is minor with a natural 6."],
+  byzantine:["Byzantine · Double Harmonic Major",[0,1,4,5,7,8,11],["1","♭2","3","4","5","♭6","7"],"A dramatic major scale with two distinctive wide jumps. Listen for F → G♯ and C → D♯ in E."]
 };
 const chords={
   none:["None","",[],""], major:["Major","",[0,4,7],"1-3-5"], minor:["Minor","m",[0,3,7],"1-b3-5"],
@@ -375,18 +395,46 @@ const chords={
   dominant7:["Dominant 7","7",[0,4,7,10],"1-3-5-b7"], dim:["Diminished","dim",[0,3,6],"1-b3-b5"], sus2:["Sus2","sus2",[0,2,7],"1-2-5"], sus4:["Sus4","sus4",[0,5,7],"1-4-5"]
 };
 const $=id=>document.getElementById(id), els={};
-["openTunerBtn","tunerScreen","returnFromTuner","startTuner","stopTuner","tunerPreset","tunerPresetTitle","tunerIntro","tunerLive","tunerStrings","tunerError","tunerNote","tunerOctave","tunerMeter","tunerNeedle","tunerMessage","tunerHz","tunerStatus","tunerSignalBar","tunerSignalText","tunerDebug","tunerSr","skillLevel","todayGoalWrap","todayGoal","coachRootWrap","coachRootLabel","coachRoot","coachChordTypeWrap","coachChordType","coachChordLabelsWrap","coachChordLabels","coachNoteWrap","coachNote","coachPentTypeWrap","coachPentType","practiceBadge","practiceTitle","practiceWhy","practiceSteps","manualModeCard","mode","mapControls","chordControls","progControls","soloControls","key","scale","overlay","display","pattern","mapWindow","scaleAction","chordRoot","chordType","shapeStyle","chordLabels","chordWindow","prevShape","nextShape","prevInlineShape","nextInlineShape","prevInlineChord","nextInlineChord","loopProgression","prevInlineProgShape","nextInlineProgShape","inlineChordLabelsWrap","inlineChordLabels","toggleInlineLabels","shapeName","shapeText","progKey","progType","progStyle","progLabels","near","prevChord","nextChord","prevProgShape","nextProgShape","soloKey","soloScale","soloBlueprint","soloArea","actionTitle","focusMeta","exploreScaleBtn","practiceScaleBtn","hearKeyBtn","inlineProgression","playCurrent","playPhrase","newPhrase","toggleDiagramView","toggleDetails","prevCoachPattern","nextCoachPattern","prevCoachChordType","nextCoachChordType","prevCoachRoot","nextCoachRoot","audioHint","progLine","title","subtitle","whyTitle","why","board","legend","pathCard","pathSummary","nextStepTitle","nextStepWhy","startNextStep","pathSteps","resetPath","markStepDone","clearCachedVersion"].forEach(id=>els[id]=$(id));
+["openTunerBtn","tunerScreen","returnFromTuner","startTuner","stopTuner","tunerPreset","tunerPresetTitle","tunerIntro","tunerLive","tunerStrings","tunerError","tunerNote","tunerOctave","tunerMeter","tunerNeedle","tunerMessage","tunerHz","tunerStatus","tunerSignalBar","tunerSignalText","tunerDebug","tunerSr","skillLevel","todayGoalWrap","todayGoal","coachRootWrap","coachRootLabel","coachRoot","coachChordTypeWrap","coachChordType","coachChordLabelsWrap","coachChordLabels","coachNoteWrap","coachNote","coachPentTypeWrap","coachPentType","practiceBadge","practiceTitle","practiceWhy","practiceSteps","manualModeCard","mode","mapControls","chordControls","progControls","soloControls","key","scale","overlay","display","pattern","mapWindow","scaleAction","chordRoot","chordType","shapeStyle","chordLabels","chordWindow","prevShape","nextShape","prevInlineShape","nextInlineShape","prevInlineChord","nextInlineChord","loopProgression","prevInlineProgShape","nextInlineProgShape","inlineChordLabelsWrap","inlineChordLabels","toggleInlineLabels","shapeName","shapeText","progKey","progType","progStyle","progLabels","near","prevChord","nextChord","prevProgShape","nextProgShape","soloKey","soloScale","soloBlueprint","soloArea","actionTitle","focusMeta","exploreScaleBtn","practiceScaleBtn","hearKeyBtn","inlineProgression","playCurrent","playPhrase","newPhrase","toggleDiagramView","toggleDetails","prevCoachPattern","nextCoachPattern","prevCoachChordType","nextCoachChordType","prevCoachRoot","nextCoachRoot","audioHint","progLine","title","subtitle","whyTitle","why","board","legend","pathCard","pathSummary","nextStepTitle","nextStepWhy","startNextStep","pathSteps","resetPath","markStepDone","clearCachedVersion","guidedLesson","lessonStep","lessonTitle","lessonInstruction","lessonSequence","exitLesson"].forEach(id=>els[id]=$(id));
 let shapeIdx=0, progChordIdx=0, progShapeOffset=0, progAnchorFret=null, progressionLoopTimer=null, audioCtx=null, detailsOpen=false, diagramView="neck", currentSound={kind:"scale",root:"A",quality:"major",notes:["A"]};
 
 const PATH_STEPS=[
   {id:"chordE",stage:"Chord",label:"Learn E major",why:"Copy one friendly open chord shape.",level:"early",goal:"chordShapes",root:"E",chordType:"major"},
-  {id:"changeEA",stage:"Change",label:"Change between E and A",why:"Move between two useful chords without theory.",level:"early",goal:"chordShapes",root:"A",chordType:"major"},
+  {id:"changeEA",stage:"Change",label:"Change between E and A",why:"Move between two useful chords without theory.",level:"early",goal:"chordShapes",root:"E",chordType:"major"},
   {id:"progADE",stage:"Progression",label:"Play three chords",why:"Hear how songs use a small group of chords.",level:"practice",goal:"progressions",root:"A"},
   {id:"patternA",stage:"Pattern",label:"One small scale box",why:"Start with one small playable scale pattern.",level:"practice",goal:"scalePractice",root:"A",pent:"minorPent"},
   {id:"phraseA",stage:"Phrase",label:"Play a 3-note phrase",why:"Turn the scale box into a musical idea.",level:"practice",goal:"soloTrainer",root:"A"},
   {id:"harmonyEAB",stage:"Harmony",label:"Why chords fit",why:"See related chords on the harmony map.",level:"harmony",goal:"tonnetz",root:"E"}
 ];
 const COACH_CHORD_TYPES=[["major","Major"],["minor","Minor"],["dominant7","7"],["sus2","Sus2"],["sus4","Sus4"]];
+const GUIDED_LESSONS={
+ chordE:{title:"Learn E major",instruction:"Place the complete open E shape, then play each string slowly.",sequence:["E"]},
+ changeEA:{title:"Change between E and A",instruction:"Play E, switch to A, then return to E. Tap either chord below.",sequence:["E","A","E","A"]},
+ progADE:{title:"Play three chords",instruction:"Follow the highlighted chord through A → D → E → A.",sequence:["A","D","E","A"]},
+ patternA:{title:"One small scale box",instruction:"Follow one exact playable route. You do not need the whole neck.",sequence:["A minor pentatonic"]},
+ phraseA:{title:"Play a three-note phrase",instruction:"Copy the numbered notes in order, then hear them again.",sequence:["1","2","3"]},
+ harmonyEAB:{title:"Why chords fit",instruction:"See how E, A and B connect without needing to memorize the theory.",sequence:["E","A","B"]}
+};
+let guidedSequenceIndex=0;
+function showGuidedLesson(step){
+ const d=GUIDED_LESSONS[step.id]; if(!d)return;
+ document.body.classList.add("lesson-active");els.guidedLesson.classList.remove("hidden");
+ els.lessonStep.textContent=`Step ${PATH_STEPS.findIndex(s=>s.id===step.id)+1} of ${PATH_STEPS.length}`;
+ els.lessonTitle.textContent=d.title;els.lessonInstruction.textContent=d.instruction;
+ guidedSequenceIndex=0;renderGuidedSequence(step);
+}
+function renderGuidedSequence(step){
+ const d=GUIDED_LESSONS[step.id];if(!d)return;
+ els.lessonSequence.innerHTML=d.sequence.map((x,i)=>`<button class="lesson-chip ${i===guidedSequenceIndex?"active":""}" data-lesson-index="${i}">${x}</button>`).join('<span>→</span>');
+}
+function selectGuidedChord(step,index){
+ guidedSequenceIndex=index;renderGuidedSequence(step);
+ const name=GUIDED_LESSONS[step.id].sequence[index];
+ if(["E","A","D"].includes(name)){
+   els.coachRoot.value=name;shapeIdx=0;startPractice();
+   showGuidedLesson(step);
+ }
+}
 const PATH_KEY="noteMapGuitarV5Path";
 let activePathStep=null;
 function loadPath(){try{return JSON.parse(localStorage.getItem(PATH_KEY)||"{}")}catch(e){return {}}}
@@ -421,6 +469,7 @@ function launchPathStep(step){
   if(step.pent&&els.coachPentType)els.coachPentType.value=step.pent;
   if(step.level==="manual"){showManualIntro();render()}
   else startPractice();
+  showGuidedLesson(step);
   if(els.markStepDone){els.markStepDone.classList.remove("hidden");els.markStepDone.textContent="Mark done"}
   let callout=document.createElement("div");
   callout.className="lesson-callout";
@@ -760,9 +809,23 @@ function playMelody(notes,step=.38){
 }
 function scalePlayback(root,scaleKey){
   let sc=scales[scaleKey], base=noteMidi(root,3);
-  return [...sc[1],12].map((it,i)=>({note:nm(idx(root)+it,root),midi:base+it,step:i}))
+  const eByz=["E","F","G♯","A","B","C","D♯","E"];
+  return [...sc[1],12].map((it,i)=>({note:(root==="E"&&scaleKey==="byzantine"?eByz[i]:nm(idx(root)+it,root)),midi:base+it,step:i}))
 }
 function visibleScalePath(key,scaleKey,w,pattern=null,limit=14){
+  if(key==="E"&&scaleKey==="byzantine"){
+    const exact=[
+      {note:"E",midi:47,string:5,fret:7,degree:0,cell:"4:7",finger:1},
+      {note:"F",midi:48,string:5,fret:8,degree:1,cell:"4:8",finger:2},
+      {note:"G♯",midi:51,string:5,fret:11,degree:4,cell:"4:11",finger:4},
+      {note:"A",midi:52,string:4,fret:7,degree:5,cell:"3:7",finger:1},
+      {note:"B",midi:54,string:4,fret:9,degree:7,cell:"3:9",finger:3},
+      {note:"C",midi:55,string:4,fret:10,degree:8,cell:"3:10",finger:4},
+      {note:"D♯",midi:59,string:3,fret:8,degree:11,cell:"2:8",finger:1},
+      {note:"E",midi:60,string:3,fret:9,degree:0,cell:"2:9",finger:2}
+    ];
+    return exact.map((n,i)=>({...n,step:i}));
+  }
   let sc=scales[scaleKey], ri=idx(key), candidates=[];
   TUNING.forEach((open,vi)=>{
     let stringIndex=TUNING.length-1-vi, oi=idx(open);
@@ -1226,7 +1289,10 @@ function renderProg(){
 }
 function stepChordShape(dir){
   let a=shapes(els.chordRoot.value,els.chordType.value,els.shapeStyle.value);
-  shapeIdx=(shapeIdx+dir+a.length)%a.length;
+  if(a.length<=1&&els.shapeStyle.value==="open"){
+    els.shapeStyle.value="all";a=shapes(els.chordRoot.value,els.chordType.value,"all");
+    shapeIdx=dir>0?Math.min(1,a.length-1):Math.max(0,a.length-1);
+  }else shapeIdx=(shapeIdx+dir+a.length)%a.length;
   render()
 }
 function stepProgressionChord(dir){
@@ -1430,6 +1496,8 @@ if(els.clearCachedVersion)els.clearCachedVersion.onclick=async()=>{
   }catch(e){}
   location.reload();
 };
+if(els.exitLesson)els.exitLesson.onclick=()=>{document.body.classList.remove("lesson-active");els.guidedLesson.classList.add("hidden");activePathStep=null;document.querySelector(".coach")?.scrollIntoView({behavior:"smooth"})};
+if(els.lessonSequence)els.lessonSequence.onclick=e=>{let b=e.target.closest("[data-lesson-index]");if(!b||!activePathStep)return;let step=PATH_STEPS.find(s=>s.id===activePathStep);selectGuidedChord(step,Number(b.dataset.lessonIndex))};
 if(els.startNextStep)els.startNextStep.onclick=()=>launchPathStep(firstIncompleteStep(loadPath()));
 if(els.resetPath)els.resetPath.onclick=()=>{if(confirm("Reset your local guitar path progress?")){savePath({});activePathStep=null;renderPath();if(els.markStepDone)els.markStepDone.classList.add("hidden")}};
 if(els.markStepDone)els.markStepDone.onclick=markActiveStepDone;
