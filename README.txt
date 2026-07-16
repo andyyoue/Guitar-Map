@@ -1,19 +1,34 @@
-NOTE MAP GUITAR — V5.3
+NOTE MAP GUITAR — V5.4 REPAIR & QA RELEASE
+Build: V5.4 · Build 2026-07-15.1
 
-Changes
-- Guided lessons now behave as connected lessons rather than exposing the underlying mode system.
-- Step 1 consistently opens E major.
-- Step 2 is a real E → A → E → A chord-change exercise with tappable chord chips.
-- Step 3 retains A → D → E → A progression behavior.
-- Explore controls synchronize with the active guided lesson.
-- Guided lessons hide the practice setup; landscape uses a compact lesson layout.
-- Chord shape navigation automatically opens alternate shapes when the standard/open family has only one shape.
-- Added Byzantine / Double Harmonic Major to Explore Freely scale choices.
-- E Byzantine displays the formula 1, ♭2, 3, 4, 5, ♭6, 7 and includes a dedicated one-octave Practice Scale path:
-  A7, A8, A11, D7, D9, D10, G8, G9.
-- Added Byzantine coaching about the two characteristic wide jumps.
-- Updated visible build and service-worker cache version.
+Purpose
+Repair usability, navigation, musical state synchronization, and regression issues without adding major features.
 
-Validation
-- JavaScript syntax check passed.
-- Nested deployment folder preserved.
+Key repairs
+- Guided E → A → E → A selections preserve the selected sequence index.
+- Guided sequence indicators, chord root, title, fretboard, finger display, audio target, and playback derive from shared application state.
+- Guided progression sequence controls synchronize with progression state.
+- Guided harmony items E, A, and B are selectable and preserve selection.
+- Activity tiles use one openActivity() navigation function and visibly scroll to rendered content.
+- Guided lessons use a simplified control presentation.
+- Lesson exit is now Back to learning path.
+- Manual controls and Choose another activity use distinct labels.
+- Fretted fingering dots are positioned closer to the destination fret wire.
+- Chord Play buttons use the displayed guitar voicing, including open and muted strings.
+- Chord and progression boards receive a short 145 ms visual redraw transition.
+- Canonical open chords regression-checked: E, Em, A, Am, D, Dm, G, C, B7.
+- Optional QA panel available by adding ?debug to the URL.
+- Build and service-worker cache updated together.
+
+QA panel example
+https://your-site.example/?debug
+
+Validation performed
+- JavaScript syntax passed.
+- Canonical open-chord fret records passed.
+- Guided initialization and refresh use separate reset/preserve paths.
+- Exact displayed-voicing audio logic is present.
+- Nested deployment package verified.
+
+Important
+Actual iPhone microphone and installed-PWA behavior still require physical-device testing after deployment.
