@@ -276,13 +276,27 @@ body.v6-workbench .guided-lesson{display:none!important}
  .v6-workbench-bar{grid-template-columns:1fr auto}.v6-workbench-bar strong{grid-column:1/-1;grid-row:1;text-align:left}.v6-workbench-bar button{grid-row:2}
  .v6-choice strong{font-size:19px}
 }
+
+/* V8 — Nordic Instrument UI */
+:root{--v8-bg:#101417;--v8-panel:#191f23;--v8-panel2:#20272c;--v8-ink:#f4efe6;--v8-muted:#aab0b1;--v8-amber:#d8a13a;--v8-line:#30383d;--v8-green:#8aa38c;--v8-shadow:0 18px 45px #0007}
+body{background:radial-gradient(circle at 50% -10%,#283035 0,#14191c 34%,#0d1113 75%);color:var(--v8-ink);min-height:100vh}
+.app{max-width:980px;padding:18px 16px 40px}.v6-header{border:0;background:transparent;color:var(--v8-ink);padding:6px 2px 16px}.v6-header h1{font-size:20px;letter-spacing:.02em}.v6-header p{color:var(--v8-muted);margin-top:3px}.v6-header b{color:#7f878a;font-size:11px}.v6-build-note{display:none}
+button,select{font:inherit}.soft-button,.tuner-button,.return-link{background:transparent!important;border:1px solid var(--v8-line)!important;color:var(--v8-ink)!important;border-radius:999px!important}
+.v8-home{max-width:720px;margin:0 auto;padding:20px 0 40px}.v8-eyebrow{display:block;text-align:center;color:var(--v8-amber);font-size:12px;font-weight:900;letter-spacing:.18em;text-transform:uppercase}.v8-home h2{text-align:center;font-size:clamp(34px,8vw,58px);line-height:.98;margin:12px auto 10px;max-width:620px;letter-spacing:-.045em}.v8-intro{text-align:center;color:var(--v8-muted);font-size:16px;margin:0 auto 24px;max-width:480px}
+.v8-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.v8-card{position:relative;overflow:hidden;display:grid;grid-template-columns:48px 1fr auto;align-items:center;gap:12px;text-align:left;min-height:102px;padding:17px;border:1px solid var(--v8-line);border-radius:20px;background:linear-gradient(145deg,#20272c,#171d21);color:var(--v8-ink);box-shadow:0 8px 24px #0003;transition:transform .2s ease,border-color .2s ease,background .2s ease}.v8-card:hover,.v8-card:focus-visible{transform:translateY(-2px);border-color:#6d5a34;background:linear-gradient(145deg,#252d32,#1a2024)}.v8-icon{width:46px;height:46px;border-radius:14px;background:#111618;border:1px solid #343d42;display:grid;place-items:center;color:var(--v8-amber);font-size:22px}.v8-card strong{display:block;font-size:19px;letter-spacing:-.015em}.v8-card small{display:block;color:var(--v8-muted);margin-top:3px;line-height:1.25}.v8-arrow{color:#737c7f;font-size:21px}.v8-card[data-section="theory"]{grid-column:1/-1;background:linear-gradient(115deg,#29251d,#191e21)}
+.v8-section{max-width:760px;margin:0 auto;background:linear-gradient(180deg,#1b2125,#151a1d);border:1px solid var(--v8-line);border-radius:24px;padding:18px;box-shadow:var(--v8-shadow)}.v8-section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}.v8-section-head h2{font-size:30px;margin:0;letter-spacing:-.035em}.v8-section-head p{color:var(--v8-muted);margin:4px 0 0}.v8-back{width:42px;height:42px;padding:0!important;border-radius:50%!important}.v8-list{display:grid;gap:10px}.v8-item{width:100%;display:grid;grid-template-columns:1fr auto;align-items:center;text-align:left;padding:15px 16px;border-radius:16px;border:1px solid var(--v8-line);background:#20272c;color:var(--v8-ink)}.v8-item strong{font-size:17px}.v8-item small{display:block;color:var(--v8-muted);margin-top:3px}.v8-item span:last-child{color:var(--v8-amber)}.v8-more{margin-top:12px;width:100%;border:1px dashed #6a5732!important;background:#211f1a!important;color:#e3bd73!important;border-radius:16px!important;padding:13px!important}.v8-tier{display:none}.v8-tier.revealed{display:grid;gap:10px;animation:v8Reveal .28s ease both}@keyframes v8Reveal{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+.v8-theory-card{background:#f0e9dc;color:#251f19;border-radius:18px;padding:24px;min-height:340px}.v8-theory-count{color:#8b795c;font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.12em}.v8-theory-card h3{font-size:30px;line-height:1.05;margin:16px 0}.v8-theory-card p{font-size:17px;line-height:1.55;color:#4e4438}.v8-theory-nav{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin-top:14px}.v8-theory-nav button:last-child{justify-self:end}.v8-theory-nav span{color:var(--v8-muted);font-size:12px}.v8-theory-select{width:100%;margin-top:12px;background:#20272c;color:var(--v8-ink);border:1px solid var(--v8-line);padding:12px;border-radius:12px}
+.v6-workbench-bar{background:#181e22;border:1px solid var(--v8-line);color:var(--v8-ink);border-radius:16px;box-shadow:0 10px 28px #0004}.v6-workbench-bar button{background:#222a2f!important;color:var(--v8-ink)!important;border:1px solid var(--v8-line)!important}.card,.coach,.neck,.audio-card{background:#f5f0e8;color:#251f19;border-color:#d3c7b8}.compact-toolbar{border-radius:16px}.compact-toolbar button{border-radius:999px}.neck{box-shadow:0 14px 36px #0005}
+body.v6-home-route #v8Section{display:none!important}body.v8-section-open #v6Home{display:none!important}body.v8-section-open #v8Section{display:block!important}body.v8-section-open #v6WorkbenchBar,body.v8-section-open #manualModeCard,body.v8-section-open #mapControls,body.v8-section-open #chordControls,body.v8-section-open #progControls,body.v8-section-open #soloControls,body.v8-section-open .compact-toolbar,body.v8-section-open .neck,body.v8-section-open #toggleDetails,body.v8-section-open .lesson-extra,body.v8-section-open .bottom-legend{display:none!important}
+@media(max-width:620px){.app{padding:10px 10px 28px}.v6-header{padding:5px 4px 10px}.v6-header p{display:none}.header-actions b{display:none}.v8-home{padding-top:12px}.v8-home h2{font-size:39px}.v8-grid{grid-template-columns:1fr;gap:9px}.v8-card,.v8-card[data-section="theory"]{grid-column:auto;min-height:82px;padding:13px;border-radius:17px}.v8-icon{width:42px;height:42px}.v8-section{border-radius:20px;padding:14px}.v8-section-head h2{font-size:26px}.v8-theory-card{padding:20px;min-height:390px}.v8-theory-card h3{font-size:27px}}
+
 </style>
 </head>
 <body>
 <main class="app">
 <header class="v6-header">
 <div><h1>Note Map Guitar</h1><p id="routeSubtitle">Learn one small thing, or explore the neck.</p></div>
-<div class="header-actions"><button id="v6HomeBtn" class="soft-button hidden">Home</button><button id="openTunerBtn" class="tuner-button">♫ Tuner</button><b id="buildLabel">V6.2 · Build 2026-07-17.2</b></div>
+<div class="header-actions"><button id="v6HomeBtn" class="soft-button hidden">Home</button><button id="openTunerBtn" class="tuner-button">♫ Tuner</button><b id="buildLabel">V8.0 · Build 2026-07-17.1</b></div>
 </header>
 <section class="hint v6-build-note">V6 Learn & Explore · <button id="clearCachedVersion" class="link-button" type="button">Clear cached version / reload</button></section>
 <section id="tunerScreen" class="tuner-screen hidden" aria-live="polite">
@@ -322,79 +336,27 @@ recorded or uploaded.</p>
 
 
 
-<section id="v6Home" class="v6-screen v6-home">
-  <div class="v6-hero">
-    <span class="pill">Welcome</span>
-    <h2>Where would you like to go?</h2>
-    <p>Choose a guided step, or open the musical workbench.</p>
-  </div>
-  <div class="v6-choice-grid">
-    <button id="chooseLearn" class="v6-choice learn-choice">
-      <span class="choice-icon">▶</span>
-      <strong>Learn guitar</strong>
-      <small>One guided step at a time. The app chooses what comes next.</small>
-    </button>
-    <button id="chooseExplore" class="v6-choice explore-choice">
-      <span class="choice-icon">⌘</span>
-      <strong>Explore the neck</strong>
-      <small>Look up chords, scales, progressions, solo ideas, and harmony.</small>
-    </button>
-    <button id="chooseTuner" class="v6-choice tuner-choice">
-      <span class="choice-icon">♫</span>
-      <strong>Tune your guitar</strong>
-      <small>Open the tuner, then return exactly where you were.</small>
-    </button>
-  </div>
-</section>
 
-<section id="v6LearnHub" class="v6-screen hidden">
-  <div class="v6-section-head">
-    <button id="learnBackHome" class="return-link">‹ Home</button>
-    <span class="pill">Guided learning</span>
-  </div>
-  <div class="learn-next-card">
-    <div>
-      <div class="path-kicker">Your next step</div>
-      <h2 id="v6NextTitle">Learn E major</h2>
-      <p id="v6NextWhy">A friendly first chord that appears in hundreds of songs.</p>
-      <small>About 3 minutes</small>
-    </div>
-    <button id="v6StartLesson">Start</button>
-  </div>
-  <details class="v6-journey">
-    <summary>See your guitar journey</summary>
-    <div id="v6JourneySteps" class="path-steps"></div>
-  </details>
-  <section class="learner-library">
-    <h3>Practise something you are learning</h3>
-    <div class="learner-tool-grid">
-      <button id="learnerChords"><strong>Common chords</strong><small>C, A, G, E, D, Em, Am, Dm and B7 — with fingers or note names.</small></button>
-      <button id="learnerScales"><strong>Common scales</strong><small>Major, minor and pentatonic patterns with fretboard note names.</small></button>
-    </div>
-  </section>
-</section>
-
-<section id="v6ExploreHub" class="v6-screen hidden">
-  <div class="v6-section-head">
-    <button id="exploreBackHome" class="return-link">‹ Home</button>
-    <span class="pill">Explore the neck</span>
-  </div>
-  <h2>What would you like to explore?</h2>
-  <p class="v6-lead">This is the musical workbench. Choose an activity, then adjust only the controls that belong to it.</p>
-  <div class="v6-tool-grid">
-    <button data-v6-tool="chord"><strong>Chords</strong><small>Find familiar shapes and alternate voicings.</small></button>
-    <button data-v6-tool="map"><strong>Scales</strong><small>Explore, practise, or hear a key.</small></button>
-    <button data-v6-tool="progression"><strong>Progressions</strong><small>Practise complete chord sequences and song styles.</small></button>
-    <button data-v6-tool="solo"><strong>Solo Trainer</strong><small>Copy short phrases inside a real pattern.</small></button>
-    <button data-v6-tool="harmony"><strong>Harmony</strong><small>See why nearby notes and chords fit together.</small></button>
+<section id="v6Home" class="v8-home">
+  <span class="v8-eyebrow">Your guitar companion</span>
+  <h2>What do you need today?</h2>
+  <p class="v8-intro">Choose one place to begin. Each library starts simple and expands only when you ask.</p>
+  <div class="v8-grid">
+    <button class="v8-card" data-section="chords"><span class="v8-icon">♬</span><span><strong>Chords</strong><small>Book shapes, fingers and notes</small></span><span class="v8-arrow">›</span></button>
+    <button class="v8-card" data-section="fretboard"><span class="v8-icon">⌁</span><span><strong>Fretboard</strong><small>See and find notes on the neck</small></span><span class="v8-arrow">›</span></button>
+    <button class="v8-card" data-section="scales"><span class="v8-icon">⌇</span><span><strong>Scales</strong><small>Pentatonic routes across the neck</small></span><span class="v8-arrow">›</span></button>
+    <button class="v8-card" data-section="progressions"><span class="v8-icon">↝</span><span><strong>Progressions</strong><small>Put useful chords together</small></span><span class="v8-arrow">›</span></button>
+    <button class="v8-card" data-section="songs"><span class="v8-icon">≋</span><span><strong>Songs & tabs</strong><small>Riffs, phrases and song shapes</small></span><span class="v8-arrow">›</span></button>
+    <button class="v8-card" data-section="tuner"><span class="v8-icon">◎</span><span><strong>Tuner</strong><small>Get in tune and start playing</small></span><span class="v8-arrow">›</span></button>
+    <button class="v8-card" data-section="theory"><span class="v8-icon">?</span><span><strong>Theory: the “why”</strong><small>Plain-language answers, available from day one</small></span><span class="v8-arrow">›</span></button>
   </div>
 </section>
-
-<section id="v6WorkbenchBar" class="v6-workbench-bar hidden">
-  <button id="workbenchBack">‹ Choose another activity</button>
-  <strong id="workbenchTitle">Chords</strong>
-  <button id="workbenchHome">Home</button>
+<section id="v8Section" class="v8-section hidden" aria-live="polite">
+  <div class="v8-section-head"><button id="v8Back" class="v8-back return-link">‹</button><div><h2 id="v8SectionTitle">Chords</h2><p id="v8SectionIntro"></p></div><span></span></div>
+  <div id="v8SectionContent"></div>
 </section>
+<section id="v6LearnHub" class="hidden"></section><section id="v6ExploreHub" class="hidden"></section>
+<section id="v6WorkbenchBar" class="v6-workbench-bar hidden"><button id="workbenchBack">‹ Menu</button><strong id="workbenchTitle">Chords</strong><button id="workbenchHome">Home</button></section>
 <section class="path-card calm-path legacy-ui" id="pathCard">
   <div class="path-head">
     <span class="pill">Learn</span>
@@ -526,7 +488,7 @@ const chords={
   dominant7:["Dominant 7","7",[0,4,7,10],"1-3-5-b7"], dim:["Diminished","dim",[0,3,6],"1-b3-b5"], sus2:["Sus2","sus2",[0,2,7],"1-2-5"], sus4:["Sus4","sus4",[0,5,7],"1-4-5"]
 };
 const $=id=>document.getElementById(id), els={};
-["openTunerBtn","tunerScreen","returnFromTuner","startTuner","stopTuner","tunerPreset","tunerPresetTitle","tunerIntro","tunerLive","tunerStrings","tunerError","tunerNote","tunerOctave","tunerMeter","tunerNeedle","tunerMessage","tunerHz","tunerStatus","tunerSignalBar","tunerSignalText","tunerDebug","tunerSr","skillLevel","todayGoalWrap","todayGoal","coachRootWrap","coachRootLabel","coachRoot","coachChordTypeWrap","coachChordType","coachChordLabelsWrap","coachChordLabels","coachNoteWrap","coachNote","coachPentTypeWrap","coachPentType","practiceBadge","practiceTitle","practiceWhy","practiceSteps","manualModeCard","mode","mapControls","chordControls","progControls","soloControls","key","scale","overlay","display","pattern","mapWindow","scaleAction","chordRoot","chordType","shapeStyle","chordLabels","chordWindow","prevShape","nextShape","prevInlineShape","nextInlineShape","prevInlineChord","nextInlineChord","loopProgression","prevInlineProgShape","nextInlineProgShape","inlineChordLabelsWrap","inlineChordLabels","toggleInlineLabels","shapeName","shapeText","progKey","progType","progStyle","progLabels","near","prevChord","nextChord","prevProgShape","nextProgShape","soloKey","soloScale","soloBlueprint","soloArea","actionTitle","focusMeta","exploreScaleBtn","practiceScaleBtn","hearKeyBtn","inlineProgression","playCurrent","playPhrase","newPhrase","toggleDiagramView","toggleDetails","prevCoachPattern","nextCoachPattern","prevCoachChordType","nextCoachChordType","prevCoachRoot","nextCoachRoot","audioHint","progLine","title","subtitle","whyTitle","why","board","legend","pathCard","pathSummary","nextStepTitle","nextStepWhy","startNextStep","pathSteps","resetPath","markStepDone","clearCachedVersion","guidedLesson","lessonStep","lessonTitle","lessonInstruction","lessonSequence","exitLesson","qaDebug","qaDebugText","v6Home","v6LearnHub","v6ExploreHub","v6WorkbenchBar","chooseLearn","chooseExplore","chooseTuner","learnBackHome","exploreBackHome","v6NextTitle","v6NextWhy","v6StartLesson","v6JourneySteps","workbenchBack","workbenchHome","workbenchTitle","v6HomeBtn","routeSubtitle","learnerChords","learnerScales"].forEach(id=>els[id]=$(id));
+["openTunerBtn","tunerScreen","returnFromTuner","startTuner","stopTuner","tunerPreset","tunerPresetTitle","tunerIntro","tunerLive","tunerStrings","tunerError","tunerNote","tunerOctave","tunerMeter","tunerNeedle","tunerMessage","tunerHz","tunerStatus","tunerSignalBar","tunerSignalText","tunerDebug","tunerSr","skillLevel","todayGoalWrap","todayGoal","coachRootWrap","coachRootLabel","coachRoot","coachChordTypeWrap","coachChordType","coachChordLabelsWrap","coachChordLabels","coachNoteWrap","coachNote","coachPentTypeWrap","coachPentType","practiceBadge","practiceTitle","practiceWhy","practiceSteps","manualModeCard","mode","mapControls","chordControls","progControls","soloControls","key","scale","overlay","display","pattern","mapWindow","scaleAction","chordRoot","chordType","shapeStyle","chordLabels","chordWindow","prevShape","nextShape","prevInlineShape","nextInlineShape","prevInlineChord","nextInlineChord","loopProgression","prevInlineProgShape","nextInlineProgShape","inlineChordLabelsWrap","inlineChordLabels","toggleInlineLabels","shapeName","shapeText","progKey","progType","progStyle","progLabels","near","prevChord","nextChord","prevProgShape","nextProgShape","soloKey","soloScale","soloBlueprint","soloArea","actionTitle","focusMeta","exploreScaleBtn","practiceScaleBtn","hearKeyBtn","inlineProgression","playCurrent","playPhrase","newPhrase","toggleDiagramView","toggleDetails","prevCoachPattern","nextCoachPattern","prevCoachChordType","nextCoachChordType","prevCoachRoot","nextCoachRoot","audioHint","progLine","title","subtitle","whyTitle","why","board","legend","pathCard","pathSummary","nextStepTitle","nextStepWhy","startNextStep","pathSteps","resetPath","markStepDone","clearCachedVersion","guidedLesson","lessonStep","lessonTitle","lessonInstruction","lessonSequence","exitLesson","qaDebug","qaDebugText","v8Section","v8Back","v8SectionTitle","v8SectionIntro","v8SectionContent","v6Home","v6LearnHub","v6ExploreHub","v6WorkbenchBar","chooseLearn","chooseExplore","chooseTuner","learnBackHome","exploreBackHome","v6NextTitle","v6NextWhy","v6StartLesson","v6JourneySteps","workbenchBack","workbenchHome","workbenchTitle","v6HomeBtn","routeSubtitle","learnerChords","learnerScales"].forEach(id=>els[id]=$(id));
 let shapeIdx=0, progChordIdx=0, progShapeOffset=0, progAnchorFret=null, progressionLoopTimer=null, audioCtx=null, detailsOpen=false, diagramView="neck", currentSound={kind:"scale",root:"A",quality:"major",notes:["A"]};
 let appState={
  route:"learn",activity:"chord",guidedStep:null,sequenceIndex:0,
@@ -538,14 +500,14 @@ function syncState(patch={}){Object.assign(appState,patch);updateQADebug()}
 const V6_ROUTE_CLASSES=["v6-home-route","v6-learn-hub","v6-explore-hub","v6-workbench","v6-guided"];
 let v6Route="home";
 function setV6Route(route){
-  V6_ROUTE_CLASSES.forEach(c=>document.body.classList.remove(c));
+  V6_ROUTE_CLASSES.forEach(c=>document.body.classList.remove(c));document.body.classList.remove("v8-section-open");
   v6Route=route;document.body.classList.add(`v6-${route}`);
   els.v6Home.classList.toggle("hidden",route!=="home-route");
-  els.v6LearnHub.classList.toggle("hidden",route!=="learn-hub");
-  els.v6ExploreHub.classList.toggle("hidden",route!=="explore-hub");
+  els.v6LearnHub?.classList.toggle("hidden",route!=="learn-hub");
+  els.v6ExploreHub?.classList.toggle("hidden",route!=="explore-hub");
   els.v6WorkbenchBar.classList.toggle("hidden",route!=="workbench");
   els.v6HomeBtn.classList.toggle("hidden",route==="home-route");
-  els.routeSubtitle.textContent=route==="home-route"?"Learn one small thing, or explore the neck.":route==="learn-hub"?"Guided learning — one step at a time.":route==="explore-hub"?"Choose a musical workbench.":route==="workbench"?`Explore: ${els.workbenchTitle.textContent}`:"Guided lesson";
+  els.routeSubtitle.textContent=route==="home-route"?"Choose what you need, then start playing.":route==="learn-hub"?"Guided learning — one step at a time.":route==="explore-hub"?"Choose a musical workbench.":route==="workbench"?`Explore: ${els.workbenchTitle.textContent}`:"Guided lesson";
   window.scrollTo({top:0,behavior:"smooth"});
 }
 function refreshV6LearnHub(){
@@ -1776,17 +1738,62 @@ if(els.clearCachedVersion)els.clearCachedVersion.onclick=async()=>{
 if(els.exitLesson)els.exitLesson.onclick=()=>{document.body.classList.remove("lesson-active");els.guidedLesson.classList.add("hidden");syncState({route:"learn",guidedStep:null});openV6Learn()};
 if(els.lessonSequence)els.lessonSequence.onclick=e=>{let b=e.target.closest("[data-lesson-index]");if(!b||!activePathStep)return;let step=PATH_STEPS.find(s=>s.id===activePathStep);renderGuidedSelection(step,Number(b.dataset.lessonIndex))};
 
-els.chooseLearn.onclick=openV6Learn;
-els.chooseExplore.onclick=openV6Explore;
-els.chooseTuner.onclick=()=>els.openTunerBtn.click();
-els.learnBackHome.onclick=()=>setV6Route("home-route");
-els.exploreBackHome.onclick=()=>setV6Route("home-route");
-els.v6HomeBtn.onclick=()=>setV6Route("home-route");
-els.workbenchHome.onclick=()=>setV6Route("home-route");
-els.workbenchBack.onclick=openV6Explore;
-els.v6StartLesson.onclick=()=>beginV6Lesson(firstIncompleteStep(loadPath()));
-els.v6JourneySteps.onclick=e=>{const b=e.target.closest("[data-v6-step]");if(!b)return;const step=PATH_STEPS.find(s=>s.id===b.dataset.v6Step);beginV6Lesson(step)};
-document.querySelectorAll("[data-v6-tool]").forEach(b=>b.onclick=()=>openV6Tool(b.dataset.v6Tool));
+
+const V8_THEORY=[
+ {q:"Why do some chords sound happy or sad?",a:"Major and minor chords differ by one especially important note: the third. Move that note by one fret and the emotional colour changes, even though the root and fifth stay the same."},
+ {q:"Why are some chords minor in a major key?",a:"Build a chord from every note of a major scale using alternating scale notes. The spacing naturally produces major, minor and one diminished chord. Nobody arbitrarily chose them; they fall out of the scale."},
+ {q:"Why does the pentatonic sound so forgiving?",a:"It removes two notes that create the strongest half-step friction in the full major or minor scale. What remains is spacious, familiar and easy to combine in many orders."},
+ {q:"Why does a fifth sound powerful?",a:"The fifth has a very simple frequency relationship with the root and blends strongly with it. Remove the third and the sound becomes neither major nor minor—just direct and powerful."},
+ {q:"Why can a shape move up the neck?",a:"Once a shape contains no open strings, every note moves by the same number of frets. The interval relationships stay intact, so the musical object remains the same but starts from a new root."},
+ {q:"Why do I, IV and V work together?",a:"They contain the notes that most clearly establish a key. I feels like home, IV moves away without much tension, and V contains the strongest pull back toward home."}
+];
+let v8TheoryIndex=0;
+const V8_SECTIONS={
+ chords:{title:"Chords",intro:"Start with the shapes you reach for most.",tiers:[
+  [{label:"Common open chords",sub:"C · A · G · E · D · Am · Em · Dm",action:"open-chords"},{label:"Power chords",sub:"Movable two- and three-note shapes",action:"power"}],
+  [{label:"7th chords",sub:"Dominant 7, major 7 and minor 7",action:"sevenths"},{label:"Barre chords",sub:"Movable major and minor shapes",action:"barre"}],
+  [{label:"Sus chords",sub:"Sus2 and sus4 colours",action:"sus"},{label:"Small triads",sub:"Compact three-string shapes",action:"triads"}]
+ ]},
+ fretboard:{title:"Fretboard",intro:"Use the neck as a map, not a memory test.",tiers:[
+  [{label:"Show every note",sub:"A clear note-name map",action:"all-notes"},{label:"Find one note",sub:"Highlight every A to begin",action:"find-note"}],
+  [{label:"Scale degrees",sub:"See roots, thirds, fifths and more",action:"degrees"},{label:"Quiz the neck",sub:"Test one location at a time",action:"quiz"}],
+  [{label:"Chord tones",sub:"See how a chord lives across the neck",action:"chord-tones"}]
+ ]},
+ scales:{title:"Scales",intro:"Begin with pentatonic shapes, while keeping the whole neck visible.",tiers:[
+  [{label:"A minor pentatonic",sub:"All five positions across the neck",action:"aminpent"},{label:"A major pentatonic",sub:"The brighter pentatonic landscape",action:"amajpent"}],
+  [{label:"Choose another key",sub:"Minor pentatonic in any key",action:"choose-minpent"},{label:"Blues scale",sub:"Pentatonic plus the blue note",action:"blues"}],
+  [{label:"Major scale",sub:"The complete seven-note map",action:"major-scale"},{label:"Natural minor",sub:"The complete minor map",action:"minor-scale"}]
+ ]},
+ progressions:{title:"Progressions",intro:"Choose a musical movement and play it immediately.",tiers:[
+  [{label:"Three-chord song",sub:"I · IV · V",action:"prog-classic"},{label:"Four-chord pop",sub:"I · V · vi · IV",action:"prog-pop"}],
+  [{label:"12-bar blues",sub:"A complete blues form",action:"prog-blues"},{label:"Minor walk-down",sub:"A familiar descending sound",action:"prog-minor"}],
+  [{label:"Andalusian cadence",sub:"The dramatic minor sequence",action:"prog-andalusian"},{label:"Jazz turnaround",sub:"I · vi · ii · V",action:"prog-turnaround"}]
+ ]},
+ songs:{title:"Songs & tabs",intro:"Short, playable ideas—not a giant song database.",tiers:[
+  [{label:"Three-note phrases",sub:"Copy a short idea inside a real scale",action:"phrase"},{label:"Solo trainer",sub:"Question, answer and resolution",action:"solo"}],
+  [{label:"Tab view",sub:"See fret numbers as a playing route",action:"tab"},{label:"Rock progression",sub:"A strong movable-chord sequence",action:"prog-rock"}],
+  [{label:"Blues phrases",sub:"Build phrases around the blue note",action:"blues-phrase"}]
+ ]},
+ theory:{title:"Theory: the why",intro:"Browse simple questions in any order.",theory:true}
+};
+function v8Home(){document.body.classList.remove("v8-section-open");setV6Route("home-route");els.v8Section.classList.add("hidden");els.v6Home.classList.remove("hidden")}
+function renderV8Theory(){const t=V8_THEORY[v8TheoryIndex];els.v8SectionContent.innerHTML=`<article class="v8-theory-card"><div class="v8-theory-count">Question ${v8TheoryIndex+1} of ${V8_THEORY.length}</div><h3>${t.q}</h3><p>${t.a}</p></article><div class="v8-theory-nav"><button data-theory-nav="-1">‹ Previous</button><span>${v8TheoryIndex+1} / ${V8_THEORY.length}</span><button data-theory-nav="1">Next ›</button></div><select class="v8-theory-select" id="v8TheorySelect">${V8_THEORY.map((x,i)=>`<option value="${i}" ${i===v8TheoryIndex?'selected':''}>${x.q}</option>`).join('')}</select>`}
+function openV8Section(name){if(name==="tuner"){els.openTunerBtn.click();return}const sec=V8_SECTIONS[name];if(!sec)return;document.body.classList.add("v8-section-open");els.v6Home.classList.add("hidden");els.v8Section.classList.remove("hidden");els.v8SectionTitle.textContent=sec.title;els.v8SectionIntro.textContent=sec.intro;if(sec.theory){renderV8Theory();return}els.v8SectionContent.innerHTML=`<div class="v8-list">${sec.tiers.map((tier,ti)=>`<div class="v8-tier ${ti===0?'revealed':''}" data-tier="${ti}">${tier.map(x=>`<button class="v8-item" data-v8-action="${x.action}"><span><strong>${x.label}</strong><small>${x.sub}</small></span><span>›</span></button>`).join('')}</div>`).join('')}</div>${sec.tiers.length>1?'<button class="v8-more" data-v8-more="1">Show me more</button>':''}`;window.scrollTo({top:0,behavior:"smooth"})}
+function v8OpenChord(root="A",type="major",style="open"){openV6Tool("chord");els.chordRoot.value=root;els.chordType.value=type;els.shapeStyle.value=style;els.chordLabels.value="fingers";shapeIdx=0;render()}
+function v8OpenScale(key="A",scale="minorPent",pattern="none",display="notes"){openV6Tool("map");els.key.value=key;els.scale.value=scale;els.pattern.value=pattern;els.display.value=display;els.scaleAction.value="exploreScale";render()}
+function v8OpenProg(type,key="A"){openV6Tool("progression");els.progKey.value=key;els.progType.value=type;render()}
+function runV8Action(a){
+ if(a==="open-chords")return v8OpenChord("C","major","open");if(a==="power")return v8OpenChord("E","major","movable");if(a==="sevenths")return v8OpenChord("A","dominant7","open");if(a==="barre")return v8OpenChord("F","major","movable");if(a==="sus")return v8OpenChord("D","sus2","open");if(a==="triads")return v8OpenChord("A","major","triad");
+ if(a==="all-notes")return v8OpenScale("C","major","none","notes");if(a==="find-note")return v8OpenScale("A","minorPent","none","notes");if(a==="degrees")return v8OpenScale("A","major","none","degrees");if(a==="quiz")return openActivity("practice","noteQuiz");if(a==="chord-tones")return v8OpenChord("A","major","all");
+ if(a==="aminpent")return v8OpenScale("A","minorPent","none","notes");if(a==="amajpent")return v8OpenScale("A","majorPent","none","notes");if(a==="choose-minpent")return v8OpenScale("E","minorPent","none","notes");if(a==="blues")return v8OpenScale("A","blues","none","notes");if(a==="major-scale")return v8OpenScale("A","major","none","notes");if(a==="minor-scale")return v8OpenScale("A","minor","none","notes");
+ if(a==="prog-classic")return v8OpenProg("classic");if(a==="prog-pop")return v8OpenProg("pop");if(a==="prog-blues")return v8OpenProg("blues");if(a==="prog-minor")return v8OpenProg("minorWalk");if(a==="prog-andalusian")return v8OpenProg("andalusian");if(a==="prog-turnaround")return v8OpenProg("turnaround");if(a==="prog-rock")return v8OpenProg("modalRock");
+ if(a==="phrase"||a==="solo"){openV6Tool("solo");render();return}if(a==="tab"){openV6Tool("solo");els.soloBlueprint.value="oneString";render();return}if(a==="blues-phrase"){openV6Tool("solo");els.soloScale.value="blues";render();return}
+}
+document.querySelectorAll("[data-section]").forEach(b=>b.onclick=()=>openV8Section(b.dataset.section));
+els.v8Back.onclick=v8Home;els.v6HomeBtn.onclick=v8Home;els.workbenchHome.onclick=v8Home;els.workbenchBack.onclick=v8Home;
+els.v8SectionContent.onclick=e=>{const more=e.target.closest("[data-v8-more]");if(more){const next=els.v8SectionContent.querySelector(".v8-tier:not(.revealed)");if(next)next.classList.add("revealed");if(!els.v8SectionContent.querySelector(".v8-tier:not(.revealed)")){more.textContent="All options shown";more.disabled=true}else more.textContent="Show me more";return}const nav=e.target.closest("[data-theory-nav]");if(nav){v8TheoryIndex=(v8TheoryIndex+Number(nav.dataset.theoryNav)+V8_THEORY.length)%V8_THEORY.length;renderV8Theory();return}const a=e.target.closest("[data-v8-action]");if(a)runV8Action(a.dataset.v8Action)};
+els.v8SectionContent.onchange=e=>{if(e.target.id==="v8TheorySelect"){v8TheoryIndex=Number(e.target.value);renderV8Theory()}};
+
 if(els.learnerChords)els.learnerChords.onclick=openLearnerChords;
 if(els.learnerScales)els.learnerScales.onclick=openLearnerScales;
 
@@ -1834,7 +1841,7 @@ if('serviceWorker' in navigator){
   window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
 }
 
-startPractice();refreshV6LearnHub();setV6Route("home-route");
+startPractice();setV6Route("home-route");
 </script>
 </body>
 </html>
