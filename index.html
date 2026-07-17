@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-title" content="Note Map" />
 <link rel="manifest" href="manifest.webmanifest" />
-<title>Note Map Guitar V6.0</title>
+<title>Note Map Guitar V6.1</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#f6f3ee;color:#221f1c;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
@@ -262,6 +262,8 @@ body.v6-guided #v6Home,body.v6-guided #v6LearnHub,body.v6-guided #v6ExploreHub,b
 body.v6-guided #manualModeCard,body.v6-guided #mapControls,body.v6-guided #chordControls,body.v6-guided #progControls,body.v6-guided #soloControls{display:none!important}
 body.v6-guided .compact-toolbar{justify-content:center}
 body.v6-guided .focus-meta,body.v6-guided #toggleDiagramView,body.v6-guided #toggleInlineLabels,body.v6-guided #prevInlineShape,body.v6-guided #nextInlineShape,body.v6-guided #prevInlineProgShape,body.v6-guided #nextInlineProgShape{display:none!important}
+body.v6-guided .compact-toolbar button:not(#playCurrent):not(#markStepDone){display:none!important}
+body.v6-guided .compact-toolbar label{display:none!important}
 body.v6-workbench #manualModeCard{display:none!important}
 body.v6-workbench .guided-lesson{display:none!important}
 #progControls label:nth-child(2){display:flex!important}
@@ -277,7 +279,7 @@ body.v6-workbench .guided-lesson{display:none!important}
 <main class="app">
 <header class="v6-header">
 <div><h1>Note Map Guitar</h1><p id="routeSubtitle">Learn one small thing, or explore the neck.</p></div>
-<div class="header-actions"><button id="v6HomeBtn" class="soft-button hidden">Home</button><button id="openTunerBtn" class="tuner-button">♫ Tuner</button><b id="buildLabel">V6.0 · Build 2026-07-16.1</b></div>
+<div class="header-actions"><button id="v6HomeBtn" class="soft-button hidden">Home</button><button id="openTunerBtn" class="tuner-button">♫ Tuner</button><b id="buildLabel">V6.1 · Build 2026-07-17.1</b></div>
 </header>
 <section class="hint v6-build-note">V6 Learn & Explore · <button id="clearCachedVersion" class="link-button" type="button">Clear cached version / reload</button></section>
 <section id="tunerScreen" class="tuner-screen hidden" aria-live="polite">
@@ -577,7 +579,7 @@ function updateQADebug(){
  els.qaDebug.classList.toggle("hidden",!enabled);
  if(!enabled)return;
  els.qaDebugText.textContent=[
-  `Build: V5.4 · 2026-07-15.1`,
+  `Build: V6.1 · 2026-07-17.1`,
   `Route: ${appState.route}`,
   `Activity: ${appState.activity}`,
   `Lesson: ${appState.guidedStep||"none"}`,
@@ -616,6 +618,8 @@ function showGuidedLesson(step,initialize=false){
  els.lessonStep.textContent=`Step ${PATH_STEPS.findIndex(s=>s.id===step.id)+1} of ${PATH_STEPS.length}`;
  els.lessonTitle.textContent=d.title;els.lessonInstruction.textContent=d.instruction;
  renderGuidedSequence(step);
+ updateAudioControls();
+ updateCoachActionButtons();
 }
 function renderGuidedSequence(step){
  const d=GUIDED_LESSONS[step.id];if(!d)return;
@@ -1127,7 +1131,7 @@ function updateAudioControls(){
   updateCoachActionButtons();
   els.actionTitle.textContent=currentSound.title||"";
   if(els.markStepDone&&!activePathStep)els.markStepDone.classList.add("hidden");
-  els.playCurrent.classList.toggle("hidden",currentSound.kind==="scaleExplore"||progressionMode);
+  els.playCurrent.classList.toggle("hidden",currentSound.kind==="scaleExplore"||(progressionMode&&appState.route!=="guided"));
   if(currentSound.kind==="chord"){els.playCurrent.textContent=`Play ${currentSound.title}`;els.audioHint.textContent=""}
   else if(currentSound.kind==="note"){els.playCurrent.textContent="Play note";els.audioHint.textContent=`Hear ${currentSound.notes[0]}.`}
   else if(currentSound.kind==="phrase"){els.playCurrent.textContent="Play slowly";els.audioHint.textContent=""}
@@ -1148,6 +1152,7 @@ function playCurrentPhrase(){
   animatePhrase(phrase)
 }
 function stepCoachChordType(dir=1){
+  if(appState.route==="guided")return;
   let full=["major","minor","minor7","major7","dominant7","sus2","sus4"], i=full.indexOf(els.coachChordType.value);
   if(isManualChordMode()){
     i=full.indexOf(els.chordType.value);

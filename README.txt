@@ -1,5 +1,5 @@
-NOTE MAP GUITAR — V6.0 LEARN & EXPLORE
-Build: V6.0 · Build 2026-07-16.1
+NOTE MAP GUITAR — V6.1 GUIDED CONSISTENCY
+Build: V6.1 · Build 2026-07-17.1
 
 PRODUCT CHANGE
 V6 separates the application into two distinct experiences sharing the same musical engine.
@@ -37,3 +37,9 @@ SMOKE TESTS COMPLETED
 
 LIMITATION
 A full automated browser interaction test could not be completed in this build environment because the installed headless Chromium process would not start reliably. Physical iPhone Safari, installed-PWA, microphone, and touch testing should still be performed after deployment.
+
+V6.1 repair:
+- Guided lessons expose only step-relevant primary actions.
+- Lesson title, musical state, fretboard, and playback are synchronized.
+- Guided progression playback remains available without Explore navigation.
+- Added guided-route guards against leaked chord-type changes.
