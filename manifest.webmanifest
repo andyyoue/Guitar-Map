@@ -1,9 +1,1 @@
-{
-  "name": "Note Map Guitar V6",
-  "short_name": "Note Map",
-  "start_url": "./index.html",
-  "display": "standalone",
-  "background_color": "#f6f3ee",
-  "theme_color": "#34251d",
-  "description": "Two guitar experiences sharing one musical engine: guided learning and a configurable exploration workbench."
-}
+{"name":"Note Map Guitar V8","short_name":"Note Map","start_url":"./","display":"standalone","background_color":"#101417","theme_color":"#101417","icons":[]}

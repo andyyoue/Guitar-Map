@@ -1,45 +1,16 @@
-NOTE MAP GUITAR — V6.2 GUIDED CONSISTENCY
-Build: V6.2 · Build 2026-07-17.2
+NOTE MAP GUITAR V8.0
 
-PRODUCT CHANGE
-V6 separates the application into two distinct experiences sharing the same musical engine.
+V8 rebuilds the interface around one opening question: “What do you need today?”
 
-LEARN GUITAR
-- Calm guided entry.
-- The app chooses the lesson, chord, key, pattern, and sequence.
-- The learner sees one next step and presses Start.
-- Guided lessons do not expose Manual controls.
-- Progress memory remains local in the browser.
+Main destinations:
+- Chords
+- Fretboard
+- Scales
+- Progressions
+- Songs & tabs
+- Theory: the why
+- Tuner
 
-EXPLORE THE NECK
-- Dedicated workbench home.
-- Separate destinations for Chords, Scales, Progressions, Solo Trainer, and Harmony.
-- Each destination displays only its relevant controls.
-- Progressions explicitly includes the Progression type selector.
-- Byzantine / Double Harmonic Major remains available under Scales.
+Each practical section begins with a small curated library. “Show me more” reveals further options in place. No skill-level tracking or guided lesson path is used.
 
-GLOBAL
-- Tuner remains available from the header and V6 home.
-- Existing musical engine, chord data, scale data, progression logic, audio, and tuner are preserved.
-- Service-worker cache and visible build number updated together.
-
-SMOKE TESTS COMPLETED
-- Home contains Learn, Explore, and Tuner entries.
-- Learn hub contains a visible next lesson and Start action.
-- Explore hub contains five activity destinations.
-- Chords, Scales, Progressions, Solo Trainer, and Harmony routes are present.
-- Progression type selector is present and contains the full style list.
-- Complete progression rendering remains present.
-- Guided lesson screen and fretboard route are present.
-- Manual controls are hidden by the guided-route CSS.
-- JavaScript syntax passed.
-- Static DOM and route wiring checks passed.
-
-LIMITATION
-A full automated browser interaction test could not be completed in this build environment because the installed headless Chromium process would not start reliably. Physical iPhone Safari, installed-PWA, microphone, and touch testing should still be performed after deployment.
-
-V6.2 repair:
-- Guided lessons expose only step-relevant primary actions.
-- Lesson title, musical state, fretboard, and playback are synchronized.
-- Guided progression playback remains available without Explore navigation.
-- Added guided-route guards against leaked chord-type changes.
+The existing musical engine is retained beneath a new Nordic instrument design language.
