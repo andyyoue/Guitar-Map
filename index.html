@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-title" content="Note Map" />
 <link rel="manifest" href="manifest.webmanifest" />
-<title>Note Map Guitar V5.4</title>
+<title>Note Map Guitar V6.0</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#f6f3ee;color:#221f1c;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
@@ -232,12 +232,54 @@ body.lesson-active .manual-mode-card,body.lesson-active #manualModeCard{display:
 .qa-debug pre{white-space:pre-wrap;margin:6px 0 0}.qa-debug.hidden{display:none}
 .lesson-chip{touch-action:manipulation}
 @media(max-width:760px){.coach-form{grid-template-columns:1fr 1fr}.compact-toolbar button{max-width:32vw}.guided-lesson .lesson-sequence{order:2}}
+
+/* V6 — two distinct products */
+.legacy-ui,.legacy-mode-card{display:none!important}
+.v6-screen{background:#fffdfa;border:1px solid #eadfce;border-radius:18px;padding:16px;margin:10px 0}
+.v6-home{background:linear-gradient(180deg,#fffdfa,#fff7ee)}
+.v6-hero{text-align:center;max-width:620px;margin:4px auto 18px}
+.v6-hero h2{font-size:30px;margin:5px 0}.v6-hero p,.v6-lead{color:#5b5148}
+.v6-choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:820px;margin:auto}
+.v6-choice{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;text-align:left;gap:2px 12px;padding:18px;border-radius:16px;border:1px solid #dacbbd;background:#fff;min-height:116px}
+.v6-choice:hover,.v6-choice:focus{box-shadow:0 0 0 3px #34251d22}
+.v6-choice .choice-icon{grid-row:1/3;font-size:26px;align-self:center}.v6-choice strong{font-size:21px}.v6-choice small{color:#5b5148;font-weight:700;line-height:1.35}
+.tuner-choice{grid-column:1/-1;min-height:82px}
+.v6-section-head{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.learn-next-card{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;background:#fff8ef;border:1px solid #e1d1c0;border-radius:16px;padding:16px;margin-top:12px}
+.learn-next-card h2{font-size:27px;margin:3px 0}.learn-next-card p{margin:0 0 6px;color:#554a42}
+.learn-next-card button{background:#34251d;color:#fff8ef;border:0;border-radius:999px;padding:12px 24px}
+.v6-journey{margin-top:12px;border-top:1px solid #eadfce;padding-top:10px}.v6-journey summary{font-weight:950;cursor:pointer}
+.v6-tool-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px}
+.v6-tool-grid button{display:flex;flex-direction:column;align-items:flex-start;text-align:left;min-height:105px;padding:16px;border-radius:14px}
+.v6-tool-grid strong{font-size:20px}.v6-tool-grid small{color:#5b5148;margin-top:5px;line-height:1.35}
+.v6-workbench-bar{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;background:#34251d;color:#fff8ef;padding:8px 10px;border-radius:12px;margin:8px 0}
+.v6-workbench-bar button{background:#fff8ef;color:#34251d;min-height:34px;padding:6px 10px}.v6-workbench-bar strong{text-align:center;font-size:18px}
+body.v6-home-route #manualModeCard,body.v6-home-route #mapControls,body.v6-home-route #chordControls,body.v6-home-route #progControls,body.v6-home-route #soloControls,body.v6-home-route .guided-lesson,body.v6-home-route .compact-toolbar,body.v6-home-route .neck,body.v6-home-route #toggleDetails,body.v6-home-route .lesson-extra,body.v6-home-route .bottom-legend{display:none!important}
+body.v6-learn-hub #manualModeCard,body.v6-learn-hub #mapControls,body.v6-learn-hub #chordControls,body.v6-learn-hub #progControls,body.v6-learn-hub #soloControls,body.v6-learn-hub .guided-lesson,body.v6-learn-hub .compact-toolbar,body.v6-learn-hub .neck,body.v6-learn-hub #toggleDetails,body.v6-learn-hub .lesson-extra,body.v6-learn-hub .bottom-legend{display:none!important}
+body.v6-explore-hub #manualModeCard,body.v6-explore-hub #mapControls,body.v6-explore-hub #chordControls,body.v6-explore-hub #progControls,body.v6-explore-hub #soloControls,body.v6-explore-hub .guided-lesson,body.v6-explore-hub .compact-toolbar,body.v6-explore-hub .neck,body.v6-explore-hub #toggleDetails,body.v6-explore-hub .lesson-extra,body.v6-explore-hub .bottom-legend{display:none!important}
+body.v6-workbench #v6Home,body.v6-workbench #v6LearnHub,body.v6-workbench #v6ExploreHub{display:none!important}
+body.v6-guided #v6Home,body.v6-guided #v6LearnHub,body.v6-guided #v6ExploreHub,body.v6-guided #v6WorkbenchBar{display:none!important}
+body.v6-guided #manualModeCard,body.v6-guided #mapControls,body.v6-guided #chordControls,body.v6-guided #progControls,body.v6-guided #soloControls{display:none!important}
+body.v6-guided .compact-toolbar{justify-content:center}
+body.v6-guided .focus-meta,body.v6-guided #toggleDiagramView,body.v6-guided #toggleInlineLabels,body.v6-guided #prevInlineShape,body.v6-guided #nextInlineShape,body.v6-guided #prevInlineProgShape,body.v6-guided #nextInlineProgShape{display:none!important}
+body.v6-workbench #manualModeCard{display:none!important}
+body.v6-workbench .guided-lesson{display:none!important}
+#progControls label:nth-child(2){display:flex!important}
+@media(max-width:760px){
+ .v6-choice-grid,.v6-tool-grid{grid-template-columns:1fr}.tuner-choice{grid-column:auto}
+ .learn-next-card{grid-template-columns:1fr}.learn-next-card button{width:100%}
+ .v6-workbench-bar{grid-template-columns:1fr auto}.v6-workbench-bar strong{grid-column:1/-1;grid-row:1;text-align:left}.v6-workbench-bar button{grid-row:2}
+ .v6-choice strong{font-size:19px}
+}
 </style>
 </head>
 <body>
 <main class="app">
-<header><div><h1>Note Map Guitar</h1><p>V5.4: repair, usability, and state synchronization.</p></div><div class="header-actions"><button id="openTunerBtn" class="tuner-button">♫ Tuner</button><b id="buildLabel">V5.4 · Build 2026-07-15.1</b></div></header>
-<section class="hint">Friendly tester build: <strong>V5.4 · Build 2026-07-15.1</strong> · Portrait works; rotate only if you want more fretboard width. <button id="clearCachedVersion" class="link-button" type="button">Clear cached version / reload</button></section>
+<header class="v6-header">
+<div><h1>Note Map Guitar</h1><p id="routeSubtitle">Learn one small thing, or explore the neck.</p></div>
+<div class="header-actions"><button id="v6HomeBtn" class="soft-button hidden">Home</button><button id="openTunerBtn" class="tuner-button">♫ Tuner</button><b id="buildLabel">V6.0 · Build 2026-07-16.1</b></div>
+</header>
+<section class="hint v6-build-note">V6 Learn & Explore · <button id="clearCachedVersion" class="link-button" type="button">Clear cached version / reload</button></section>
 <section id="tunerScreen" class="tuner-screen hidden" aria-live="polite">
   <div class="tuner-panel">
     <div class="tuner-top"><button id="returnFromTuner" class="return-link">‹ Return to App</button><label>Tuning: <select id="tunerPreset"><option value="standard">Standard</option><option value="dropD">Drop D</option></select></label></div>
@@ -275,7 +317,73 @@ recorded or uploaded.</p>
 
 
 
-<section class="path-card calm-path" id="pathCard">
+<section id="v6Home" class="v6-screen v6-home">
+  <div class="v6-hero">
+    <span class="pill">Welcome</span>
+    <h2>Where would you like to go?</h2>
+    <p>Choose a guided step, or open the musical workbench.</p>
+  </div>
+  <div class="v6-choice-grid">
+    <button id="chooseLearn" class="v6-choice learn-choice">
+      <span class="choice-icon">▶</span>
+      <strong>Learn guitar</strong>
+      <small>One guided step at a time. The app chooses what comes next.</small>
+    </button>
+    <button id="chooseExplore" class="v6-choice explore-choice">
+      <span class="choice-icon">⌘</span>
+      <strong>Explore the neck</strong>
+      <small>Look up chords, scales, progressions, solo ideas, and harmony.</small>
+    </button>
+    <button id="chooseTuner" class="v6-choice tuner-choice">
+      <span class="choice-icon">♫</span>
+      <strong>Tune your guitar</strong>
+      <small>Open the tuner, then return exactly where you were.</small>
+    </button>
+  </div>
+</section>
+
+<section id="v6LearnHub" class="v6-screen hidden">
+  <div class="v6-section-head">
+    <button id="learnBackHome" class="return-link">‹ Home</button>
+    <span class="pill">Guided learning</span>
+  </div>
+  <div class="learn-next-card">
+    <div>
+      <div class="path-kicker">Your next step</div>
+      <h2 id="v6NextTitle">Learn E major</h2>
+      <p id="v6NextWhy">A friendly first chord that appears in hundreds of songs.</p>
+      <small>About 3 minutes</small>
+    </div>
+    <button id="v6StartLesson">Start</button>
+  </div>
+  <details class="v6-journey">
+    <summary>See your guitar journey</summary>
+    <div id="v6JourneySteps" class="path-steps"></div>
+  </details>
+</section>
+
+<section id="v6ExploreHub" class="v6-screen hidden">
+  <div class="v6-section-head">
+    <button id="exploreBackHome" class="return-link">‹ Home</button>
+    <span class="pill">Explore the neck</span>
+  </div>
+  <h2>What would you like to explore?</h2>
+  <p class="v6-lead">This is the musical workbench. Choose an activity, then adjust only the controls that belong to it.</p>
+  <div class="v6-tool-grid">
+    <button data-v6-tool="chord"><strong>Chords</strong><small>Find familiar shapes and alternate voicings.</small></button>
+    <button data-v6-tool="map"><strong>Scales</strong><small>Explore, practise, or hear a key.</small></button>
+    <button data-v6-tool="progression"><strong>Progressions</strong><small>Practise complete chord sequences and song styles.</small></button>
+    <button data-v6-tool="solo"><strong>Solo Trainer</strong><small>Copy short phrases inside a real pattern.</small></button>
+    <button data-v6-tool="harmony"><strong>Harmony</strong><small>See why nearby notes and chords fit together.</small></button>
+  </div>
+</section>
+
+<section id="v6WorkbenchBar" class="v6-workbench-bar hidden">
+  <button id="workbenchBack">‹ Choose another activity</button>
+  <strong id="workbenchTitle">Chords</strong>
+  <button id="workbenchHome">Home</button>
+</section>
+<section class="path-card calm-path legacy-ui" id="pathCard">
   <div class="path-head">
     <span class="pill">Learn</span>
     <button id="resetPath" class="soft-button" type="button">Reset progress</button>
@@ -306,7 +414,7 @@ recorded or uploaded.</p>
     </div>
   </details>
 </section>
-<section class="coach">
+<section class="coach legacy-ui">
 <div class="coach-panel">
 <span class="pill">Explore freely</span>
 <h2>Choose a practice area</h2>
@@ -323,7 +431,7 @@ recorded or uploaded.</p>
 </div>
 </section>
 
-<section id="manualModeCard" class="card mode hidden"><label>Manual Controls<select id="mode"><option value="map">Scale map</option><option value="chord">Chord shape</option><option value="progression">Progression</option><option value="solo">Solo trainer</option></select></label></section>
+<section id="manualModeCard" class="legacy-mode-card card mode hidden"><label>Manual Controls<select id="mode"><option value="map">Scale map</option><option value="chord">Chord shape</option><option value="progression">Progression</option><option value="solo">Solo trainer</option></select></label></section>
 
 <section id="mapControls" class="card controls">
 <label>Key<select id="key"></select></label>
@@ -351,7 +459,7 @@ recorded or uploaded.</p>
 
 <section id="progControls" class="card controls hidden">
 <label>Key<select id="progKey"></select></label>
-<label>Music style<select id="progType"><option value="classic">Three-chord song</option><option value="pop">Four-chord pop</option><option value="dooWop">Oldies loop</option><option value="folk">Gentle folk loop</option><option value="sad">Sad progression</option><option value="romantic">Romantic</option><option value="suspense">Dark return</option><option value="minorWalk">Minor walk-down</option><option value="andalusian">Andalusian cadence</option><option value="blues">Blues</option><option value="quickBlues">Quick-change blues</option><option value="jazzBlues">Jazz blues</option><option value="turnaround">Turnaround</option><option value="funk">Funk groove</option><option value="modalRock">Rock progression</option><option value="plagal">Amen sound</option></select></label>
+<label>Progression type<select id="progType"><option value="classic">Three-chord song</option><option value="pop">Four-chord pop</option><option value="dooWop">Oldies loop</option><option value="folk">Gentle folk loop</option><option value="sad">Sad progression</option><option value="romantic">Romantic</option><option value="suspense">Dark return</option><option value="minorWalk">Minor walk-down</option><option value="andalusian">Andalusian cadence</option><option value="blues">Blues</option><option value="quickBlues">Quick-change blues</option><option value="jazzBlues">Jazz blues</option><option value="turnaround">Turnaround</option><option value="funk">Funk groove</option><option value="modalRock">Rock progression</option><option value="plagal">Amen sound</option></select></label>
 <label>Neck area<select id="near"><option value="auto">Auto</option><option value="0">Open / low</option><option value="5">Middle neck</option><option value="9">Upper neck</option></select></label>
 <label class="hidden">Shape style<select id="progStyle"><option value="all">Automatic practical shapes</option><option value="easy">Small three-string shapes</option><option value="open">Open</option><option value="movable">Barre and movable shapes</option><option value="triad">Small triads only</option></select></label>
 <label class="hidden">Show on chord<select id="progLabels"><option value="fingers">Finger numbers</option><option value="notes">Note names</option></select></label>
@@ -406,7 +514,7 @@ const chords={
   dominant7:["Dominant 7","7",[0,4,7,10],"1-3-5-b7"], dim:["Diminished","dim",[0,3,6],"1-b3-b5"], sus2:["Sus2","sus2",[0,2,7],"1-2-5"], sus4:["Sus4","sus4",[0,5,7],"1-4-5"]
 };
 const $=id=>document.getElementById(id), els={};
-["openTunerBtn","tunerScreen","returnFromTuner","startTuner","stopTuner","tunerPreset","tunerPresetTitle","tunerIntro","tunerLive","tunerStrings","tunerError","tunerNote","tunerOctave","tunerMeter","tunerNeedle","tunerMessage","tunerHz","tunerStatus","tunerSignalBar","tunerSignalText","tunerDebug","tunerSr","skillLevel","todayGoalWrap","todayGoal","coachRootWrap","coachRootLabel","coachRoot","coachChordTypeWrap","coachChordType","coachChordLabelsWrap","coachChordLabels","coachNoteWrap","coachNote","coachPentTypeWrap","coachPentType","practiceBadge","practiceTitle","practiceWhy","practiceSteps","manualModeCard","mode","mapControls","chordControls","progControls","soloControls","key","scale","overlay","display","pattern","mapWindow","scaleAction","chordRoot","chordType","shapeStyle","chordLabels","chordWindow","prevShape","nextShape","prevInlineShape","nextInlineShape","prevInlineChord","nextInlineChord","loopProgression","prevInlineProgShape","nextInlineProgShape","inlineChordLabelsWrap","inlineChordLabels","toggleInlineLabels","shapeName","shapeText","progKey","progType","progStyle","progLabels","near","prevChord","nextChord","prevProgShape","nextProgShape","soloKey","soloScale","soloBlueprint","soloArea","actionTitle","focusMeta","exploreScaleBtn","practiceScaleBtn","hearKeyBtn","inlineProgression","playCurrent","playPhrase","newPhrase","toggleDiagramView","toggleDetails","prevCoachPattern","nextCoachPattern","prevCoachChordType","nextCoachChordType","prevCoachRoot","nextCoachRoot","audioHint","progLine","title","subtitle","whyTitle","why","board","legend","pathCard","pathSummary","nextStepTitle","nextStepWhy","startNextStep","pathSteps","resetPath","markStepDone","clearCachedVersion","guidedLesson","lessonStep","lessonTitle","lessonInstruction","lessonSequence","exitLesson","qaDebug","qaDebugText"].forEach(id=>els[id]=$(id));
+["openTunerBtn","tunerScreen","returnFromTuner","startTuner","stopTuner","tunerPreset","tunerPresetTitle","tunerIntro","tunerLive","tunerStrings","tunerError","tunerNote","tunerOctave","tunerMeter","tunerNeedle","tunerMessage","tunerHz","tunerStatus","tunerSignalBar","tunerSignalText","tunerDebug","tunerSr","skillLevel","todayGoalWrap","todayGoal","coachRootWrap","coachRootLabel","coachRoot","coachChordTypeWrap","coachChordType","coachChordLabelsWrap","coachChordLabels","coachNoteWrap","coachNote","coachPentTypeWrap","coachPentType","practiceBadge","practiceTitle","practiceWhy","practiceSteps","manualModeCard","mode","mapControls","chordControls","progControls","soloControls","key","scale","overlay","display","pattern","mapWindow","scaleAction","chordRoot","chordType","shapeStyle","chordLabels","chordWindow","prevShape","nextShape","prevInlineShape","nextInlineShape","prevInlineChord","nextInlineChord","loopProgression","prevInlineProgShape","nextInlineProgShape","inlineChordLabelsWrap","inlineChordLabels","toggleInlineLabels","shapeName","shapeText","progKey","progType","progStyle","progLabels","near","prevChord","nextChord","prevProgShape","nextProgShape","soloKey","soloScale","soloBlueprint","soloArea","actionTitle","focusMeta","exploreScaleBtn","practiceScaleBtn","hearKeyBtn","inlineProgression","playCurrent","playPhrase","newPhrase","toggleDiagramView","toggleDetails","prevCoachPattern","nextCoachPattern","prevCoachChordType","nextCoachChordType","prevCoachRoot","nextCoachRoot","audioHint","progLine","title","subtitle","whyTitle","why","board","legend","pathCard","pathSummary","nextStepTitle","nextStepWhy","startNextStep","pathSteps","resetPath","markStepDone","clearCachedVersion","guidedLesson","lessonStep","lessonTitle","lessonInstruction","lessonSequence","exitLesson","qaDebug","qaDebugText","v6Home","v6LearnHub","v6ExploreHub","v6WorkbenchBar","chooseLearn","chooseExplore","chooseTuner","learnBackHome","exploreBackHome","v6NextTitle","v6NextWhy","v6StartLesson","v6JourneySteps","workbenchBack","workbenchHome","workbenchTitle","v6HomeBtn","routeSubtitle"].forEach(id=>els[id]=$(id));
 let shapeIdx=0, progChordIdx=0, progShapeOffset=0, progAnchorFret=null, progressionLoopTimer=null, audioCtx=null, detailsOpen=false, diagramView="neck", currentSound={kind:"scale",root:"A",quality:"major",notes:["A"]};
 let appState={
  route:"learn",activity:"chord",guidedStep:null,sequenceIndex:0,
@@ -414,6 +522,55 @@ let appState={
  progressionIndex:0,currentShape:null,audioTarget:null
 };
 function syncState(patch={}){Object.assign(appState,patch);updateQADebug()}
+
+const V6_ROUTE_CLASSES=["v6-home-route","v6-learn-hub","v6-explore-hub","v6-workbench","v6-guided"];
+let v6Route="home";
+function setV6Route(route){
+  V6_ROUTE_CLASSES.forEach(c=>document.body.classList.remove(c));
+  v6Route=route;document.body.classList.add(`v6-${route}`);
+  els.v6Home.classList.toggle("hidden",route!=="home-route");
+  els.v6LearnHub.classList.toggle("hidden",route!=="learn-hub");
+  els.v6ExploreHub.classList.toggle("hidden",route!=="explore-hub");
+  els.v6WorkbenchBar.classList.toggle("hidden",route!=="workbench");
+  els.v6HomeBtn.classList.toggle("hidden",route==="home-route");
+  els.routeSubtitle.textContent=route==="home-route"?"Learn one small thing, or explore the neck.":route==="learn-hub"?"Guided learning — one step at a time.":route==="explore-hub"?"Choose a musical workbench.":route==="workbench"?`Explore: ${els.workbenchTitle.textContent}`:"Guided lesson";
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function refreshV6LearnHub(){
+  const progress=loadPath(),next=firstIncompleteStep(progress);
+  els.v6NextTitle.textContent=next.label;els.v6NextWhy.textContent=next.why;
+  els.v6JourneySteps.innerHTML=PATH_STEPS.map((s,i)=>{
+    const done=!!progress[s.id],current=s.id===next.id&&!done;
+    return `<button type="button" class="path-step ${done?"done":""} ${current?"current":""}" data-v6-step="${s.id}">
+      <div class="num">${i+1}. ${s.stage}</div><div class="label">${s.label}</div><div class="status">${done?"✓ Done":current?"Next":"Later"}</div>
+    </button>`
+  }).join("");
+}
+function openV6Learn(){
+  refreshV6LearnHub();syncState({route:"learn"});setV6Route("learn-hub")
+}
+function openV6Explore(){
+  syncState({route:"explore"});setV6Route("explore-hub")
+}
+function openV6Tool(tool){
+  document.body.classList.remove("lesson-active");
+  els.skillLevel.value="manual";
+  const mapping={chord:"chord",map:"map",progression:"progression",solo:"solo",harmony:"map"};
+  els.mode.value=mapping[tool]||"map";
+  els.workbenchTitle.textContent={chord:"Chords",map:"Scales",progression:"Progressions",solo:"Solo Trainer",harmony:"Harmony"}[tool]||"Explore";
+  setV6Route("workbench");
+  if(tool==="harmony"){
+    els.skillLevel.value="harmony";refreshGoalOptions();els.todayGoal.value="tonnetz";refreshGoalOptions();startPractice()
+  }else{
+    setVis();render()
+  }
+  syncState({route:"explore",activity:tool});
+  setTimeout(()=>document.querySelector("#mapControls:not(.hidden),#chordControls:not(.hidden),#progControls:not(.hidden),#soloControls:not(.hidden),.compact-toolbar")?.scrollIntoView({behavior:"smooth",block:"start"}),50)
+}
+function beginV6Lesson(step){
+  launchPathStep(step);setV6Route("guided");document.body.classList.add("lesson-active")
+}
+
 function updateQADebug(){
  if(!els.qaDebugText)return;
  const enabled=new URLSearchParams(location.search).has("debug");
@@ -531,10 +688,12 @@ function launchPathStep(step){
 }
 function markActiveStepDone(){
   if(!activePathStep)return;
-  let progress=loadPath(); progress[activePathStep]=true; progress.lastActivity=new Date().toISOString(); progress.currentStep=firstIncompleteStep(progress)?.id||activePathStep; savePath(progress);
-  renderPath();
+  let progress=loadPath(); progress[activePathStep]=true; progress.lastActivity=new Date().toISOString(); savePath(progress);
+  renderPath();refreshV6LearnHub();
   if(els.markStepDone)els.markStepDone.classList.add("hidden");
   document.querySelector(".lesson-callout")?.remove();
+  document.body.classList.remove("lesson-active");els.guidedLesson.classList.add("hidden");
+  openV6Learn()
 }
 
 KEY_ORDER.forEach(k=>{["key","progKey","chordRoot","soloKey"].forEach(id=>{let o=document.createElement("option");o.value=k;o.textContent=k;els[id].appendChild(o)})});
@@ -1573,8 +1732,21 @@ if(els.clearCachedVersion)els.clearCachedVersion.onclick=async()=>{
   }catch(e){}
   location.reload();
 };
-if(els.exitLesson)els.exitLesson.onclick=()=>{document.body.classList.remove("lesson-active");els.guidedLesson.classList.add("hidden");syncState({route:"learn",guidedStep:null});document.querySelector("#pathCard")?.scrollIntoView({behavior:"smooth",block:"start"})};
+if(els.exitLesson)els.exitLesson.onclick=()=>{document.body.classList.remove("lesson-active");els.guidedLesson.classList.add("hidden");syncState({route:"learn",guidedStep:null});openV6Learn()};
 if(els.lessonSequence)els.lessonSequence.onclick=e=>{let b=e.target.closest("[data-lesson-index]");if(!b||!activePathStep)return;let step=PATH_STEPS.find(s=>s.id===activePathStep);renderGuidedSelection(step,Number(b.dataset.lessonIndex))};
+
+els.chooseLearn.onclick=openV6Learn;
+els.chooseExplore.onclick=openV6Explore;
+els.chooseTuner.onclick=()=>els.openTunerBtn.click();
+els.learnBackHome.onclick=()=>setV6Route("home-route");
+els.exploreBackHome.onclick=()=>setV6Route("home-route");
+els.v6HomeBtn.onclick=()=>setV6Route("home-route");
+els.workbenchHome.onclick=()=>setV6Route("home-route");
+els.workbenchBack.onclick=openV6Explore;
+els.v6StartLesson.onclick=()=>beginV6Lesson(firstIncompleteStep(loadPath()));
+els.v6JourneySteps.onclick=e=>{const b=e.target.closest("[data-v6-step]");if(!b)return;const step=PATH_STEPS.find(s=>s.id===b.dataset.v6Step);beginV6Lesson(step)};
+document.querySelectorAll("[data-v6-tool]").forEach(b=>b.onclick=()=>openV6Tool(b.dataset.v6Tool));
+
 if(els.startNextStep)els.startNextStep.onclick=()=>launchPathStep(firstIncompleteStep(loadPath()));
 if(els.resetPath)els.resetPath.onclick=()=>{if(confirm("Reset your local guitar path progress?")){savePath({});activePathStep=null;renderPath();if(els.markStepDone)els.markStepDone.classList.add("hidden")}};
 if(els.markStepDone)els.markStepDone.onclick=markActiveStepDone;
@@ -1610,7 +1782,7 @@ if('serviceWorker' in navigator){
   window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
 }
 
-startPractice();
+startPractice();refreshV6LearnHub();setV6Route("home-route");
 </script>
 </body>
 </html>

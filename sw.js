@@ -1,4 +1,4 @@
-const CACHE_NAME = 'note-map-guitar-v5-4-2026-07-15-1';
+const CACHE_NAME = 'note-map-guitar-v6-0-2026-07-16-1';
 const ASSETS = ['./', './index.html', './manifest.webmanifest'];
 self.addEventListener('install', event => {
   self.skipWaiting();

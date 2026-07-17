@@ -1,9 +1,9 @@
 {
-  "name": "Note Map Guitar",
+  "name": "Note Map Guitar V6",
   "short_name": "Note Map",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#f6f3ee",
   "theme_color": "#34251d",
-  "description": "Guided guitar fretboard practice from first chords to patterns, progressions, and simple phrases."
+  "description": "Two guitar experiences sharing one musical engine: guided learning and a configurable exploration workbench."
 }

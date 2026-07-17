@@ -1,34 +1,39 @@
-NOTE MAP GUITAR — V5.4 REPAIR & QA RELEASE
-Build: V5.4 · Build 2026-07-15.1
+NOTE MAP GUITAR — V6.0 LEARN & EXPLORE
+Build: V6.0 · Build 2026-07-16.1
 
-Purpose
-Repair usability, navigation, musical state synchronization, and regression issues without adding major features.
+PRODUCT CHANGE
+V6 separates the application into two distinct experiences sharing the same musical engine.
 
-Key repairs
-- Guided E → A → E → A selections preserve the selected sequence index.
-- Guided sequence indicators, chord root, title, fretboard, finger display, audio target, and playback derive from shared application state.
-- Guided progression sequence controls synchronize with progression state.
-- Guided harmony items E, A, and B are selectable and preserve selection.
-- Activity tiles use one openActivity() navigation function and visibly scroll to rendered content.
-- Guided lessons use a simplified control presentation.
-- Lesson exit is now Back to learning path.
-- Manual controls and Choose another activity use distinct labels.
-- Fretted fingering dots are positioned closer to the destination fret wire.
-- Chord Play buttons use the displayed guitar voicing, including open and muted strings.
-- Chord and progression boards receive a short 145 ms visual redraw transition.
-- Canonical open chords regression-checked: E, Em, A, Am, D, Dm, G, C, B7.
-- Optional QA panel available by adding ?debug to the URL.
-- Build and service-worker cache updated together.
+LEARN GUITAR
+- Calm guided entry.
+- The app chooses the lesson, chord, key, pattern, and sequence.
+- The learner sees one next step and presses Start.
+- Guided lessons do not expose Manual controls.
+- Progress memory remains local in the browser.
 
-QA panel example
-https://your-site.example/?debug
+EXPLORE THE NECK
+- Dedicated workbench home.
+- Separate destinations for Chords, Scales, Progressions, Solo Trainer, and Harmony.
+- Each destination displays only its relevant controls.
+- Progressions explicitly includes the Progression type selector.
+- Byzantine / Double Harmonic Major remains available under Scales.
 
-Validation performed
+GLOBAL
+- Tuner remains available from the header and V6 home.
+- Existing musical engine, chord data, scale data, progression logic, audio, and tuner are preserved.
+- Service-worker cache and visible build number updated together.
+
+SMOKE TESTS COMPLETED
+- Home contains Learn, Explore, and Tuner entries.
+- Learn hub contains a visible next lesson and Start action.
+- Explore hub contains five activity destinations.
+- Chords, Scales, Progressions, Solo Trainer, and Harmony routes are present.
+- Progression type selector is present and contains the full style list.
+- Complete progression rendering remains present.
+- Guided lesson screen and fretboard route are present.
+- Manual controls are hidden by the guided-route CSS.
 - JavaScript syntax passed.
-- Canonical open-chord fret records passed.
-- Guided initialization and refresh use separate reset/preserve paths.
-- Exact displayed-voicing audio logic is present.
-- Nested deployment package verified.
+- Static DOM and route wiring checks passed.
 
-Important
-Actual iPhone microphone and installed-PWA behavior still require physical-device testing after deployment.
+LIMITATION
+A full automated browser interaction test could not be completed in this build environment because the installed headless Chromium process would not start reliably. Physical iPhone Safari, installed-PWA, microphone, and touch testing should still be performed after deployment.
