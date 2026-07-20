@@ -332,13 +332,40 @@ body.v6-home-route #v8Section{display:none!important}body.v8-section-open #v6Hom
 /* Slightly warmer book diagrams to match the new instrument surface */
 .book-wrap{background:#fffaf0;border:1px solid #e1d2bc;box-shadow:inset 0 0 24px #b98d4a12}
 
+
+
+/* V8.3.1 fretboard refinement — rosewood, steel frets, real string lines */
+.neck{
+  background:
+    radial-gradient(ellipse at 18% 35%,rgba(145,64,38,.20),transparent 27%),
+    radial-gradient(ellipse at 75% 72%,rgba(102,39,29,.24),transparent 33%),
+    repeating-linear-gradient(2deg,rgba(231,155,105,.075) 0 1px,transparent 1px 5px),
+    repeating-linear-gradient(178deg,rgba(0,0,0,.18) 0 2px,transparent 2px 9px),
+    repeating-linear-gradient(91deg,rgba(255,210,160,.035) 0 1px,transparent 1px 18px),
+    linear-gradient(96deg,#170907 0%,#3a1711 20%,#24100d 42%,#4b1f15 67%,#210d0a 100%);
+  border-color:#70412d;
+  box-shadow:inset 0 1px 0 #ffffff18,inset 0 -16px 34px #0009,0 10px 30px #0005;
+}
+.neck:before{opacity:.15;background:linear-gradient(105deg,transparent 0 22%,#fff1 25%,transparent 29% 61%,#fff1 64%,transparent 69%)}
+.fret:not(:empty){background:transparent;border:0;box-shadow:none;border-radius:0;color:#fff0d7;text-shadow:0 2px 4px #000;font-size:13px;padding:0;min-width:0}
+.cell{position:relative;border-left:0!important;border-bottom:0!important;box-shadow:none!important;background:linear-gradient(to bottom,transparent calc(50% - 1px),rgba(235,226,211,.92) 50%,rgba(86,76,68,.95) calc(50% + 1px),transparent calc(50% + 2px))}
+.cell:not(.nutcell)::before{content:"";position:absolute;z-index:0;left:-2px;top:0;bottom:0;width:5px;background:linear-gradient(90deg,#575b5e 0,#f3f5f6 28%,#aeb4b8 53%,#f8fafb 72%,#606568 100%);box-shadow:1px 0 2px #0008,-1px 0 1px #fff5}
+.row:nth-child(2) .cell{background:linear-gradient(to bottom,transparent calc(50% - 1.7px),#efe7d8 calc(50% - 1px),#756b61 calc(50% + 1.8px),transparent calc(50% + 2.4px))}
+.row:nth-child(3) .cell{background:linear-gradient(to bottom,transparent calc(50% - 1.45px),#eee5d6 calc(50% - .8px),#746a60 calc(50% + 1.5px),transparent calc(50% + 2.1px))}
+.row:nth-child(4) .cell{background:linear-gradient(to bottom,transparent calc(50% - 1.2px),#eee5d6 calc(50% - .6px),#746a60 calc(50% + 1.2px),transparent calc(50% + 1.8px))}
+.row:nth-child(5) .cell,.row:nth-child(6) .cell,.row:nth-child(7) .cell{background:linear-gradient(to bottom,transparent calc(50% - .8px),#f3eadb 50%,#766c62 calc(50% + .9px),transparent calc(50% + 1.4px))}
+.nutcell{border-left:7px solid #eceff0!important;background:linear-gradient(90deg,#16100d,#2b1710)!important;box-shadow:inset -3px 0 5px #0009!important}
+.dot{position:relative;z-index:2}
+.dot.outside,.openmark.ghost{visibility:hidden!important;box-shadow:none!important;border:0!important;background:transparent!important}
+.dot.fingering{left:0!important;transform:none!important;box-shadow:0 3px 8px #000a,inset 0 1px 0 #fff8}
+
 </style>
 </head>
 <body>
 <main class="app">
 <header class="v6-header">
 <div><h1>Note Map Guitar</h1><p id="routeSubtitle">Learn one small thing, or explore the neck.</p></div>
-<div class="header-actions"><button id="v6HomeBtn" class="soft-button hidden">Home</button><button id="openTunerBtn" class="tuner-button">♫ Tuner</button><b id="buildLabel">V8.2 · Build 2026-07-17.2</b></div>
+<div class="header-actions"><button id="v6HomeBtn" class="soft-button hidden">Home</button><button id="openTunerBtn" class="tuner-button">♫ Tuner</button><b id="buildLabel">V8.3 · Build 2026-07-20.3</b></div>
 </header>
 <section class="hint v6-build-note">V6 Learn & Explore · <button id="clearCachedVersion" class="link-button" type="button">Clear cached version / reload</button></section>
 <section id="tunerScreen" class="tuner-screen hidden" aria-live="polite">
@@ -1082,19 +1109,44 @@ function playTone(midi,when,dur=1.8,gain=0.12,pan=0){
   if(ctx.createStereoPanner){const p=ctx.createStereoPanner();p.pan.value=Math.max(-1,Math.min(1,pan));amp.connect(p).connect(ctx.destination)}else amp.connect(ctx.destination);
   src.start(when);src.stop(when+Math.max(.65,dur)+.12)
 }
+const RECORDED_MAJOR_CHORDS={
+  A:"https://upload.wikimedia.org/wikipedia/commons/3/34/A-major.ogg",
+  C:"https://upload.wikimedia.org/wikipedia/commons/3/32/C-major.ogg",
+  D:"https://upload.wikimedia.org/wikipedia/commons/4/4b/D-major.ogg",
+  E:"https://upload.wikimedia.org/wikipedia/commons/8/8c/E-major.ogg",
+  F:"https://upload.wikimedia.org/wikipedia/commons/c/cf/F-major.ogg",
+  G:"https://upload.wikimedia.org/wikipedia/commons/4/4e/G-major.ogg"
+};
+let recordedChordAudio=null;
+function playRecordedChord(root,q){
+  const url=q==="major"?RECORDED_MAJOR_CHORDS[root]:null;
+  if(!url)return false;
+  try{
+    if(recordedChordAudio){recordedChordAudio.pause();recordedChordAudio.currentTime=0}
+    recordedChordAudio=new Audio(url);
+    recordedChordAudio.preload="auto";
+    recordedChordAudio.volume=.92;
+    const promise=recordedChordAudio.play();
+    if(promise&&promise.catch)promise.catch(()=>{});
+    return true
+  }catch(e){return false}
+}
 function playChord(root,q){
-  const ctx=ensureAudio(),s=appState.currentShape,now=ctx.currentTime+.035;
+  if(playRecordedChord(root,q)){
+    syncState({audioTarget:`${root} ${q} — recorded acoustic guitar`});return
+  }
+  const ctx=ensureAudio(),s=appState.currentShape,now=ctx.currentTime+.025;
   if(s&&s.root===root&&(!s.quality||s.quality===q)&&Array.isArray(s.frets)){
     const openMidi=[40,45,50,55,59,64],played=s.frets.map((f,i)=>({f,i})).filter(x=>x.f!=="x"&&x.f!=null);
-    // A compact 14–18 ms down-strum reads as one chord while retaining a believable pick sweep.
+    // Near-simultaneous 4–6 ms sweep, with a long decay, for unsupported/minor chords.
     played.forEach((x,n)=>{
-      const jitter=(Math.random()*4-2)/1000,delay=n*.016+jitter;
-      playTone(openMidi[x.i]+Number(x.f),now+delay,1.65,.105,-.32+(n/Math.max(1,played.length-1))*.64)
+      const jitter=(Math.random()*1.5-0.75)/1000,delay=n*.005+jitter;
+      playTone(openMidi[x.i]+Number(x.f),now+delay,3.15,.11,-.28+(n/Math.max(1,played.length-1))*.56)
     });
     syncState({audioTarget:s.name||`${root} ${q}`});return
   }
   const ints=chords[q]?.[2]||[0,4,7],base=noteMidi(root,3);
-  ints.forEach((it,i)=>playTone(base+it+(i>1?12:0),now+i*.014,1.55,.12,-.2+i*.2));
+  ints.forEach((it,i)=>playTone(base+it+(i>1?12:0),now+i*.004,3.0,.13,-.15+i*.15));
   syncState({audioTarget:`${root} ${q}`})
 }
 function playMelody(notes,step=.38){

@@ -7,3 +7,5 @@ Quality release:
 - Full V8.2 theory sequence retained
 
 Open index.html, or deploy the folder to GitHub Pages.
+
+V8.3.1: revised rosewood fretboard and stainless fret rendering. Major-chord playback uses public-domain acoustic-guitar recordings by WBOSITG from Wikimedia Commons; unsupported/minor chords use the local plucked-string fallback.
