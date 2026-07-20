@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-title" content="Note Map" />
 <link rel="manifest" href="manifest.webmanifest" />
-<title>Note Map Guitar V8.5</title>
+<title>Note Map Guitar V8.4</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#f6f3ee;color:#221f1c;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
@@ -420,46 +420,13 @@ body.v6-home-route #v8Section{display:none!important}body.v8-section-open #v6Hom
 }
 .dot.outside,.dot.ghost{display:none!important}
 
-
-/* V8.5 — polished instrument surface and exact string-centred finger markers. */
-.neck{
-  background:
-    linear-gradient(112deg,transparent 0 10%,rgba(255,255,255,.17) 15%,transparent 21% 46%,rgba(255,214,176,.11) 51%,transparent 58% 100%),
-    radial-gradient(ellipse at 16% 24%,rgba(211,112,70,.31) 0 4%,transparent 27%),
-    radial-gradient(ellipse at 61% 70%,rgba(135,48,31,.39) 0 6%,transparent 35%),
-    repeating-linear-gradient(1deg,rgba(255,187,126,.16) 0 1px,transparent 1px 4px),
-    repeating-linear-gradient(178deg,rgba(8,1,1,.27) 0 2px,transparent 2px 8px),
-    linear-gradient(96deg,#210806 0%,#6b2818 19%,#32100b 38%,#7b301c 59%,#35100b 79%,#1c0605 100%)!important;
-  box-shadow:inset 0 2px 0 #ffd6b34a,inset 0 15px 30px #fff2,inset 0 -20px 38px #000a,0 13px 31px #0006!important;
-}
-.neck::after{content:"";position:absolute;inset:2px;pointer-events:none;border-radius:11px;background:linear-gradient(104deg,transparent 0 31%,rgba(255,255,255,.10) 37%,transparent 45% 74%,rgba(255,228,203,.07) 79%,transparent 87%);mix-blend-mode:screen}
-.cell::before{
-  background:linear-gradient(90deg,#292d30 0%,#fcffff 19%,#8f989e 40%,#fff 57%,#b9c0c4 72%,#353a3d 100%)!important;
-  box-shadow:1px 0 3px #000c,-1px 0 2px #fff9,0 0 5px #eaf7ff66!important;
-}
-.cell::after,.nutcell::after{filter:drop-shadow(0 1px 1px #000c) drop-shadow(0 -1px 1px #fff3)}
-/* True circular fingertip, with its centre exactly on the horizontal string. */
-.cell.has-finger{position:relative;display:flex!important;align-items:center!important;justify-content:center!important}
-.dot.fingering{
-  width:30px!important;height:30px!important;min-width:30px!important;min-height:30px!important;aspect-ratio:1/1!important;
-  border-radius:50%!important;box-sizing:border-box!important;
-  position:absolute!important;left:50%!important;top:50%!important;transform:translate(-50%,-50%)!important;
-  background:radial-gradient(circle at 34% 25%,#fff1dd 0 8%,#efb085 25%,#cf7654 68%,#85402d 100%)!important;
-  border:2px solid #ffe8d4!important;box-shadow:0 4px 9px #000c,inset 0 2px 2px #fff9,inset 0 -3px 5px #67291f77!important;
-}
-.dot.fingering::after{left:-10px!important;right:-10px!important;top:50%!important;transform:translateY(-50%)!important}
-/* Keep nut symbols in their own lane; strings begin only at the fretboard side of the nut. */
-.nutcell::after{left:9px!important}
-.openmark,.mutemark{position:relative;z-index:6;background:#160b08e6!important;box-shadow:0 1px 4px #000b!important}
-.openmark.ghost{visibility:hidden!important}
-
 </style>
 </head>
 <body>
 <main class="app">
 <header class="v6-header">
 <div><h1>Note Map Guitar</h1><p id="routeSubtitle">Learn one small thing, or explore the neck.</p></div>
-<div class="header-actions"><button id="v6HomeBtn" class="soft-button hidden">Home</button><button id="openTunerBtn" class="tuner-button">♫ Tuner</button><b id="buildLabel">V8.5 · Build 2026-07-20.5</b></div>
+<div class="header-actions"><button id="v6HomeBtn" class="soft-button hidden">Home</button><button id="openTunerBtn" class="tuner-button">♫ Tuner</button><b id="buildLabel">V8.4 · Build 2026-07-20.4</b></div>
 </header>
 <section class="hint v6-build-note">V6 Learn & Explore · <button id="clearCachedVersion" class="link-button" type="button">Clear cached version / reload</button></section>
 <section id="tunerScreen" class="tuner-screen hidden" aria-live="polite">
@@ -1197,14 +1164,11 @@ function playTone(midi,when,dur=1.8,gain=0.12,pan=0){
   const ctx=ensureAudio(),src=ctx.createBufferSource(),tone=ctx.createBiquadFilter(),body=ctx.createBiquadFilter(),amp=ctx.createGain();
   src.buffer=guitarBuffer(midi,Math.max(1.45,dur+0.45));
   tone.type='lowpass';tone.frequency.setValueAtTime(Math.min(7200,2600+(midi-36)*95),when);tone.Q.value=.45;
-  body.type='peaking';body.frequency.value=midi<52?175:270;body.Q.value=.72;body.gain.value=4.1;
-  amp.gain.setValueAtTime(.0001,when);amp.gain.exponentialRampToValueAtTime(Math.max(.001,gain),when+.008);amp.gain.exponentialRampToValueAtTime(Math.max(.001,gain*.44),when+.085);amp.gain.exponentialRampToValueAtTime(.0001,when+Math.max(.9,dur));
+  body.type='peaking';body.frequency.value=midi<52?185:285;body.Q.value=.8;body.gain.value=3.2;
+  amp.gain.setValueAtTime(.0001,when);amp.gain.exponentialRampToValueAtTime(Math.max(.001,gain),when+.008);amp.gain.exponentialRampToValueAtTime(.0001,when+Math.max(.55,dur));
   src.connect(tone).connect(body).connect(amp);
-  const dry=ctx.createGain(),room=ctx.createDelay(.18),roomGain=ctx.createGain();
-  dry.gain.value=.93;room.delayTime.value=.072;roomGain.gain.value=.16;
-  if(ctx.createStereoPanner){const p=ctx.createStereoPanner();p.pan.value=Math.max(-1,Math.min(1,pan));amp.connect(p);p.connect(dry);p.connect(room)}else{amp.connect(dry);amp.connect(room)}
-  dry.connect(ctx.destination);room.connect(roomGain).connect(ctx.destination);
-  src.start(when);src.stop(when+Math.max(.9,dur)+.18)
+  if(ctx.createStereoPanner){const p=ctx.createStereoPanner();p.pan.value=Math.max(-1,Math.min(1,pan));amp.connect(p).connect(ctx.destination)}else amp.connect(ctx.destination);
+  src.start(when);src.stop(when+Math.max(.65,dur)+.12)
 }
 const RECORDED_MAJOR_CHORDS={
   A:"https://upload.wikimedia.org/wikipedia/commons/3/34/A-major.ogg",
@@ -1237,14 +1201,13 @@ function playChord(root,q){
     const openMidi=[40,45,50,55,59,64],played=s.frets.map((f,i)=>({f,i})).filter(x=>x.f!=="x"&&x.f!=null);
     // Near-simultaneous 4–6 ms sweep, with a long decay, for unsupported/minor chords.
     played.forEach((x,n)=>{
-      const jitter=(Math.random()*.8-.4)/1000,delay=n*.0032+jitter;
-      const minorWarmth=(q==="minor"||q==="minor7")?1.08:1;
-      playTone(openMidi[x.i]+Number(x.f),now+delay,3.85,.108*minorWarmth,-.28+(n/Math.max(1,played.length-1))*.56)
+      const jitter=(Math.random()*1.5-0.75)/1000,delay=n*.005+jitter;
+      playTone(openMidi[x.i]+Number(x.f),now+delay,3.15,.11,-.28+(n/Math.max(1,played.length-1))*.56)
     });
     syncState({audioTarget:s.name||`${root} ${q}`});return
   }
   const ints=chords[q]?.[2]||[0,4,7],base=noteMidi(root,3);
-  ints.forEach((it,i)=>playTone(base+it+(i>1?12:0),now+i*.0032,3.7,(q==="minor"||q==="minor7")?.142:.13,-.15+i*.15));
+  ints.forEach((it,i)=>playTone(base+it+(i>1?12:0),now+i*.004,3.0,.13,-.15+i*.15));
   syncState({audioTarget:`${root} ${q}`})
 }
 function playMelody(notes,step=.38){
@@ -1782,11 +1745,7 @@ function stopProgressionLoop(){
 function toggleProgressionLoop(){
   if(progressionLoopTimer){stopProgressionLoop();return}
   els.loopProgression.textContent="Stop";
-  playCurrentSound();
-  progressionLoopTimer=setInterval(()=>{
-    stepProgressionChord(1);
-    window.setTimeout(()=>playCurrentSound(),55);
-  },2600);
+  progressionLoopTimer=setInterval(()=>stepProgressionChord(1),2000);
 }
 function render(){setVis(); if(!(els.skillLevel.value==="manual"&&els.mode.value==="progression"))stopProgressionLoop(); if(els.mode.value==="map")renderMap(); else if(els.mode.value==="chord")renderChord(); else if(els.mode.value==="progression")renderProg(); else renderSolo(); updateAudioControls()}
 ["key","scale","overlay","display","pattern","mapWindow","scaleAction","mode","chordRoot","chordType","shapeStyle","chordLabels","chordWindow","progKey","progType","progStyle","progLabels","near","soloKey","soloScale","soloBlueprint","soloArea"].forEach(id=>els[id].addEventListener("change",()=>{
@@ -2093,5 +2052,5 @@ if('serviceWorker' in navigator){
 
 startPractice();setV6Route("home-route");
 </script>
-</body>
+<script>window.addEventListener("load",()=>setTimeout(()=>{diagramView="neck";v8EnterFocus("open-chords",3);},250));</script></body>
 </html>
