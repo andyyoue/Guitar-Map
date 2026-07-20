@@ -1,4 +1,4 @@
-Note Map Guitar V8.3
+Note Map Guitar V8.4
 
 Quality release:
 - Beginner-first canonical open chord shapes in V8 progression loops
@@ -8,4 +8,4 @@ Quality release:
 
 Open index.html, or deploy the folder to GitHub Pages.
 
-V8.3.1: revised rosewood fretboard and stainless fret rendering. Major-chord playback uses public-domain acoustic-guitar recordings by WBOSITG from Wikimedia Commons; unsupported/minor chords use the local plucked-string fallback.
+V8.4.1: revised rosewood fretboard and stainless fret rendering. Major-chord playback uses public-domain acoustic-guitar recordings by WBOSITG from Wikimedia Commons; unsupported/minor chords use the local plucked-string fallback.

@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-title" content="Note Map" />
 <link rel="manifest" href="manifest.webmanifest" />
-<title>Note Map Guitar V8.3</title>
+<title>Note Map Guitar V8.4</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#f6f3ee;color:#221f1c;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
@@ -359,13 +359,74 @@ body.v6-home-route #v8Section{display:none!important}body.v8-section-open #v6Hom
 .dot.outside,.openmark.ghost{visibility:hidden!important;box-shadow:none!important;border:0!important;background:transparent!important}
 .dot.fingering{left:0!important;transform:none!important;box-shadow:0 3px 8px #000a,inset 0 1px 0 #fff8}
 
+
+/* V8.4 — definitive rosewood fretboard. No grid, steel fret wire, strings through finger positions. */
+.neck{
+  overflow:auto;
+  padding:16px 12px 13px;
+  border:2px solid #70432f;
+  border-radius:14px;
+  background:
+    radial-gradient(ellipse at 12% 28%,rgba(188,92,55,.25) 0 4%,transparent 24%),
+    radial-gradient(ellipse at 58% 72%,rgba(116,43,31,.32) 0 5%,transparent 31%),
+    repeating-linear-gradient(1deg,rgba(242,164,104,.12) 0 1px,transparent 1px 4px),
+    repeating-linear-gradient(179deg,rgba(9,2,1,.30) 0 2px,transparent 2px 8px),
+    linear-gradient(96deg,#1a0806 0%,#481b13 18%,#28100c 37%,#5b2417 58%,#2a0f0b 78%,#160706 100%)!important;
+  box-shadow:inset 0 0 0 1px #b8734b55,inset 0 10px 28px #fff1,inset 0 -18px 35px #000b,0 10px 28px #0005!important;
+}
+.neck::before{
+  content:"";position:absolute;inset:0;pointer-events:none;border-radius:12px;
+  background:repeating-linear-gradient(168deg,transparent 0 14px,rgba(255,199,145,.055) 15px,transparent 17px 31px);
+  opacity:1!important;
+}
+.fretboard{position:relative;z-index:1}
+.row{position:relative}
+.cell,.nutcell{position:relative;border:0!important;box-shadow:none!important;background:none!important}
+/* Each row is a string; the line runs through the vertical centre of every fret cell. */
+.cell::after,.nutcell::after{
+  content:"";position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);z-index:1;
+  height:2px;background:linear-gradient(#fff,#a9a9a9 42%,#3d3d3d 58%,#d9d9d9);box-shadow:0 1px 1px #000b;
+}
+.row:nth-child(2) .cell::after,.row:nth-child(2) .nutcell::after{height:4px}
+.row:nth-child(3) .cell::after,.row:nth-child(3) .nutcell::after{height:3.5px}
+.row:nth-child(4) .cell::after,.row:nth-child(4) .nutcell::after{height:3px}
+.row:nth-child(5) .cell::after,.row:nth-child(5) .nutcell::after{height:2.5px}
+.row:nth-child(6) .cell::after,.row:nth-child(6) .nutcell::after{height:2px}
+.row:nth-child(7) .cell::after,.row:nth-child(7) .nutcell::after{height:1.5px}
+/* Stainless fret wire sits at the leading edge of each fret cell. */
+.cell::before{
+  content:"";position:absolute;left:-3px;top:1px;bottom:1px;width:6px;z-index:2;border-radius:3px;
+  background:linear-gradient(90deg,#3c4145 0%,#eef2f4 22%,#9da5aa 48%,#fff 68%,#4e5458 100%);
+  box-shadow:1px 0 2px #000b,-1px 0 1px #fff7;
+}
+.nutcell{border-left:8px solid #f0f2f2!important;background:#160a07aa!important}
+.nutcell::before{display:none}
+.fret{color:#fff1d5!important;background:transparent!important;border:0!important;box-shadow:none!important;text-shadow:0 2px 4px #000!important;font-size:14px!important;font-weight:950!important}
+.string{color:#f4dfbd!important;text-shadow:0 2px 3px #000!important}
+/* Finger marker: fingertip-shaped, centered exactly on the string. */
+.cell.has-finger{display:flex;align-items:center;justify-content:center}
+.dot.fingering{
+  position:relative!important;z-index:5!important;left:auto!important;top:auto!important;transform:none!important;
+  width:25px!important;height:33px!important;border-radius:48% 48% 42% 42%!important;
+  background:linear-gradient(145deg,#ffd2ae 0%,#d98f68 65%,#9d583f 100%)!important;
+  color:#26120d!important;border:2px solid #ffe4ce!important;
+  box-shadow:0 4px 8px #000b,inset 0 2px 2px #fff8,inset 0 -3px 4px #7f3d2d66!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;font-size:12px!important;font-weight:950!important;
+}
+/* A small visible string segment confirms the fingertip is pressing the string, not floating between strings. */
+.dot.fingering::after{
+  content:"";position:absolute;left:-8px;right:-8px;top:50%;height:2px;transform:translateY(-50%);z-index:-1;
+  background:linear-gradient(#fff,#868686 55%,#d7d7d7);box-shadow:0 1px 1px #0008;
+}
+.dot.outside,.dot.ghost{display:none!important}
+
 </style>
 </head>
 <body>
 <main class="app">
 <header class="v6-header">
 <div><h1>Note Map Guitar</h1><p id="routeSubtitle">Learn one small thing, or explore the neck.</p></div>
-<div class="header-actions"><button id="v6HomeBtn" class="soft-button hidden">Home</button><button id="openTunerBtn" class="tuner-button">♫ Tuner</button><b id="buildLabel">V8.3 · Build 2026-07-20.3</b></div>
+<div class="header-actions"><button id="v6HomeBtn" class="soft-button hidden">Home</button><button id="openTunerBtn" class="tuner-button">♫ Tuner</button><b id="buildLabel">V8.4 · Build 2026-07-20.4</b></div>
 </header>
 <section class="hint v6-build-note">V6 Learn & Explore · <button id="clearCachedVersion" class="link-button" type="button">Clear cached version / reload</button></section>
 <section id="tunerScreen" class="tuner-screen hidden" aria-live="polite">
@@ -1376,9 +1437,10 @@ function drawShape(s,title,sub,why,wv="auto",labelMode="fingers",noteKey=s.root|
     else if(tf===0) html+=zeroShapeCell(labelMode==="notes"?noteAtString(vi,0,noteKey):"O","openmark");
     else html+=zeroShapeCell("","openmark ghost");
     fs.forEach(f=>{
-      let lab=".",cl="outside";
-      if(tf===f){lab=labelMode==="notes"?noteAtString(vi,f,noteKey):((fg&&fg!=="●")?fg:(suggested[5-vi]||"●"));cl="fingering"}
-      html+=`<div class="cell"><span class="dot ${cl}" data-note="${tf===f?noteAtString(vi,f,noteKey):""}">${lab}</span></div>`
+      if(tf===f){
+        const lab=labelMode==="notes"?noteAtString(vi,f,noteKey):((fg&&fg!=="●")?fg:(suggested[5-vi]||"●"));
+        html+=`<div class="cell has-finger"><span class="dot fingering" data-note="${noteAtString(vi,f,noteKey)}">${lab}</span></div>`
+      }else html+=`<div class="cell"></div>`
     });
     html+=`</div>`
   });
