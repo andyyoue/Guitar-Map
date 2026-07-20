@@ -1,12 +1,13 @@
-Note Map Guitar V9.1
+NOTE MAP GUITAR V9.2
 
-Audio behavior
-- Major chords A–G: individual public-domain acoustic-guitar recordings from Wikimedia Commons.
-- Minor chords: a verified reusable C-minor recording from Wikimedia Commons; other minor roots are pitch-matched from that recorded source as a temporary consistency measure.
-- Other chord qualities: synthesized-guitar fallback using the displayed voicing.
+Audio release
+-------------
+This build bundles a coherent set of all 12 major and all 12 minor guitar chord recordings from godlesswonder's GuitarStrum pack.
 
-Credits
-- Natural major chord recordings: WBOSITG, public domain.
-- C minor chord with third high and low: Kaernbach, CC BY 3.0.
+Source: Freesound GuitarStrum pack by godlesswonder
+Instrument/session: Fender Stratocaster, clean/light chorus
+License: CC0
 
-This is an interim audio library intended to be replaced by a consistent custom recording set.
+The recordings are level-matched and encoded locally as Ogg Vorbis. No chord is pitch-shifted. Enharmonic spellings such as A-sharp/B-flat share the same exact recorded pitch.
+
+Major and minor chords use recorded audio in both individual playback and progression loops. Seventh, suspended and other chord qualities continue to use the synthesized fallback.
