@@ -1,12 +1,9 @@
-NOTE MAP GUITAR V8.2
+Note Map Guitar V8.3
 
-V8.2 replaces the short Theory Q&A with the complete From Sound to Fretboard sequence.
+Quality release:
+- Beginner-first canonical open chord shapes in V8 progression loops
+- Dark rosewood fretboard with higher-contrast fret numbers
+- New offline plucked-string audio engine with compact realistic chord strums
+- Full V8.2 theory sequence retained
 
-Theory now:
-- Opens as an expandable chapter library.
-- Preserves the source document order from Sound and Pitch through the verification checklist.
-- Preserves each chapter's internal subsection order.
-- Supports chapter contents, previous/next navigation and direct chapter selection.
-- Uses the same Nordic charcoal / amber library interaction as the rest of V8.
-
-All V8.1 constrained chord, scale, fretboard and progression libraries remain unchanged.
+Open index.html, or deploy the folder to GitHub Pages.

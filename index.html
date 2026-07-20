@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<meta name="theme-color" content="#34251d" />
+<meta name="theme-color" content="#17120f" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-title" content="Note Map" />
 <link rel="manifest" href="manifest.webmanifest" />
-<title>Note Map Guitar V6.1</title>
+<title>Note Map Guitar V8.3</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#f6f3ee;color:#221f1c;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
@@ -298,6 +298,40 @@ body.v8-focused .compact-toolbar button:not(#playCurrent):not(#playPhrase):not(#
 body.v6-home-route #v8Section{display:none!important}body.v8-section-open #v6Home{display:none!important}body.v8-section-open #v8Section{display:block!important}body.v8-section-open #v6WorkbenchBar,body.v8-section-open #manualModeCard,body.v8-section-open #mapControls,body.v8-section-open #chordControls,body.v8-section-open #progControls,body.v8-section-open #soloControls,body.v8-section-open .compact-toolbar,body.v8-section-open .neck,body.v8-section-open #toggleDetails,body.v8-section-open .lesson-extra,body.v8-section-open .bottom-legend{display:none!important}
 @media(max-width:620px){.app{padding:10px 10px 28px}.v6-header{padding:5px 4px 10px}.v6-header p{display:none}.header-actions b{display:none}.v8-home{padding-top:12px}.v8-home h2{font-size:39px}.v8-grid{grid-template-columns:1fr;gap:9px}.v8-card,.v8-card[data-section="theory"]{grid-column:auto;min-height:82px;padding:13px;border-radius:17px}.v8-icon{width:42px;height:42px}.v8-section{border-radius:20px;padding:14px}.v8-section-head h2{font-size:26px}.v8-theory-card{padding:20px;min-height:390px}.v8-theory-card h3{font-size:27px}}
 
+
+
+/* V8.3 quality release — dark rosewood neck and readable landmarks */
+.neck{
+  position:relative;
+  background:
+    linear-gradient(90deg,rgba(255,255,255,.025),transparent 18%,rgba(0,0,0,.13) 46%,transparent 72%,rgba(255,255,255,.018)),
+    repeating-linear-gradient(3deg,rgba(210,151,96,.035) 0 1px,transparent 1px 6px),
+    repeating-linear-gradient(177deg,rgba(0,0,0,.11) 0 2px,transparent 2px 11px),
+    linear-gradient(100deg,#140d0a 0%,#2a1711 22%,#1d110d 52%,#321b13 78%,#130c09 100%);
+  border:1px solid #5c3a27;
+  box-shadow:inset 0 1px 0 #ffffff12,inset 0 -10px 24px #0008,0 8px 22px #0002;
+}
+.neck:before{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;background:linear-gradient(90deg,transparent,#fff2 48%,transparent 51%);opacity:.08}
+.fretboard{position:relative;z-index:1}
+.fret{
+  color:#fff6df;
+  font-size:12px;
+  font-weight:950;
+  text-shadow:0 1px 3px #000;
+}
+.fret:not(:empty){justify-self:center;align-self:center;min-height:25px;height:25px;min-width:25px;padding:0 6px;border-radius:999px;background:#090706c9;border:1px solid #d7b98775;box-shadow:0 1px 5px #0009,inset 0 1px 0 #fff2}
+.string{color:#fff3d8;text-shadow:0 1px 3px #000;font-weight:950}
+.cell{border-left:3px solid #c8b29d99;border-bottom:1px solid #e3d3bd4f;box-shadow:inset 1px 0 #fff2}
+.nutcell{border-left:6px solid #f0e0c7;background:#100a08aa;box-shadow:inset -3px 0 4px #0008}
+.row:nth-child(3) .cell,.row:nth-child(5) .cell{border-bottom-color:#fff8}
+.openmark{color:#fff3d8;border-color:#f3dfc5;background:#140c08aa}
+.mutemark{background:#090605;color:#ae9a87;border-color:#6d594a}
+.outside{background:#3a281f;color:#cdb8a4;border-color:#ffffff3d;opacity:.78}
+.dot{box-shadow:0 2px 6px #0008,inset 0 1px 0 #fff7}
+
+/* Slightly warmer book diagrams to match the new instrument surface */
+.book-wrap{background:#fffaf0;border:1px solid #e1d2bc;box-shadow:inset 0 0 24px #b98d4a12}
+
 </style>
 </head>
 <body>
@@ -566,7 +600,7 @@ function updateQADebug(){
  els.qaDebug.classList.toggle("hidden",!enabled);
  if(!enabled)return;
  els.qaDebugText.textContent=[
-  `Build: V6.1 · 2026-07-17.2`,
+  `Build: V8.3 · 2026-07-20`,
   `Route: ${appState.route}`,
   `Activity: ${appState.activity}`,
   `Lesson: ${appState.guidedStep||"none"}`,
@@ -1009,29 +1043,58 @@ function ensureAudio(){
   if(audioCtx.state==="suspended")audioCtx.resume();
   return audioCtx
 }
-function playTone(midi,when,dur,gain=0.12){
-  let ctx=ensureAudio(), osc=ctx.createOscillator(), amp=ctx.createGain();
-  osc.type="triangle";
-  osc.frequency.setValueAtTime(440*Math.pow(2,(midi-69)/12),when);
-  amp.gain.setValueAtTime(0.0001,when);
-  amp.gain.exponentialRampToValueAtTime(gain,when+0.018);
-  amp.gain.exponentialRampToValueAtTime(0.0001,when+dur);
-  osc.connect(amp).connect(ctx.destination);
-  osc.start(when); osc.stop(when+dur+0.04)
+const guitarBufferCache=new Map();
+function guitarBuffer(midi,duration=2.25){
+  const ctx=ensureAudio(),key=`${midi}:${duration}`;
+  if(guitarBufferCache.has(key))return guitarBufferCache.get(key);
+  const sr=ctx.sampleRate,freq=440*Math.pow(2,(midi-69)/12),period=Math.max(2,Math.round(sr/freq)),length=Math.floor(sr*duration);
+  const buffer=ctx.createBuffer(1,length,sr),data=buffer.getChannelData(0);
+  // Karplus–Strong plucked string: a short pick impulse circulates through a damped delay line.
+  const ring=new Float32Array(period);
+  for(let i=0;i<period;i++){
+    const pick=(Math.random()*2-1);
+    const taper=Math.sin(Math.PI*(i+1)/(period+1));
+    ring[i]=pick*(.72+.28*taper);
+  }
+  let prev=0;
+  const damping=midi<48?.9971:midi<60?.9965:.9954;
+  for(let i=0;i<length;i++){
+    const j=i%period,next=(j+1)%period;
+    let v=ring[j];
+    // Fractional brightness and a little pick/body asymmetry keep it from sounding like a toy oscillator.
+    let averaged=(v+ring[next])*.5*damping;
+    ring[j]=averaged;
+    const attack=i<96?i/96:1;
+    const release=Math.pow(1-i/length,1.15);
+    const body=v*.82+prev*.18;
+    data[i]=body*attack*release*.72;
+    prev=body;
+  }
+  guitarBufferCache.set(key,buffer);return buffer
+}
+function playTone(midi,when,dur=1.8,gain=0.12,pan=0){
+  const ctx=ensureAudio(),src=ctx.createBufferSource(),tone=ctx.createBiquadFilter(),body=ctx.createBiquadFilter(),amp=ctx.createGain();
+  src.buffer=guitarBuffer(midi,Math.max(1.45,dur+0.45));
+  tone.type='lowpass';tone.frequency.setValueAtTime(Math.min(7200,2600+(midi-36)*95),when);tone.Q.value=.45;
+  body.type='peaking';body.frequency.value=midi<52?185:285;body.Q.value=.8;body.gain.value=3.2;
+  amp.gain.setValueAtTime(.0001,when);amp.gain.exponentialRampToValueAtTime(Math.max(.001,gain),when+.008);amp.gain.exponentialRampToValueAtTime(.0001,when+Math.max(.55,dur));
+  src.connect(tone).connect(body).connect(amp);
+  if(ctx.createStereoPanner){const p=ctx.createStereoPanner();p.pan.value=Math.max(-1,Math.min(1,pan));amp.connect(p).connect(ctx.destination)}else amp.connect(ctx.destination);
+  src.start(when);src.stop(when+Math.max(.65,dur)+.12)
 }
 function playChord(root,q){
-  let ctx=ensureAudio(), s=appState.currentShape;
+  const ctx=ensureAudio(),s=appState.currentShape,now=ctx.currentTime+.035;
   if(s&&s.root===root&&(!s.quality||s.quality===q)&&Array.isArray(s.frets)){
-    const openMidi=[40,45,50,55,59,64];
-    s.frets.forEach((f,i)=>{
-      if(f==="x"||f==null)return;
-      playTone(openMidi[i]+Number(f),ctx.currentTime+i*.045,.95,.085)
+    const openMidi=[40,45,50,55,59,64],played=s.frets.map((f,i)=>({f,i})).filter(x=>x.f!=="x"&&x.f!=null);
+    // A compact 14–18 ms down-strum reads as one chord while retaining a believable pick sweep.
+    played.forEach((x,n)=>{
+      const jitter=(Math.random()*4-2)/1000,delay=n*.016+jitter;
+      playTone(openMidi[x.i]+Number(x.f),now+delay,1.65,.105,-.32+(n/Math.max(1,played.length-1))*.64)
     });
-    syncState({audioTarget:s.name||`${root} ${q}`});
-    return
+    syncState({audioTarget:s.name||`${root} ${q}`});return
   }
-  let ints=chords[q]?.[2]||[0,4,7], base=noteMidi(root,3);
-  ints.forEach((it,i)=>playTone(base+it+(i>1?12:0),ctx.currentTime+i*.035,.9,.09));
+  const ints=chords[q]?.[2]||[0,4,7],base=noteMidi(root,3);
+  ints.forEach((it,i)=>playTone(base+it+(i>1?12:0),now+i*.014,1.55,.12,-.2+i*.2));
   syncState({audioTarget:`${root} ${q}`})
 }
 function playMelody(notes,step=.38){
@@ -1522,7 +1585,9 @@ function renderProgLine(cs){
 function chooseProgressionShape(arr,target){return closest(arr,target)}
 function renderProg(){
   let key=els.progKey.value,p=progs[els.progType.value],cs=progChords(); if(progChordIdx>=cs.length)progChordIdx=0;
-  let c=cs[progChordIdx],target=progressionTarget(),arr=shapes(c.root,c.q,els.progStyle.value||"all"),base=chooseProgressionShape(arr,target);
+  let c=cs[progChordIdx],target=progressionTarget(),requestedStyle=els.progStyle.value||"all",arr=shapes(c.root,c.q,requestedStyle);
+  if(document.body.classList.contains("v8-focused")){const canonical=shapes(c.root,c.q,"open").filter(x=>x.style==="open");if(canonical.length){arr=canonical;target=0}}
+  let base=chooseProgressionShape(arr,target);
   let si=(base+progShapeOffset)%arr.length; if(si<0)si+=arr.length;
   let s=arr[si],seq=cs.map(x=>`${x.display}${chords[x.q][1]}`).join(" → ");
   if(els.near.value==="auto"||progAnchorFret==null)progAnchorFret=s.position;
@@ -1809,7 +1874,7 @@ function v8RootFromLabel(label){return label.replace(/m$|5$|7$|sus2$|sus4$/,'').
 function v8EnterFocus(libKey,index=0){const lib=V8_LIBRARIES[libKey];if(!lib)return;v8ActiveLibrary=libKey;v8ActiveIndex=index;document.body.classList.remove("v8-section-open");document.body.classList.add("v8-focused");els.v8Section.classList.add("hidden");els.v6Home.classList.add("hidden");els.v8Focus.classList.remove("hidden");els.v8FocusTitle.textContent=lib.title;els.v8FocusSubtitle.textContent=lib.subtitle;els.v8ChoiceRow.innerHTML=lib.items.map((it,i)=>`<button class="v8-choice ${i===index?'active':''}" data-v8-choice="${i}">${it[0]}</button>`).join('');els.v8ViewRow.innerHTML=lib.kind==='chord'?'<button class="active" data-v8-view="fingers">Fingers</button><button data-v8-view="notes">Notes</button>':'<button class="active" data-v8-view="notes">Notes</button><button data-v8-view="degrees">Degrees</button>';v8RenderLibraryItem();window.scrollTo({top:0,behavior:"smooth"})}
 function v8RenderLibraryItem(){const lib=V8_LIBRARIES[v8ActiveLibrary],it=lib.items[v8ActiveIndex];if(!lib||!it)return;if(lib.kind==='chord'){const root=v8RootFromLabel(it[0]);openV6Tool("chord");document.body.classList.add("v8-focused");els.v8Focus.classList.remove("hidden");els.chordRoot.value=root;els.chordType.value=it[2];els.shapeStyle.value=it[3];els.chordLabels.value=(els.v8ViewRow.querySelector('.active')?.dataset.v8View||'fingers');shapeIdx=0;render()}else{openV6Tool("map");document.body.classList.add("v8-focused");els.v8Focus.classList.remove("hidden");els.key.value=it[2];els.scale.value=it[3];els.pattern.value=it[4];els.display.value=(els.v8ViewRow.querySelector('.active')?.dataset.v8View||it[5]);els.scaleAction.value="exploreScale";render()}els.v8ChoiceRow.querySelectorAll('.v8-choice').forEach((b,i)=>b.classList.toggle('active',i===v8ActiveIndex))}
 function v8OpenScale(key="A",scale="minorPent",pattern="none",display="notes"){openV6Tool("map");document.body.classList.add("v8-focused");els.v8Focus.classList.remove("hidden");els.key.value=key;els.scale.value=scale;els.pattern.value=pattern;els.display.value=display;els.scaleAction.value="exploreScale";render()}
-function v8OpenProg(type,key="A"){openV6Tool("progression");document.body.classList.add("v8-focused");els.v8Focus.classList.remove("hidden");els.v8FocusTitle.textContent="Progression";els.v8FocusSubtitle.textContent="Play each chord in order";els.v8ChoiceRow.innerHTML="";els.v8ViewRow.innerHTML="";els.progKey.value=key;els.progType.value=type;render()}
+function v8OpenProg(type,key="A"){openV6Tool("progression");document.body.classList.add("v8-focused");els.v8Focus.classList.remove("hidden");els.v8FocusTitle.textContent="Progression";els.v8FocusSubtitle.textContent="Beginner-friendly shapes first";els.v8ChoiceRow.innerHTML="";els.v8ViewRow.innerHTML="";els.progKey.value=key;els.progType.value=type;els.progStyle.value="open";els.near.value="0";progChordIdx=0;progShapeOffset=0;progAnchorFret=0;render()}
 function runV8Action(a){
  if(V8_LIBRARIES[a])return v8EnterFocus(a);
  if(a==="all-notes")return v8OpenScale("C","chromatic","none","notes");if(a==="find-note")return v8OpenScale("A","singleNote","none","notes");if(a==="degrees")return v8OpenScale("A","major","none","degrees");if(a==="quiz")return openActivity("practice","noteQuiz");if(a==="chord-tones")return v8EnterFocus("triads");
