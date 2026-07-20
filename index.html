@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-title" content="Note Map" />
 <link rel="manifest" href="manifest.webmanifest" />
-<title>Note Map Guitar V9.0</title>
+<title>Note Map Guitar V9.1</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#f6f3ee;color:#221f1c;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
@@ -458,7 +458,7 @@ body.v6-home-route #v8Section{display:none!important}body.v8-section-open #v6Hom
 .recording-badge{display:inline-flex;align-items:center;height:28px;padding:0 10px;border:1px solid rgba(232,174,60,.38);border-radius:999px;background:rgba(232,174,60,.08);color:#e9ba58;font-size:10px;font-weight:900;letter-spacing:.11em;white-space:nowrap}
 .audio-card #playCurrent{background:linear-gradient(180deg,#f2bd50,#bb7414);color:#1b1005;border-color:#ffd67c;box-shadow:0 7px 20px rgba(173,99,11,.24)}
 
-/* V9.0 — dedicated premium visual release */
+/* V9.1 — recorded-source audio expansion */
 :root{--paper:#f4efe4;--ink:#f4f0e7;--amber:#e9aa32;--panel:rgba(16,17,18,.88);--line:rgba(255,255,255,.12)}
 body{background:radial-gradient(circle at 70% -10%,rgba(111,71,25,.2),transparent 34%),linear-gradient(145deg,#07090a,#121416 55%,#080a0b);letter-spacing:.005em}
 header{background:linear-gradient(180deg,rgba(13,15,16,.96),rgba(7,9,10,.92));border-bottom:1px solid rgba(255,255,255,.12);box-shadow:0 18px 45px rgba(0,0,0,.25)}
@@ -483,7 +483,7 @@ h1,h2,.v8-card strong{letter-spacing:-.025em}.v8-card strong{font-size:1.18rem}.
 <main class="app">
 <header class="v6-header">
 <div><h1>Note Map Guitar</h1><p id="routeSubtitle">Learn one small thing, or explore the neck.</p></div>
-<div class="header-actions"><button id="v6HomeBtn" class="soft-button hidden">Home</button><button id="openTunerBtn" class="tuner-button">♫ Tuner</button><b id="buildLabel">V9.0 · Build 2026-07-20.90</b></div>
+<div class="header-actions"><button id="v6HomeBtn" class="soft-button hidden">Home</button><button id="openTunerBtn" class="tuner-button">♫ Tuner</button><b id="buildLabel">V9.1 · Build 2026-07-20.91</b></div>
 </header>
 <section class="hint v6-build-note">V6 Learn & Explore · <button id="clearCachedVersion" class="link-button" type="button">Clear cached version / reload</button></section>
 <section id="tunerScreen" class="tuner-screen hidden" aria-live="polite">
@@ -646,7 +646,8 @@ recorded or uploaded.</p>
 <div id="lessonSequence" class="lesson-sequence"></div>
 <button id="exitLesson" class="soft-button">Back to learning path</button>
 </section>
-<section class="card audio-card compact-toolbar"><span id="actionTitle" class="action-title"></span><span id="focusMeta" class="focus-meta"></span><button id="exploreScaleBtn" class="task-btn hidden">Explore</button><button id="practiceScaleBtn" class="task-btn hidden">Practice</button><button id="hearKeyBtn" class="task-btn hidden">Hear</button><label id="inlineChordLabelsWrap" class="inline-select hidden">Show<select id="inlineChordLabels"><option value="fingers">Finger numbers</option><option value="notes">Note names</option></select></label><button id="toggleInlineLabels" class="hidden">Notes</button><button id="prevInlineShape" class="hidden">‹ Shape</button><button id="nextInlineShape" class="hidden">Shape ›</button><button id="prevInlineChord" class="hidden">‹ Chord</button><button id="nextInlineChord" class="hidden">Chord ›</button><button id="loopProgression" class="hidden">Loop</button><button id="prevInlineProgShape" class="hidden">‹ Shape</button><button id="nextInlineProgShape" class="hidden">Shape ›</button><button id="prevCoachPattern" class="hidden">‹ Pattern</button><button id="nextCoachPattern" class="hidden">Pattern ›</button><button id="prevCoachRoot" class="hidden">‹ Chord</button><button id="nextCoachRoot" class="hidden">Chord ›</button><button id="prevCoachChordType" class="hidden">‹ Type</button><button id="nextCoachChordType" class="hidden">Type ›</button><button id="playCurrent">▶ Play chord</button><span class="recording-badge" title="Natural major chords use public-domain acoustic recordings">RECORDED GUITAR</span><button id="playPhrase">Hear phrase</button><button id="newPhrase" class="hidden">New phrase</button><button id="toggleDiagramView" class="hidden">Diagram</button><button id="markStepDone" class="hidden">Mark done</button><span id="audioHint"></span><div id="inlineProgression" class="inline-prog hidden"></div></section>
+<section class="card audio-card compact-toolbar"><span id="actionTitle" class="action-title"></span><span id="focusMeta" class="focus-meta"></span><button id="exploreScaleBtn" class="task-btn hidden">Explore</button><button id="practiceScaleBtn" class="task-btn hidden">Practice</button><button id="hearKeyBtn" class="task-btn hidden">Hear</button><label id="inlineChordLabelsWrap" class="inline-select hidden">Show<select id="inlineChordLabels"><option value="fingers">Finger numbers</option><option value="notes">Note names</option></select></label><button id="toggleInlineLabels" class="hidden">Notes</button><button id="prevInlineShape" class="hidden">‹ Shape</button><button id="nextInlineShape" class="hidden">Shape ›</button><button id="prevInlineChord" class="hidden">‹ Chord</button><button id="nextInlineChord" class="hidden">Chord ›</button><button id="loopProgression" class="hidden">Loop</button><button id="prevInlineProgShape" class="hidden">‹ Shape</button><button id="nextInlineProgShape" class="hidden">Shape ›</button><button id="prevCoachPattern" class="hidden">‹ Pattern</button><button id="nextCoachPattern" class="hidden">Pattern ›</button><button id="prevCoachRoot" class="hidden">‹ Chord</button><button id="nextCoachRoot" class="hidden">Chord ›</button><button id="prevCoachChordType" class="hidden">‹ Type</button><button id="nextCoachChordType" class="hidden">Type ›</button><button id="playCurrent">▶ Play chord</button><span class="recording-badge" title="Recorded chord audio is used whenever a verified reusable source is available">RECORDED GUITAR</span><button id="playPhrase">Hear phrase</button><button id="newPhrase" class="hidden">New phrase</button><button id="toggleDiagramView" class="hidden">Diagram</button><button id="markStepDone" class="hidden">Mark done</button><span id="audioHint"></span><div id="inlineProgression" class="inline-prog hidden"></div></section>
+<details class="more-options" style="margin:-4px 0 12px"><summary>Audio sources</summary><p style="margin:8px 0 0;color:#6d6258;font-size:13px">Major-chord recordings: WBOSITG, public domain, Wikimedia Commons. Minor recorded source: “C minor chord with third high and low” by Kaernbach, CC BY 3.0; other minor roots are temporarily pitch-matched from that recording. Unavailable chord qualities use the app’s synthesized-guitar fallback.</p></details>
 <section class="neck"><div id="board"></div></section>
 <section class="card"><button id="toggleDetails">Show coaching notes</button></section>
 <section class="practice-card lesson-extra hidden">
@@ -745,7 +746,7 @@ function updateQADebug(){
  els.qaDebug.classList.toggle("hidden",!enabled);
  if(!enabled)return;
  els.qaDebugText.textContent=[
-  `Build: V8.3 · 2026-07-20`,
+  `Build: V9.1 · 2026-07-20`,
   `Route: ${appState.route}`,
   `Activity: ${appState.activity}`,
   `Lesson: ${appState.guidedStep||"none"}`,
@@ -1230,38 +1231,54 @@ function playTone(midi,when,dur=1.8,gain=0.12,pan=0){
   dry.connect(ctx.destination);room.connect(roomGain).connect(ctx.destination);
   src.start(when);src.stop(when+Math.max(.9,dur)+.18)
 }
-const RECORDED_MAJOR_CHORDS={
-  A:"https://upload.wikimedia.org/wikipedia/commons/3/34/A-major.ogg",
-  C:"https://upload.wikimedia.org/wikipedia/commons/3/32/C-major.ogg",
-  D:"https://upload.wikimedia.org/wikipedia/commons/4/4b/D-major.ogg",
-  E:"https://upload.wikimedia.org/wikipedia/commons/8/8c/E-major.ogg",
-  F:"https://upload.wikimedia.org/wikipedia/commons/c/cf/F-major.ogg",
-  G:"https://upload.wikimedia.org/wikipedia/commons/4/4e/G-major.ogg",
-  B:"https://upload.wikimedia.org/wikipedia/commons/9/9b/B-major.ogg"
+const RECORDED_CHORDS={
+  "A major":{url:"https://upload.wikimedia.org/wikipedia/commons/3/34/A-major.ogg",license:"Public domain",author:"WBOSITG",style:"acoustic guitar"},
+  "B major":{url:"https://upload.wikimedia.org/wikipedia/commons/9/9b/B-major.ogg",license:"Public domain",author:"WBOSITG",style:"acoustic guitar"},
+  "C major":{url:"https://upload.wikimedia.org/wikipedia/commons/3/32/C-major.ogg",license:"Public domain",author:"WBOSITG",style:"acoustic guitar"},
+  "D major":{url:"https://upload.wikimedia.org/wikipedia/commons/4/4b/D-major.ogg",license:"Public domain",author:"WBOSITG",style:"acoustic guitar"},
+  "E major":{url:"https://upload.wikimedia.org/wikipedia/commons/8/8c/E-major.ogg",license:"Public domain",author:"WBOSITG",style:"acoustic guitar"},
+  "F major":{url:"https://upload.wikimedia.org/wikipedia/commons/c/cf/F-major.ogg",license:"Public domain",author:"WBOSITG",style:"acoustic guitar"},
+  "G major":{url:"https://upload.wikimedia.org/wikipedia/commons/4/4e/G-major.ogg",license:"Public domain",author:"WBOSITG",style:"acoustic guitar"},
+  "C minor":{url:"https://upload.wikimedia.org/wikipedia/commons/8/8c/C_minor_chord_with_third_high_and_low.ogg",license:"CC BY 3.0",author:"Kaernbach",style:"recorded minor chord",baseRoot:"C"}
 };
+const ROOT_SEMITONES={C:0,"C♯":1,"D♭":1,D:2,"D♯":3,"E♭":3,E:4,F:5,"F♯":6,"G♭":6,G:7,"G♯":8,"A♭":8,A:9,"A♯":10,"B♭":10,B:11};
 let recordedChordAudio=null;
 let recordedStopTimer=null;
-const RECORDED_CHORD_META={source:"Wikimedia Commons",license:"Public domain",style:"natural acoustic strum"};
+let recordedChordCredit="";
+function recordedChordEntry(root,q){
+  const exact=RECORDED_CHORDS[`${root} ${q}`];
+  if(exact)return {...exact,rate:1,transposed:false};
+  // Wikimedia currently provides one verified reusable minor-chord recording in this build.
+  // Re-pitch that recorded source for the remaining minor roots rather than switching instruments.
+  if(q==="minor"){
+    const source=RECORDED_CHORDS["C minor"];
+    const delta=((ROOT_SEMITONES[root]??0)-ROOT_SEMITONES.C+12)%12;
+    const signed=delta>6?delta-12:delta;
+    return {...source,rate:Math.pow(2,signed/12),transposed:root!=="C"};
+  }
+  return null;
+}
 function stopRecordedChord(){
   if(recordedStopTimer){clearTimeout(recordedStopTimer);recordedStopTimer=null}
   if(recordedChordAudio){recordedChordAudio.pause();recordedChordAudio.currentTime=0;recordedChordAudio=null}
 }
 function playRecordedChord(root,q,options={}){
-  const url=q==="major"?RECORDED_MAJOR_CHORDS[root]:null;
-  if(!url)return false;
+  const entry=recordedChordEntry(root,q);
+  if(!entry)return false;
   try{
     stopRecordedChord();
-    const audio=new Audio(url);
+    const audio=new Audio(entry.url);
     recordedChordAudio=audio;
     audio.preload="auto";
     audio.crossOrigin="anonymous";
-    audio.volume=options.loop?.78:.9;
-    // A single deck and fixed gain make every route sound like the same instrument.
-    audio.playbackRate=1;
+    audio.volume=options.loop?.76:.88;
+    audio.playbackRate=entry.rate||1;
+    recordedChordCredit=`${entry.author} · ${entry.license}`;
     const promise=audio.play();
     if(promise&&promise.catch)promise.catch(()=>{});
-    recordedStopTimer=setTimeout(()=>{if(recordedChordAudio===audio)stopRecordedChord()},options.loop?2350:4300);
-    return true
+    const baseMs=options.loop?2450:4300;
+    recordedStopTimer=setTimeout(()=>{if(recordedChordAudio===audio)stopRecordedChord()},baseMs/Math.max(.75,audio.playbackRate));
+    return entry
   }catch(e){return false}
 }
 function playSampledFallback(root,q,options={}){
@@ -1277,14 +1294,16 @@ function playSampledFallback(root,q,options={}){
   return `${root} ${q}`
 }
 function playChord(root,q,options={}){
-  if(playRecordedChord(root,q,options)){
-    syncState({audioTarget:`${root} ${q} — recorded acoustic guitar`});
-    if(els.audioHint)els.audioHint.textContent=options.loop?"Recorded chord loop":"Recorded acoustic chord · natural strum";
+  const entry=playRecordedChord(root,q,options);
+  if(entry){
+    const sourceLabel=entry.transposed?"recorded minor source · pitch-matched":"recorded chord";
+    syncState({audioTarget:`${root} ${q} — ${sourceLabel}`});
+    if(els.audioHint)els.audioHint.textContent=options.loop?`${sourceLabel} loop`:`${sourceLabel} · ${recordedChordCredit}`;
     return
   }
   const target=playSampledFallback(root,q,options);
-  syncState({audioTarget:`${target} — recorded-string fallback`});
-  if(els.audioHint)els.audioHint.textContent="Recorded-string fallback · matching chord voicing";
+  syncState({audioTarget:`${target} — synthesized guitar fallback`});
+  if(els.audioHint)els.audioHint.textContent="Synthesized guitar fallback · exact displayed voicing";
 }
 function playMelody(notes,step=.38){
   let ctx=ensureAudio(), t=ctx.currentTime;

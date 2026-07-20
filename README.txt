@@ -1,9 +1,12 @@
-NOTE MAP GUITAR V9.0
+Note Map Guitar V9.1
 
-Release focus: premium visual system.
+Audio behavior
+- Major chords A–G: individual public-domain acoustic-guitar recordings from Wikimedia Commons.
+- Minor chords: a verified reusable C-minor recording from Wikimedia Commons; other minor roots are pitch-matched from that recorded source as a temporary consistency measure.
+- Other chord qualities: synthesized-guitar fallback using the displayed voicing.
 
-Audio sources
-Natural major chord recordings A–G: public-domain acoustic-guitar files by WBOSITG, hosted by Wikimedia Commons.
-Where an exact public recording is unavailable, the app identifies and uses its recorded-string fallback rather than mislabelling it as a chord recording.
+Credits
+- Natural major chord recordings: WBOSITG, public domain.
+- C minor chord with third high and low: Kaernbach, CC BY 3.0.
 
-Open index.html, or deploy the entire folder so the service worker and manifest remain available.
+This is an interim audio library intended to be replaced by a consistent custom recording set.
