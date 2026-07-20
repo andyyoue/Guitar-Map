@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-title" content="Note Map" />
 <link rel="manifest" href="manifest.webmanifest" />
-<title>Note Map Guitar V8.5</title>
+<title>Note Map Guitar V9.0</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#f6f3ee;color:#221f1c;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
@@ -453,13 +453,37 @@ body.v6-home-route #v8Section{display:none!important}body.v8-section-open #v6Hom
 .openmark,.mutemark{position:relative;z-index:6;background:#160b08e6!important;box-shadow:0 1px 4px #000b!important}
 .openmark.ghost{visibility:hidden!important}
 
+
+/* V8.6 — unified recorded-chord deck */
+.recording-badge{display:inline-flex;align-items:center;height:28px;padding:0 10px;border:1px solid rgba(232,174,60,.38);border-radius:999px;background:rgba(232,174,60,.08);color:#e9ba58;font-size:10px;font-weight:900;letter-spacing:.11em;white-space:nowrap}
+.audio-card #playCurrent{background:linear-gradient(180deg,#f2bd50,#bb7414);color:#1b1005;border-color:#ffd67c;box-shadow:0 7px 20px rgba(173,99,11,.24)}
+
+/* V9.0 — dedicated premium visual release */
+:root{--paper:#f4efe4;--ink:#f4f0e7;--amber:#e9aa32;--panel:rgba(16,17,18,.88);--line:rgba(255,255,255,.12)}
+body{background:radial-gradient(circle at 70% -10%,rgba(111,71,25,.2),transparent 34%),linear-gradient(145deg,#07090a,#121416 55%,#080a0b);letter-spacing:.005em}
+header{background:linear-gradient(180deg,rgba(13,15,16,.96),rgba(7,9,10,.92));border-bottom:1px solid rgba(255,255,255,.12);box-shadow:0 18px 45px rgba(0,0,0,.25)}
+.card,.v8-card,.audio-card,.book-wrap{background:linear-gradient(145deg,rgba(31,33,34,.94),rgba(12,13,14,.94));border:1px solid rgba(255,255,255,.12);box-shadow:0 18px 45px rgba(0,0,0,.28),inset 0 1px rgba(255,255,255,.045)}
+.v8-card{transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}.v8-card:hover{transform:translateY(-3px);border-color:rgba(233,170,50,.5);box-shadow:0 24px 55px rgba(0,0,0,.36),0 0 0 1px rgba(233,170,50,.08)}
+button,select{border-radius:12px}button{transition:transform .14s ease,filter .14s ease,box-shadow .14s ease}button:active{transform:translateY(1px) scale(.99)}
+#board.physical-board .fretboard{background:
+linear-gradient(102deg,transparent 0 12%,rgba(255,190,105,.09) 18%,transparent 23% 56%,rgba(255,255,255,.055) 62%,transparent 69%),
+repeating-linear-gradient(3deg,rgba(255,184,91,.13) 0 1px,rgba(44,15,7,.04) 2px 7px),
+linear-gradient(180deg,#5c2316 0%,#2a0d09 23%,#6a2918 48%,#210806 74%,#4b170f 100%);
+box-shadow:inset 0 4px 8px rgba(255,210,145,.18),inset 0 -12px 20px rgba(0,0,0,.58),0 18px 38px rgba(0,0,0,.38);border:1px solid rgba(255,205,139,.22)}
+#board.physical-board .fret{border-right:5px solid transparent;border-image:linear-gradient(90deg,#414141,#fff 35%,#9e9e9e 60%,#fff 78%,#313131) 1;filter:drop-shadow(2px 0 1px rgba(0,0,0,.7))}
+#board.physical-board .cell::after{filter:brightness(1.3) drop-shadow(0 1px 1px #000)}
+#board.physical-board .dot{box-shadow:inset 0 2px 2px rgba(255,255,255,.58),inset 0 -4px 7px rgba(93,49,5,.5),0 5px 10px rgba(0,0,0,.55);border:2px solid #ffdb7a}
+h1,h2,.v8-card strong{letter-spacing:-.025em}.v8-card strong{font-size:1.18rem}.v8-card small{opacity:.78;line-height:1.45}
+.v8-home-grid{gap:16px}.v8-section-shell{max-width:1120px;margin-inline:auto}.compact-toolbar{backdrop-filter:blur(16px)}
+@media(max-width:760px){.v8-home-grid{gap:10px}.recording-badge{display:none}.card,.v8-card{border-radius:16px}}
+
 </style>
 </head>
 <body>
 <main class="app">
 <header class="v6-header">
 <div><h1>Note Map Guitar</h1><p id="routeSubtitle">Learn one small thing, or explore the neck.</p></div>
-<div class="header-actions"><button id="v6HomeBtn" class="soft-button hidden">Home</button><button id="openTunerBtn" class="tuner-button">♫ Tuner</button><b id="buildLabel">V8.5 · Build 2026-07-20.5</b></div>
+<div class="header-actions"><button id="v6HomeBtn" class="soft-button hidden">Home</button><button id="openTunerBtn" class="tuner-button">♫ Tuner</button><b id="buildLabel">V9.0 · Build 2026-07-20.90</b></div>
 </header>
 <section class="hint v6-build-note">V6 Learn & Explore · <button id="clearCachedVersion" class="link-button" type="button">Clear cached version / reload</button></section>
 <section id="tunerScreen" class="tuner-screen hidden" aria-live="polite">
@@ -622,7 +646,7 @@ recorded or uploaded.</p>
 <div id="lessonSequence" class="lesson-sequence"></div>
 <button id="exitLesson" class="soft-button">Back to learning path</button>
 </section>
-<section class="card audio-card compact-toolbar"><span id="actionTitle" class="action-title"></span><span id="focusMeta" class="focus-meta"></span><button id="exploreScaleBtn" class="task-btn hidden">Explore</button><button id="practiceScaleBtn" class="task-btn hidden">Practice</button><button id="hearKeyBtn" class="task-btn hidden">Hear</button><label id="inlineChordLabelsWrap" class="inline-select hidden">Show<select id="inlineChordLabels"><option value="fingers">Finger numbers</option><option value="notes">Note names</option></select></label><button id="toggleInlineLabels" class="hidden">Notes</button><button id="prevInlineShape" class="hidden">‹ Shape</button><button id="nextInlineShape" class="hidden">Shape ›</button><button id="prevInlineChord" class="hidden">‹ Chord</button><button id="nextInlineChord" class="hidden">Chord ›</button><button id="loopProgression" class="hidden">Loop</button><button id="prevInlineProgShape" class="hidden">‹ Shape</button><button id="nextInlineProgShape" class="hidden">Shape ›</button><button id="prevCoachPattern" class="hidden">‹ Pattern</button><button id="nextCoachPattern" class="hidden">Pattern ›</button><button id="prevCoachRoot" class="hidden">‹ Chord</button><button id="nextCoachRoot" class="hidden">Chord ›</button><button id="prevCoachChordType" class="hidden">‹ Type</button><button id="nextCoachChordType" class="hidden">Type ›</button><button id="playCurrent">Play</button><button id="playPhrase">Hear phrase</button><button id="newPhrase" class="hidden">New phrase</button><button id="toggleDiagramView" class="hidden">Diagram</button><button id="markStepDone" class="hidden">Mark done</button><span id="audioHint"></span><div id="inlineProgression" class="inline-prog hidden"></div></section>
+<section class="card audio-card compact-toolbar"><span id="actionTitle" class="action-title"></span><span id="focusMeta" class="focus-meta"></span><button id="exploreScaleBtn" class="task-btn hidden">Explore</button><button id="practiceScaleBtn" class="task-btn hidden">Practice</button><button id="hearKeyBtn" class="task-btn hidden">Hear</button><label id="inlineChordLabelsWrap" class="inline-select hidden">Show<select id="inlineChordLabels"><option value="fingers">Finger numbers</option><option value="notes">Note names</option></select></label><button id="toggleInlineLabels" class="hidden">Notes</button><button id="prevInlineShape" class="hidden">‹ Shape</button><button id="nextInlineShape" class="hidden">Shape ›</button><button id="prevInlineChord" class="hidden">‹ Chord</button><button id="nextInlineChord" class="hidden">Chord ›</button><button id="loopProgression" class="hidden">Loop</button><button id="prevInlineProgShape" class="hidden">‹ Shape</button><button id="nextInlineProgShape" class="hidden">Shape ›</button><button id="prevCoachPattern" class="hidden">‹ Pattern</button><button id="nextCoachPattern" class="hidden">Pattern ›</button><button id="prevCoachRoot" class="hidden">‹ Chord</button><button id="nextCoachRoot" class="hidden">Chord ›</button><button id="prevCoachChordType" class="hidden">‹ Type</button><button id="nextCoachChordType" class="hidden">Type ›</button><button id="playCurrent">▶ Play chord</button><span class="recording-badge" title="Natural major chords use public-domain acoustic recordings">RECORDED GUITAR</span><button id="playPhrase">Hear phrase</button><button id="newPhrase" class="hidden">New phrase</button><button id="toggleDiagramView" class="hidden">Diagram</button><button id="markStepDone" class="hidden">Mark done</button><span id="audioHint"></span><div id="inlineProgression" class="inline-prog hidden"></div></section>
 <section class="neck"><div id="board"></div></section>
 <section class="card"><button id="toggleDetails">Show coaching notes</button></section>
 <section class="practice-card lesson-extra hidden">
@@ -1212,40 +1236,55 @@ const RECORDED_MAJOR_CHORDS={
   D:"https://upload.wikimedia.org/wikipedia/commons/4/4b/D-major.ogg",
   E:"https://upload.wikimedia.org/wikipedia/commons/8/8c/E-major.ogg",
   F:"https://upload.wikimedia.org/wikipedia/commons/c/cf/F-major.ogg",
-  G:"https://upload.wikimedia.org/wikipedia/commons/4/4e/G-major.ogg"
+  G:"https://upload.wikimedia.org/wikipedia/commons/4/4e/G-major.ogg",
+  B:"https://upload.wikimedia.org/wikipedia/commons/9/9b/B-major.ogg"
 };
 let recordedChordAudio=null;
-function playRecordedChord(root,q){
+let recordedStopTimer=null;
+const RECORDED_CHORD_META={source:"Wikimedia Commons",license:"Public domain",style:"natural acoustic strum"};
+function stopRecordedChord(){
+  if(recordedStopTimer){clearTimeout(recordedStopTimer);recordedStopTimer=null}
+  if(recordedChordAudio){recordedChordAudio.pause();recordedChordAudio.currentTime=0;recordedChordAudio=null}
+}
+function playRecordedChord(root,q,options={}){
   const url=q==="major"?RECORDED_MAJOR_CHORDS[root]:null;
   if(!url)return false;
   try{
-    if(recordedChordAudio){recordedChordAudio.pause();recordedChordAudio.currentTime=0}
-    recordedChordAudio=new Audio(url);
-    recordedChordAudio.preload="auto";
-    recordedChordAudio.volume=.92;
-    const promise=recordedChordAudio.play();
+    stopRecordedChord();
+    const audio=new Audio(url);
+    recordedChordAudio=audio;
+    audio.preload="auto";
+    audio.crossOrigin="anonymous";
+    audio.volume=options.loop?.78:.9;
+    // A single deck and fixed gain make every route sound like the same instrument.
+    audio.playbackRate=1;
+    const promise=audio.play();
     if(promise&&promise.catch)promise.catch(()=>{});
+    recordedStopTimer=setTimeout(()=>{if(recordedChordAudio===audio)stopRecordedChord()},options.loop?2350:4300);
     return true
   }catch(e){return false}
 }
-function playChord(root,q){
-  if(playRecordedChord(root,q)){
-    syncState({audioTarget:`${root} ${q} — recorded acoustic guitar`});return
-  }
-  const ctx=ensureAudio(),s=appState.currentShape,now=ctx.currentTime+.025;
+function playSampledFallback(root,q,options={}){
+  const ctx=ensureAudio(),s=appState.currentShape,now=ctx.currentTime+.018;
+  const loop=!!options.loop,dur=loop?2.15:3.95,level=loop?.092:.108;
   if(s&&s.root===root&&(!s.quality||s.quality===q)&&Array.isArray(s.frets)){
     const openMidi=[40,45,50,55,59,64],played=s.frets.map((f,i)=>({f,i})).filter(x=>x.f!=="x"&&x.f!=null);
-    // Near-simultaneous 4–6 ms sweep, with a long decay, for unsupported/minor chords.
-    played.forEach((x,n)=>{
-      const jitter=(Math.random()*.8-.4)/1000,delay=n*.0032+jitter;
-      const minorWarmth=(q==="minor"||q==="minor7")?1.08:1;
-      playTone(openMidi[x.i]+Number(x.f),now+delay,3.85,.108*minorWarmth,-.28+(n/Math.max(1,played.length-1))*.56)
-    });
-    syncState({audioTarget:s.name||`${root} ${q}`});return
+    played.forEach((x,n)=>playTone(openMidi[x.i]+Number(x.f),now+n*.0028,dur,level,-.3+(n/Math.max(1,played.length-1))*.6));
+    return s.name||`${root} ${q}`
   }
   const ints=chords[q]?.[2]||[0,4,7],base=noteMidi(root,3);
-  ints.forEach((it,i)=>playTone(base+it+(i>1?12:0),now+i*.0032,3.7,(q==="minor"||q==="minor7")?.142:.13,-.15+i*.15));
-  syncState({audioTarget:`${root} ${q}`})
+  ints.forEach((it,i)=>playTone(base+it+(i>1?12:0),now+i*.0028,dur,level*1.15,-.18+i*.18));
+  return `${root} ${q}`
+}
+function playChord(root,q,options={}){
+  if(playRecordedChord(root,q,options)){
+    syncState({audioTarget:`${root} ${q} — recorded acoustic guitar`});
+    if(els.audioHint)els.audioHint.textContent=options.loop?"Recorded chord loop":"Recorded acoustic chord · natural strum";
+    return
+  }
+  const target=playSampledFallback(root,q,options);
+  syncState({audioTarget:`${target} — recorded-string fallback`});
+  if(els.audioHint)els.audioHint.textContent="Recorded-string fallback · matching chord voicing";
 }
 function playMelody(notes,step=.38){
   let ctx=ensureAudio(), t=ctx.currentTime;
@@ -1361,8 +1400,8 @@ function updateAudioControls(){
   else if(currentSound.kind==="scalePath"){els.playCurrent.textContent="Play route";els.audioHint.textContent=""}
   else if(currentSound.kind==="scaleExplore"){els.playCurrent.textContent="";els.audioHint.textContent=""}
   else {els.playCurrent.textContent="Play";els.audioHint.textContent="Hear the notes that create the key. This is listening practice, not a fingering path."}
-}function playCurrentSound(){
-  if(currentSound.kind==="chord")playChord(currentSound.root,currentSound.quality);
+}function playCurrentSound(options={}){
+  if(currentSound.kind==="chord")playChord(currentSound.root,currentSound.quality,options);
   else {
     let seq=currentSound.playback||currentSound.notes||["A"];
     playMelody(seq);
@@ -1782,11 +1821,11 @@ function stopProgressionLoop(){
 function toggleProgressionLoop(){
   if(progressionLoopTimer){stopProgressionLoop();return}
   els.loopProgression.textContent="Stop";
-  playCurrentSound();
+  playCurrentSound({loop:true});
   progressionLoopTimer=setInterval(()=>{
     stepProgressionChord(1);
-    window.setTimeout(()=>playCurrentSound(),55);
-  },2600);
+    window.setTimeout(()=>playCurrentSound({loop:true}),70);
+  },2400);
 }
 function render(){setVis(); if(!(els.skillLevel.value==="manual"&&els.mode.value==="progression"))stopProgressionLoop(); if(els.mode.value==="map")renderMap(); else if(els.mode.value==="chord")renderChord(); else if(els.mode.value==="progression")renderProg(); else renderSolo(); updateAudioControls()}
 ["key","scale","overlay","display","pattern","mapWindow","scaleAction","mode","chordRoot","chordType","shapeStyle","chordLabels","chordWindow","progKey","progType","progStyle","progLabels","near","soloKey","soloScale","soloBlueprint","soloArea"].forEach(id=>els[id].addEventListener("change",()=>{

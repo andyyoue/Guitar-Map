@@ -1,10 +1,9 @@
-NOTE MAP GUITAR — V8.5
-Build 2026-07-20.5
+NOTE MAP GUITAR V9.0
 
-Changes in this build:
-- Circular finger markers are centered precisely on each string.
-- Rosewood and stainless fret rendering have a brighter polished finish.
-- Nut O/X symbols remain unobstructed by string rendering.
-- Generated minor chords now have a warmer body, tighter strum, longer ring, and light room ambience.
-- Progression loops now play each chord as the displayed chord advances.
-- New V8.5 service-worker cache identity prevents older builds from being reused.
+Release focus: premium visual system.
+
+Audio sources
+Natural major chord recordings A–G: public-domain acoustic-guitar files by WBOSITG, hosted by Wikimedia Commons.
+Where an exact public recording is unavailable, the app identifies and uses its recorded-string fallback rather than mislabelling it as a chord recording.
+
+Open index.html, or deploy the entire folder so the service worker and manifest remain available.
