@@ -1,0 +1,62 @@
+{
+  "format": "tonejs-friendly-compact",
+  "ppq": 480,
+  "license": "public-domain",
+  "purpose": "reference MIDI layer; independent of groove notation",
+  "source": "https://library.timelesstruths.org/music/Trust_and_Obey/midi/",
+  "title": "Trust and Obey",
+  "tempo": 92,
+  "timeSignature": [
+    4,
+    4
+  ],
+  "tracks": [
+    {
+      "name": "lead melody excerpt",
+      "notes": [
+        {
+          "name": "G4",
+          "timeBeats": 0,
+          "durationBeats": 1,
+          "velocity": 0.78
+        },
+        {
+          "name": "A4",
+          "timeBeats": 1,
+          "durationBeats": 1,
+          "velocity": 0.78
+        },
+        {
+          "name": "B4",
+          "timeBeats": 2,
+          "durationBeats": 2,
+          "velocity": 0.78
+        },
+        {
+          "name": "D5",
+          "timeBeats": 4,
+          "durationBeats": 2,
+          "velocity": 0.78
+        },
+        {
+          "name": "B4",
+          "timeBeats": 6,
+          "durationBeats": 1,
+          "velocity": 0.78
+        },
+        {
+          "name": "A4",
+          "timeBeats": 7,
+          "durationBeats": 1,
+          "velocity": 0.78
+        },
+        {
+          "name": "G4",
+          "timeBeats": 8,
+          "durationBeats": 2,
+          "velocity": 0.78
+        }
+      ]
+    }
+  ]
+}
