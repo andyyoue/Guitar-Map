@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-title" content="Note Map" />
 <link rel="manifest" href="manifest.webmanifest" />
-<title>Note Map Guitar V9.2</title>
+<title>Note Map Guitar V10</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#f6f3ee;color:#221f1c;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
@@ -458,7 +458,7 @@ body.v6-home-route #v8Section{display:none!important}body.v8-section-open #v6Hom
 .recording-badge{display:inline-flex;align-items:center;height:28px;padding:0 10px;border:1px solid rgba(232,174,60,.38);border-radius:999px;background:rgba(232,174,60,.08);color:#e9ba58;font-size:10px;font-weight:900;letter-spacing:.11em;white-space:nowrap}
 .audio-card #playCurrent{background:linear-gradient(180deg,#f2bd50,#bb7414);color:#1b1005;border-color:#ffd67c;box-shadow:0 7px 20px rgba(173,99,11,.24)}
 
-/* V9.2 — coherent 24-chord recorded guitar library */
+/* V10 — songs, groove notation and navigation QA */
 :root{--paper:#f4efe4;--ink:#f4f0e7;--amber:#e9aa32;--panel:rgba(16,17,18,.88);--line:rgba(255,255,255,.12)}
 body{background:radial-gradient(circle at 70% -10%,rgba(111,71,25,.2),transparent 34%),linear-gradient(145deg,#07090a,#121416 55%,#080a0b);letter-spacing:.005em}
 header{background:linear-gradient(180deg,rgba(13,15,16,.96),rgba(7,9,10,.92));border-bottom:1px solid rgba(255,255,255,.12);box-shadow:0 18px 45px rgba(0,0,0,.25)}
@@ -477,15 +477,21 @@ h1,h2,.v8-card strong{letter-spacing:-.025em}.v8-card strong{font-size:1.18rem}.
 .v8-home-grid{gap:16px}.v8-section-shell{max-width:1120px;margin-inline:auto}.compact-toolbar{backdrop-filter:blur(16px)}
 @media(max-width:760px){.v8-home-grid{gap:10px}.recording-badge{display:none}.card,.v8-card{border-radius:16px}}
 
+
+/* V10 song groove trial */
+.song-picker{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}.song-picker button{background:transparent;color:var(--ink);border:1px solid var(--line);padding:10px 14px}.song-picker button.active{background:var(--amber);color:#211508;border-color:var(--amber)}
+.song-workspace{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(280px,.75fr);gap:16px}.song-panel{background:linear-gradient(145deg,rgba(31,33,34,.94),rgba(12,13,14,.94));border:1px solid var(--line);border-radius:18px;padding:18px}.song-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}.song-meta span{font-size:12px;font-weight:800;padding:6px 9px;border-radius:999px;background:rgba(233,170,50,.1);border:1px solid rgba(233,170,50,.28);color:#f1c46d}.song-view-tabs{display:flex;gap:8px;margin:0 0 14px}.song-view-tabs button{background:transparent;color:var(--ink);border:1px solid var(--line);padding:9px 12px}.song-view-tabs button.active{border-color:var(--amber);color:#ffd47f}.lyric-sheet{font-size:18px;line-height:1.9}.lyric-line{margin:0 0 5px}.lyric-line .chord{display:inline-block;color:#f3b647;font-size:12px;font-weight:900;vertical-align:top;transform:translateY(-.65em);margin-right:3px;min-width:22px}.groove-grid{display:grid;grid-template-columns:repeat(8,minmax(44px,1fr));gap:7px;margin-top:12px}.groove-step{min-height:84px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.025);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}.groove-step.rest{opacity:.38}.groove-beat{font-size:10px;opacity:.6}.groove-arrow{font-size:28px;font-weight:900;line-height:1}.groove-zone{font-size:10px;letter-spacing:.08em;text-transform:uppercase}.groove-accent{color:#f4b643}.groove-note{margin-top:12px;font-size:13px;opacity:.72;line-height:1.5}.song-source{font-size:11px;opacity:.58;margin-top:14px}.song-empty{padding:28px;border:1px dashed var(--line);border-radius:16px;text-align:center;opacity:.75}.song-legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;opacity:.75;margin-top:12px}
+@media(max-width:780px){.song-workspace{grid-template-columns:1fr}.groove-grid{grid-template-columns:repeat(4,1fr)}.lyric-sheet{font-size:16px}.song-panel{padding:14px}}
+
 </style>
 </head>
 <body>
 <main class="app">
 <header class="v6-header">
 <div><h1>Note Map Guitar</h1><p id="routeSubtitle">Learn one small thing, or explore the neck.</p></div>
-<div class="header-actions"><button id="v6HomeBtn" class="soft-button hidden">Home</button><button id="openTunerBtn" class="tuner-button">♫ Tuner</button><b id="buildLabel">V9.2 · Build 2026-07-20.92</b></div>
+<div class="header-actions"><button id="v6HomeBtn" class="soft-button hidden">Home</button><button id="openTunerBtn" class="tuner-button">♫ Tuner</button><b id="buildLabel">V10 · Build 2026-07-23.10</b></div>
 </header>
-<section class="hint v6-build-note">V6 Learn & Explore · <button id="clearCachedVersion" class="link-button" type="button">Clear cached version / reload</button></section>
+<section class="hint v6-build-note">V10 Songs & Groove · <button id="clearCachedVersion" class="link-button" type="button">Clear cached version / reload</button></section>
 <section id="tunerScreen" class="tuner-screen hidden" aria-live="polite">
   <div class="tuner-panel">
     <div class="tuner-top"><button id="returnFromTuner" class="return-link">‹ Return to App</button><label>Tuning: <select id="tunerPreset"><option value="standard">Standard</option><option value="dropD">Drop D</option></select></label></div>
@@ -533,7 +539,7 @@ recorded or uploaded.</p>
     <button class="v8-card" data-section="fretboard"><span class="v8-icon">⌁</span><span><strong>Fretboard</strong><small>See and find notes on the neck</small></span><span class="v8-arrow">›</span></button>
     <button class="v8-card" data-section="scales"><span class="v8-icon">⌇</span><span><strong>Scales</strong><small>Pentatonic routes across the neck</small></span><span class="v8-arrow">›</span></button>
     <button class="v8-card" data-section="progressions"><span class="v8-icon">↝</span><span><strong>Progressions</strong><small>Put useful chords together</small></span><span class="v8-arrow">›</span></button>
-    <button class="v8-card" data-section="songs"><span class="v8-icon">≋</span><span><strong>Songs & tabs</strong><small>Riffs, phrases and song shapes</small></span><span class="v8-arrow">›</span></button>
+    <button class="v8-card" data-section="songs"><span class="v8-icon">≋</span><span><strong>Songs & groove</strong><small>Lyrics, chords and strumming together</small></span><span class="v8-arrow">›</span></button>
     <button class="v8-card" data-section="tuner"><span class="v8-icon">◎</span><span><strong>Tuner</strong><small>Get in tune and start playing</small></span><span class="v8-arrow">›</span></button>
     <button class="v8-card" data-section="theory"><span class="v8-icon">?</span><span><strong>Theory: the “why”</strong><small>Plain-language answers, available from day one</small></span><span class="v8-arrow">›</span></button>
   </div>
@@ -746,7 +752,7 @@ function updateQADebug(){
  els.qaDebug.classList.toggle("hidden",!enabled);
  if(!enabled)return;
  els.qaDebugText.textContent=[
-  `Build: V9.2 · 2026-07-20`,
+  `Build: V10 · 2026-07-23`,
   `Route: ${appState.route}`,
   `Activity: ${appState.activity}`,
   `Lesson: ${appState.guidedStep||"none"}`,
@@ -2042,18 +2048,40 @@ const V8_SECTIONS={
   [{label:"12-bar blues",sub:"A complete blues form",action:"prog-blues"},{label:"Minor walk-down",sub:"A familiar descending sound",action:"prog-minor"}],
   [{label:"Andalusian cadence",sub:"The dramatic minor sequence",action:"prog-andalusian"},{label:"Jazz turnaround",sub:"I · vi · ii · V",action:"prog-turnaround"}]
  ]},
- songs:{title:"Songs & tabs",intro:"Short, playable ideas—not a giant song database.",tiers:[
-  [{label:"Three-note phrases",sub:"Copy a short idea inside a real scale",action:"phrase"},{label:"Solo trainer",sub:"Question, answer and resolution",action:"solo"}],
-  [{label:"Tab view",sub:"See fret numbers as a playing route",action:"tab"},{label:"Rock progression",sub:"A strong movable-chord sequence",action:"prog-rock"}],
-  [{label:"Blues phrases",sub:"Build phrases around the blue note",action:"blues-phrase"}]
- ]},
+ songs:{title:"Songs & groove",intro:"See the words, chord changes and strumming language in one place.",songs:true},
  theory:{title:"From Sound to Fretboard",intro:"A connected theory sequence, from vibration to movable triads.",theory:true}
 };
 function v8Home(){document.body.classList.remove("v8-section-open","v8-focused");els.v8Focus.classList.add("hidden");setV6Route("home-route");els.v8Section.classList.add("hidden");els.v6Home.classList.remove("hidden")}
 function theorySectionHtml(section){return `<section class="v8-theory-sub"><h4>${section[0]}</h4><p>${section[1]}</p></section>`}
 function renderV8TheoryList(){v8TheoryReading=false;const tiers=[V8_THEORY.slice(0,5),V8_THEORY.slice(5,10),V8_THEORY.slice(10)];els.v8SectionContent.innerHTML=`<div class="v8-theory-chain"><strong>Sound → intervals → scales → keys → harmony → guitar geometry → voicings</strong><small>Open the sequence at the beginning, or jump directly to a chapter.</small></div><div class="v8-list">${tiers.map((tier,ti)=>`<div class="v8-tier ${ti===0?'revealed':''}" data-tier="${ti}">${tier.map((x,j)=>{const i=(ti===0?0:ti===1?5:10)+j;return `<button class="v8-item" data-theory-chapter="${i}"><span><strong>${i+1}. ${x.title}</strong><small>${x.subtitle}</small></span><span>›</span></button>`}).join('')}</div>`).join('')}</div><button class="v8-more" data-v8-more="1">Show me more</button>`}
 function renderV8Theory(){v8TheoryReading=true;const t=V8_THEORY[v8TheoryIndex];els.v8SectionContent.innerHTML=`<button class="v8-theory-contents" data-theory-list="1">☰ Theory contents</button><article class="v8-theory-card"><div class="v8-theory-count">Chapter ${v8TheoryIndex+1} of ${V8_THEORY.length}</div><h3>${t.title}</h3><p class="v8-theory-deck">${t.subtitle}</p>${t.sections.map(theorySectionHtml).join('')}</article><div class="v8-theory-nav"><button data-theory-nav="-1" ${v8TheoryIndex===0?'disabled':''}>‹ Previous</button><span>${v8TheoryIndex+1} / ${V8_THEORY.length}</span><button data-theory-nav="1" ${v8TheoryIndex===V8_THEORY.length-1?'disabled':''}>Next ›</button></div><select class="v8-theory-select" id="v8TheorySelect">${V8_THEORY.map((x,i)=>`<option value="${i}" ${i===v8TheoryIndex?'selected':''}>${i+1}. ${x.title}</option>`).join('')}</select>`}
-function openV8Section(name){if(name==="tuner"){els.openTunerBtn.click();return}const sec=V8_SECTIONS[name];if(!sec)return;document.body.classList.add("v8-section-open");els.v6Home.classList.add("hidden");els.v8Section.classList.remove("hidden");els.v8SectionTitle.textContent=sec.title;els.v8SectionIntro.textContent=sec.intro;if(sec.theory){renderV8TheoryList();return}els.v8SectionContent.innerHTML=`<div class="v8-list">${sec.tiers.map((tier,ti)=>`<div class="v8-tier ${ti===0?'revealed':''}" data-tier="${ti}">${tier.map(x=>`<button class="v8-item" data-v8-action="${x.action}"><span><strong>${x.label}</strong><small>${x.sub}</small></span><span>›</span></button>`).join('')}</div>`).join('')}</div>${sec.tiers.length>1?'<button class="v8-more" data-v8-more="1">Show me more</button>':''}`;window.scrollTo({top:0,behavior:"smooth"})}
+
+const V10_SONGS=[
+ {id:"amazing-grace",title:"Amazing Grace",key:"G",meter:"3/4",tempo:76,source:"Public-domain words and NEW BRITAIN melody; MIDI source available from Timeless Truths.",midiJson:"data/songs/amazing-grace-midi.json",groove:[
+  {beat:"1",dir:"down",zone:"full",accent:true},{beat:"2",dir:"down",zone:"mid"},{beat:"3",dir:"up",zone:"high"},
+  {beat:"1",dir:"down",zone:"full",accent:true},{beat:"2",dir:"down",zone:"mid"},{beat:"3",dir:"up",zone:"high"}
+ ],lines:[
+  [{c:"G",t:"Amazing grace! How sweet the sound"}],
+  [{c:"D",t:"That saved a wretch like me!"}],
+  [{c:"G",t:"I once was lost, but now am found;"}],
+  [{c:"C",t:"Was blind, but "},{c:"G",t:"now I "},{c:"D",t:"see."}]
+ ]},
+ {id:"trust-and-obey",title:"Trust and Obey",key:"G",meter:"4/4",tempo:92,source:"Public-domain hymn; MIDI source available from Timeless Truths.",midiJson:"data/songs/trust-and-obey-midi.json",groove:[
+  {beat:"1",dir:"down",zone:"full",accent:true},{beat:"&",dir:null,zone:""},{beat:"2",dir:"down",zone:"mid"},{beat:"&",dir:"up",zone:"high"},
+  {beat:"3",dir:"down",zone:"full",accent:true},{beat:"&",dir:null,zone:""},{beat:"4",dir:"down",zone:"mid"},{beat:"&",dir:"up",zone:"high"}
+ ],lines:[
+  [{c:"G",t:"When we walk with the Lord in the light of His Word,"}],
+  [{c:"D",t:"What a glory He sheds on our way!"}],
+  [{c:"G",t:"While we do His good will, He abides with us still,"}],
+  [{c:"D",t:"And with all who will "},{c:"G",t:"trust and obey."}]
+ ]}
+];
+let v10SongIndex=0,v10SongView="combined";
+function v10LyricHtml(song){return song.lines.map(parts=>`<div class="lyric-line">${parts.map(p=>`<span class="chord">${p.c||""}</span>${p.t}`).join("")}</div>`).join("")}
+function v10GrooveHtml(song){return `<div class="groove-grid">${song.groove.map(g=>`<div class="groove-step ${g.dir?'':'rest'}"><span class="groove-beat">${g.beat}</span><span class="groove-arrow ${g.accent?'groove-accent':''}">${g.dir==='down'?'↓':g.dir==='up'?'↑':'·'}</span><span class="groove-zone">${g.zone||'rest'}</span></div>`).join('')}</div><div class="song-legend"><span>↓ downstroke</span><span>↑ upstroke</span><span>amber = accent</span><span>full / mid / high = string area</span></div>`}
+function renderV10Songs(){const song=V10_SONGS[v10SongIndex];const showLyrics=v10SongView!=="groove",showGroove=v10SongView!=="lyrics";els.v8SectionContent.innerHTML=`<div class="song-picker">${V10_SONGS.map((x,i)=>`<button data-song-index="${i}" class="${i===v10SongIndex?'active':''}">${x.title}</button>`).join('')}</div><div class="song-view-tabs"><button data-song-view="combined" class="${v10SongView==='combined'?'active':''}">Lyrics + groove</button><button data-song-view="lyrics" class="${v10SongView==='lyrics'?'active':''}">Lyrics & chords</button><button data-song-view="groove" class="${v10SongView==='groove'?'active':''}">Groove only</button></div><div class="song-workspace">${showLyrics?`<article class="song-panel"><h3>${song.title}</h3><div class="song-meta"><span>Key ${song.key}</span><span>${song.meter}</span><span>${song.tempo} BPM</span></div><div class="lyric-sheet">${v10LyricHtml(song)}</div><div class="song-source">${song.source}</div></article>`:''}${showGroove?`<aside class="song-panel"><h3>Groove</h3><p>One repeating bar. The notation describes the playing gesture; playback and automation remain separate.</p>${v10GrooveHtml(song)}<p class="groove-note">Trial model: timing position, direction, string area and accent. Ring duration and muted/raked strokes can be added without changing the song screen.</p></aside>`:''}</div>`}
+
+function openV8Section(name){if(name==="tuner"){els.openTunerBtn.click();return}const sec=V8_SECTIONS[name];if(!sec)return;document.body.classList.add("v8-section-open");els.v6Home.classList.add("hidden");els.v8Section.classList.remove("hidden");els.v8SectionTitle.textContent=sec.title;els.v8SectionIntro.textContent=sec.intro;if(sec.theory){renderV8TheoryList();return}if(sec.songs){renderV10Songs();window.scrollTo({top:0,behavior:"smooth"});return}els.v8SectionContent.innerHTML=`<div class="v8-list">${sec.tiers.map((tier,ti)=>`<div class="v8-tier ${ti===0?'revealed':''}" data-tier="${ti}">${tier.map(x=>`<button class="v8-item" data-v8-action="${x.action}"><span><strong>${x.label}</strong><small>${x.sub}</small></span><span>›</span></button>`).join('')}</div>`).join('')}</div>${sec.tiers.length>1?'<button class="v8-more" data-v8-more="1">Show me more</button>':''}`;window.scrollTo({top:0,behavior:"smooth"})}
 const V8_LIBRARIES={
  "open-chords":{title:"Open Chords",subtitle:"Common book shapes",kind:"chord",items:[
   ["C","C major","major","open"],["A","A major","major","open"],["G","G major","major","open"],["E","E major","major","open"],["D","D major","major","open"],["Am","A minor","minor","open"],["Em","E minor","minor","open"],["Dm","D minor","minor","open"]]},
@@ -2083,7 +2111,7 @@ function runV8Action(a){
 }
 document.querySelectorAll("[data-section]").forEach(b=>b.onclick=()=>openV8Section(b.dataset.section));
 els.v8Back.onclick=v8Home;els.v6HomeBtn.onclick=v8Home;els.workbenchHome.onclick=v8Home;els.workbenchBack.onclick=v8Home;
-els.v8SectionContent.onclick=e=>{const more=e.target.closest("[data-v8-more]");if(more){const next=els.v8SectionContent.querySelector(".v8-tier:not(.revealed)");if(next)next.classList.add("revealed");if(!els.v8SectionContent.querySelector(".v8-tier:not(.revealed)")){more.textContent="All options shown";more.disabled=true}else more.textContent="Show me more";return}const chapter=e.target.closest("[data-theory-chapter]");if(chapter){v8TheoryIndex=Number(chapter.dataset.theoryChapter);renderV8Theory();window.scrollTo({top:0,behavior:"smooth"});return}if(e.target.closest("[data-theory-list]")){renderV8TheoryList();return}const nav=e.target.closest("[data-theory-nav]");if(nav&&!nav.disabled){v8TheoryIndex=Math.max(0,Math.min(V8_THEORY.length-1,v8TheoryIndex+Number(nav.dataset.theoryNav)));renderV8Theory();window.scrollTo({top:0,behavior:"smooth"});return}const a=e.target.closest("[data-v8-action]");if(a)runV8Action(a.dataset.v8Action)};
+els.v8SectionContent.onclick=e=>{const songPick=e.target.closest("[data-song-index]");if(songPick){v10SongIndex=Number(songPick.dataset.songIndex);renderV10Songs();return}const songView=e.target.closest("[data-song-view]");if(songView){v10SongView=songView.dataset.songView;renderV10Songs();return}const more=e.target.closest("[data-v8-more]");if(more){const next=els.v8SectionContent.querySelector(".v8-tier:not(.revealed)");if(next)next.classList.add("revealed");if(!els.v8SectionContent.querySelector(".v8-tier:not(.revealed)")){more.textContent="All options shown";more.disabled=true}else more.textContent="Show me more";return}const chapter=e.target.closest("[data-theory-chapter]");if(chapter){v8TheoryIndex=Number(chapter.dataset.theoryChapter);renderV8Theory();window.scrollTo({top:0,behavior:"smooth"});return}if(e.target.closest("[data-theory-list]")){renderV8TheoryList();return}const nav=e.target.closest("[data-theory-nav]");if(nav&&!nav.disabled){v8TheoryIndex=Math.max(0,Math.min(V8_THEORY.length-1,v8TheoryIndex+Number(nav.dataset.theoryNav)));renderV8Theory();window.scrollTo({top:0,behavior:"smooth"});return}const a=e.target.closest("[data-v8-action]");if(a)runV8Action(a.dataset.v8Action)};
 els.v8SectionContent.onchange=e=>{if(e.target.id==="v8TheorySelect"){v8TheoryIndex=Number(e.target.value);renderV8Theory()}};
 els.v8FocusBack.onclick=()=>{document.body.classList.remove("v8-focused");els.v8Focus.classList.add("hidden");openV8Section(v8ActiveLibrary&&["open-chords","power","sevenths","barre","sus","triads"].includes(v8ActiveLibrary)?"chords":v8ActiveLibrary&&["aminpent","amajpent","choose-minpent","blues","major-scale","minor-scale"].includes(v8ActiveLibrary)?"scales":"progressions")};
 els.v8ChoiceRow.onclick=e=>{const b=e.target.closest("[data-v8-choice]");if(!b)return;v8ActiveIndex=Number(b.dataset.v8Choice);v8RenderLibraryItem()};
